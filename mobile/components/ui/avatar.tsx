@@ -17,7 +17,14 @@ export function Avatar({ emoji, tint, size = 48 }: AvatarProps) {
         styles.circle,
         { width: size, height: size, borderRadius: radius.pill, backgroundColor: tint },
       ]}>
-      <ThemedText style={{ fontSize: size * 0.5 }} accessibilityElementsHidden importantForAccessibility="no">
+      {/* lineHeight set explicitly (and larger than fontSize): ThemedText's
+          default (body) lineHeight is a fixed 21, which clips an emoji
+          rendered at these larger, size-dependent fontSizes instead of
+          just adding breathing room. */}
+      <ThemedText
+        style={{ fontSize: size * 0.5, lineHeight: size * 0.6 }}
+        accessibilityElementsHidden
+        importantForAccessibility="no">
         {emoji}
       </ThemedText>
     </View>

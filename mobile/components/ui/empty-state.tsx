@@ -33,6 +33,10 @@ export function EmptyState({ emoji = '🌿', title, description, actionLabel, on
 
 const styles = StyleSheet.create({
   container: { alignItems: 'center', justifyContent: 'center', gap: spacing.sm, padding: spacing.xl },
-  emoji: { fontSize: 40 },
+  // lineHeight must be set explicitly and generously here: ThemedText's
+  // default (body) lineHeight is 21, far shorter than an emoji glyph
+  // rendered at fontSize 40 needs, so without this the emoji gets
+  // clipped top/bottom instead of the extra size just adding padding.
+  emoji: { fontSize: 40, lineHeight: 48 },
   center: { textAlign: 'center' },
 });

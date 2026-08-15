@@ -48,5 +48,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  emoji: { fontSize: 24 },
+  // lineHeight explicit and larger than fontSize: ThemedText's default
+  // (body) lineHeight is 21, shorter than this emoji's fontSize, which
+  // clips it instead of just adding breathing room.
+  emoji: { fontSize: 24, lineHeight: 28 },
 });
