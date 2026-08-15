@@ -1,8 +1,9 @@
 import * as Crypto from 'expo-crypto';
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-import { nowLocalTimestamp } from '@/domain/datetime';
+import { nowUtcIso } from '@/domain/datetime';
 import type { Profile, ProfileType } from '@/domain/types';
+import { InvalidPersistedDataError, assertValidProfileInput, isValidProfileType } from '@/domain/validation';
 
 interface ProfileRow {
   id: string;
@@ -15,10 +16,14 @@ interface ProfileRow {
 }
 
 function toProfile(row: ProfileRow): Profile {
+  if (!isValidProfileType(row.type)) {
+    throw new InvalidPersistedDataError(`Profile ${row.id} has an unknown type: ${row.type}.`);
+  }
+
   return {
     id: row.id,
     name: row.name,
-    type: row.type as ProfileType,
+    type: row.type,
     avatar: row.avatar,
     color: row.color,
     notes: row.notes,
@@ -61,8 +66,9 @@ export class ProfileRepository {
   }
 
   async create(input: CreateProfileInput): Promise<Profile> {
+    assertValidProfileInput(input);
     const id = Crypto.randomUUID();
-    const createdAt = nowLocalTimestamp();
+    const createdAt = nowUtcIso();
 
     await this.db.runAsync(
       `INSERT INTO profiles (id, name, type, avatar, color, notes, created_at)
@@ -88,6 +94,7 @@ export class ProfileRepository {
   }
 
   async update(id: string, input: UpdateProfileInput): Promise<void> {
+    assertValidProfileInput(input);
     await this.db.runAsync(
       `UPDATE profiles SET name = ?, type = ?, avatar = ?, color = ?, notes = ? WHERE id = ?;`,
       input.name,

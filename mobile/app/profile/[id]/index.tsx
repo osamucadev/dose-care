@@ -11,15 +11,15 @@ import { LoadingState } from '@/components/ui/loading-state';
 import { ScreenContainer } from '@/components/ui/screen-container';
 import { ThemedText } from '@/components/ui/themed-text';
 import { computeNowAndNext } from '@/domain/occurrences';
-import type { DoseEventStatus, DoseOccurrence } from '@/domain/types';
 import { NextPreview } from '@/features/doses/next-preview';
 import { NowCard } from '@/features/doses/now-card';
 import { UpcomingList } from '@/features/doses/upcoming-list';
 import { MedicationCard } from '@/features/medications/medication-card';
+import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
 import { useDoses } from '@/hooks/use-doses';
 import { useMedications } from '@/hooks/use-medications';
 import { useProfile } from '@/hooks/use-profile';
-import { getProfileTypeMeta } from '@/theme/profile-types';
+import { getProfileTypeMeta, resolveProfileAccentColor } from '@/theme/profile-types';
 import { spacing } from '@/theme/tokens';
 
 export default function ProfileScreen() {
@@ -34,8 +34,8 @@ export default function ProfileScreen() {
     setActive,
   } = useMedications(id, { includeInactive: true });
   const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses, recordDose } = useDoses(id);
-  const [actingOccurrenceId, setActingOccurrenceId] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<Error | null>(null);
+  const { actingOccurrenceId, actionError, performDoseAction, clearActionError } = useDoseActionHandler(recordDose);
+  const [medicationActionError, setMedicationActionError] = useState<Error | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -45,18 +45,6 @@ export default function ProfileScreen() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
   );
-
-  async function handleAction(occurrence: DoseOccurrence, status: DoseEventStatus) {
-    setActingOccurrenceId(occurrence.id);
-    setActionError(null);
-    try {
-      await recordDose(occurrence, status);
-    } catch (err) {
-      setActionError(err instanceof Error ? err : new Error(String(err)));
-    } finally {
-      setActingOccurrenceId(null);
-    }
-  }
 
   if (profileLoading) {
     return (
@@ -75,6 +63,7 @@ export default function ProfileScreen() {
   }
 
   const meta = getProfileTypeMeta(profile.type);
+  const accentColor = resolveProfileAccentColor(profile);
   const now = new Date();
   const nowNext = computeNowAndNext(occurrences, now);
 
@@ -89,7 +78,7 @@ export default function ProfileScreen() {
               accessibilityLabel="Editar perfil"
               hitSlop={8}
               onPress={() => router.push(`/profile/${profile.id}/edit`)}>
-              <ThemedText style={{ color: meta.color }}>✎ Editar</ThemedText>
+              <ThemedText style={{ color: accentColor }}>✎ Editar</ThemedText>
             </Pressable>
           ),
         }}
@@ -104,7 +93,7 @@ export default function ProfileScreen() {
       </View>
 
       {actionError ? (
-        <ErrorState message="Não foi possível registrar essa dose agora." onRetry={() => setActionError(null)} />
+        <ErrorState message="Não foi possível registrar essa dose agora." onRetry={clearActionError} />
       ) : null}
 
       {dosesError ? (
@@ -115,8 +104,8 @@ export default function ProfileScreen() {
         <NowCard
           occurrence={nowNext.now}
           busy={actingOccurrenceId === nowNext.now.id}
-          onTaken={() => nowNext.now && handleAction(nowNext.now, 'taken')}
-          onSkip={() => nowNext.now && handleAction(nowNext.now, 'skipped')}
+          onTaken={() => nowNext.now && performDoseAction(nowNext.now, 'taken')}
+          onSkip={() => nowNext.now && performDoseAction(nowNext.now, 'skipped')}
         />
       ) : (
         <View style={styles.okBanner}>
@@ -134,6 +123,13 @@ export default function ProfileScreen() {
 
       <View style={styles.section}>
         <ThemedText variant="subtitle">Rotina</ThemedText>
+
+        {medicationActionError ? (
+          <ErrorState
+            message="Não foi possível atualizar esse medicamento agora."
+            onRetry={() => setMedicationActionError(null)}
+          />
+        ) : null}
 
         {medicationsError ? (
           <ErrorState onRetry={refreshMedications} />
@@ -155,7 +151,7 @@ export default function ProfileScreen() {
                 onEdit={() => router.push(`/medication/${medication.id}/edit`)}
                 onToggleActive={() => {
                   setActive(medication.id, !medication.active).catch((err: unknown) => {
-                    setActionError(err instanceof Error ? err : new Error(String(err)));
+                    setMedicationActionError(err instanceof Error ? err : new Error(String(err)));
                   });
                 }}
               />

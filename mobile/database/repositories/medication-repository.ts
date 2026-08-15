@@ -1,8 +1,9 @@
 import * as Crypto from 'expo-crypto';
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-import { nowLocalTimestamp } from '@/domain/datetime';
+import { nowUtcIso } from '@/domain/datetime';
 import type { Medication } from '@/domain/types';
+import { InvalidPersistedDataError, assertValidMedicationInput, parseMedicationTimes } from '@/domain/validation';
 
 interface MedicationRow {
   id: string;
@@ -19,6 +20,10 @@ interface MedicationRow {
 }
 
 function toMedication(row: MedicationRow): Medication {
+  if (row.active !== 0 && row.active !== 1) {
+    throw new InvalidPersistedDataError(`Medication ${row.id} has an invalid active flag: ${row.active}.`);
+  }
+
   return {
     id: row.id,
     profileId: row.profile_id,
@@ -26,7 +31,7 @@ function toMedication(row: MedicationRow): Medication {
     dosage: row.dosage,
     quantityPerDose: row.quantity_per_dose,
     notes: row.notes,
-    times: JSON.parse(row.times) as string[],
+    times: parseMedicationTimes(row.times),
     startDate: row.start_date,
     active: row.active === 1,
     createdAt: row.created_at,
@@ -77,9 +82,9 @@ export class MedicationRepository {
   }
 
   async create(input: MedicationRoutineInput): Promise<Medication> {
+    const times = assertValidMedicationInput(input);
     const id = Crypto.randomUUID();
-    const timestamp = nowLocalTimestamp();
-    const times = [...input.times].sort();
+    const timestamp = nowUtcIso();
 
     await this.db.runAsync(
       `INSERT INTO medications
@@ -116,9 +121,17 @@ export class MedicationRepository {
    * Updates the routine configuration going forward. Never touches
    * dose_events, so history recorded under the previous configuration
    * stays exactly as it was.
+   *
+   * Explicit MVP decision (no schedule versioning yet): the new config
+   * takes effect immediately for every occurrence that has not been
+   * acted on. Since occurrences are computed at read time from the
+   * current row (see `domain/occurrences.ts`), a still-pending dose for
+   * "today at 20:00" simply stops existing if this edit removes 20:00
+   * from `times` — there is nothing to "un-schedule" because it was
+   * never a persisted row. Only a recorded DoseEvent is immutable.
    */
   async update(id: string, input: MedicationRoutineInput): Promise<void> {
-    const times = [...input.times].sort();
+    const times = assertValidMedicationInput(input);
     await this.db.runAsync(
       `UPDATE medications
        SET name = ?, dosage = ?, quantity_per_dose = ?, notes = ?, times = ?, start_date = ?, updated_at = ?
@@ -129,7 +142,7 @@ export class MedicationRepository {
       input.notes ?? null,
       JSON.stringify(times),
       input.startDate,
-      nowLocalTimestamp(),
+      nowUtcIso(),
       id
     );
   }
@@ -139,7 +152,7 @@ export class MedicationRepository {
     await this.db.runAsync(
       'UPDATE medications SET active = ?, updated_at = ? WHERE id = ?;',
       active ? 1 : 0,
-      nowLocalTimestamp(),
+      nowUtcIso(),
       id
     );
   }

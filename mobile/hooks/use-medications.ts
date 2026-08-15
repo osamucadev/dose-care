@@ -18,7 +18,7 @@ export function useMedications(profileId: string | undefined, options: { include
   const createMedication = useCallback(
     async (input: MedicationRoutineInput) => {
       const medication = await medicationService.createMedication(input);
-      refresh();
+      await refresh();
       return medication;
     },
     [refresh]
@@ -27,7 +27,7 @@ export function useMedications(profileId: string | undefined, options: { include
   const updateMedication = useCallback(
     async (id: string, input: MedicationRoutineInput) => {
       await medicationService.updateMedication(id, input);
-      refresh();
+      await refresh();
     },
     [refresh]
   );
@@ -35,7 +35,7 @@ export function useMedications(profileId: string | undefined, options: { include
   const setActive = useCallback(
     async (id: string, active: boolean) => {
       await medicationService.setMedicationActive(id, active);
-      refresh();
+      await refresh();
     },
     [refresh]
   );

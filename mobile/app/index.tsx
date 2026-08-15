@@ -9,14 +9,15 @@ import { ErrorState } from '@/components/ui/error-state';
 import { LoadingState } from '@/components/ui/loading-state';
 import { ScreenContainer } from '@/components/ui/screen-container';
 import { ThemedText } from '@/components/ui/themed-text';
+import { toLocalDateString } from '@/domain/datetime';
 import { computeNowAndNext, computeProfileDayStatus } from '@/domain/occurrences';
-import type { DoseEventStatus, DoseOccurrence } from '@/domain/types';
-import { doseTimeLabel } from '@/features/doses/dose-time';
+import { doseDayTimeLabel } from '@/features/doses/dose-time';
 import { NextPreview } from '@/features/doses/next-preview';
 import { NowCard } from '@/features/doses/now-card';
 import { UpcomingList } from '@/features/doses/upcoming-list';
 import { ProfileCard } from '@/features/profiles/profile-card';
 import { ProfileSelector } from '@/features/profiles/profile-selector';
+import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
 import { useDoses } from '@/hooks/use-doses';
 import { useProfiles } from '@/hooks/use-profiles';
 import { getProfileTypeMeta } from '@/theme/profile-types';
@@ -26,9 +27,8 @@ export default function HomeScreen() {
   const router = useRouter();
   const { profiles, loading: profilesLoading, error: profilesError, refresh: refreshProfiles } = useProfiles();
   const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses, recordDose } = useDoses();
+  const { actingOccurrenceId, actionError, performDoseAction, clearActionError } = useDoseActionHandler(recordDose);
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
-  const [actingOccurrenceId, setActingOccurrenceId] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<Error | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -47,18 +47,6 @@ export default function HomeScreen() {
   const visibleOccurrences = selectedProfileId
     ? occurrences.filter((o) => o.profileId === selectedProfileId)
     : occurrences;
-
-  async function handleAction(occurrence: DoseOccurrence, status: DoseEventStatus) {
-    setActingOccurrenceId(occurrence.id);
-    setActionError(null);
-    try {
-      await recordDose(occurrence, status);
-    } catch (err) {
-      setActionError(err instanceof Error ? err : new Error(String(err)));
-    } finally {
-      setActingOccurrenceId(null);
-    }
-  }
 
   if (profilesLoading) {
     return (
@@ -91,6 +79,7 @@ export default function HomeScreen() {
   }
 
   const now = new Date();
+  const todayStr = toLocalDateString(now);
   const nowNext = computeNowAndNext(visibleOccurrences, now);
   const nowProfile = nowNext.now ? profilesById[nowNext.now.profileId] : undefined;
   const nowMeta = nowProfile ? getProfileTypeMeta(nowProfile.type) : undefined;
@@ -108,7 +97,7 @@ export default function HomeScreen() {
           {actionError ? (
             <ErrorState
               message="Não foi possível registrar essa dose agora."
-              onRetry={() => setActionError(null)}
+              onRetry={clearActionError}
             />
           ) : null}
 
@@ -119,8 +108,8 @@ export default function HomeScreen() {
               profileAvatar={nowProfile?.avatar}
               profileTint={nowMeta?.tint}
               busy={actingOccurrenceId === nowNext.now.id}
-              onTaken={() => nowNext.now && handleAction(nowNext.now, 'taken')}
-              onSkip={() => nowNext.now && handleAction(nowNext.now, 'skipped')}
+              onTaken={() => nowNext.now && performDoseAction(nowNext.now, 'taken')}
+              onSkip={() => nowNext.now && performDoseAction(nowNext.now, 'skipped')}
             />
           ) : (
             <View style={styles.okBanner}>
@@ -149,7 +138,7 @@ export default function HomeScreen() {
                     key={profile.id}
                     profile={profile}
                     status={status}
-                    nextTime={nextOccurrence ? doseTimeLabel(nextOccurrence.scheduledAt) : null}
+                    nextTime={nextOccurrence ? doseDayTimeLabel(nextOccurrence.scheduledAt, todayStr) : null}
                     onPress={() => router.push(`/profile/${profile.id}`)}
                   />
                 );

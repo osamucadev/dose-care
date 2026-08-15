@@ -1,4 +1,5 @@
-export type ProfileType = 'child' | 'adult' | 'elderly' | 'pet' | 'plant';
+export const PROFILE_TYPE_VALUES = ['child', 'adult', 'elderly', 'pet', 'plant'] as const;
+export type ProfileType = (typeof PROFILE_TYPE_VALUES)[number];
 
 export interface Profile {
   id: string;
@@ -7,6 +8,7 @@ export interface Profile {
   avatar: string;
   color: string;
   notes: string | null;
+  /** UTC ISO 8601 timestamp. */
   createdAt: string;
 }
 
@@ -17,16 +19,18 @@ export interface Medication {
   dosage: string | null;
   quantityPerDose: string | null;
   notes: string | null;
-  /** Fixed daily times, e.g. ["08:00", "20:00"]. Always sorted ascending. */
+  /** Fixed daily times, e.g. ["08:00", "20:00"]. Always sorted, deduplicated. */
   times: string[];
   /** Local calendar date (YYYY-MM-DD) the routine starts being active. */
   startDate: string;
   active: boolean;
+  /** UTC ISO 8601 timestamps. */
   createdAt: string;
   updatedAt: string;
 }
 
-export type DoseEventStatus = 'taken' | 'skipped';
+export const DOSE_EVENT_STATUS_VALUES = ['taken', 'skipped'] as const;
+export type DoseEventStatus = (typeof DOSE_EVENT_STATUS_VALUES)[number];
 
 /**
  * The record of an action taken on a dose. This is the only persisted,
@@ -41,11 +45,12 @@ export interface DoseEvent {
   medicationNameSnapshot: string;
   dosageSnapshot: string | null;
   quantitySnapshot: string | null;
-  /** Local datetime (YYYY-MM-DDTHH:mm) this event answers for. */
+  /** Scheduled local datetime (YYYY-MM-DDTHH:mm) this event answers for — civil time, not UTC. */
   scheduledAt: string;
-  /** Local datetime (YYYY-MM-DDTHH:mm) the action was actually performed. */
+  /** UTC ISO 8601 timestamp of when the action was actually performed. */
   occurredAt: string;
   status: DoseEventStatus;
+  /** UTC ISO 8601 timestamp. */
   createdAt: string;
 }
 
@@ -63,7 +68,7 @@ export interface DoseOccurrence {
   medicationName: string;
   dosage: string | null;
   quantityPerDose: string | null;
-  /** Local datetime (YYYY-MM-DDTHH:mm) this dose is expected. */
+  /** Scheduled local datetime (YYYY-MM-DDTHH:mm) this dose is expected — civil time, not UTC. */
   scheduledAt: string;
   status: DoseOccurrenceStatus;
   event: DoseEvent | null;

@@ -11,7 +11,7 @@ export function useProfiles() {
   const createProfile = useCallback(
     async (input: CreateProfileInput) => {
       const profile = await profileService.createProfile(input);
-      refresh();
+      await refresh();
       return profile;
     },
     [refresh]
@@ -20,7 +20,7 @@ export function useProfiles() {
   const updateProfile = useCallback(
     async (id: string, input: UpdateProfileInput) => {
       await profileService.updateProfile(id, input);
-      refresh();
+      await refresh();
     },
     [refresh]
   );

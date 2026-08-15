@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ui/themed-text';
+import { formatUtcIsoToLocalTime } from '@/domain/datetime';
 import type { DoseEvent } from '@/domain/types';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { spacing } from '@/theme/tokens';
@@ -20,8 +21,10 @@ export function HistoryItem({ event }: { event: DoseEvent }) {
         {event.dosageSnapshot ? ` · ${event.dosageSnapshot}` : ''}
       </ThemedText>
       <ThemedText variant="muted">
+        {/* scheduledAt is already local civil time; occurredAt is stored as
+            a UTC instant and must be converted for display. */}
         {formatHistoryDate(event.scheduledAt)} · previsto {doseTimeLabel(event.scheduledAt)} · realizado{' '}
-        {doseTimeLabel(event.occurredAt)}
+        {formatUtcIsoToLocalTime(event.occurredAt)}
       </ThemedText>
       <ThemedText variant="label" style={{ color: taken ? success : danger }}>
         {taken ? '✓ Tomado' : '× Pulado'}

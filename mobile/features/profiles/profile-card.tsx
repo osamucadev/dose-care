@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ui/themed-text';
 import type { ProfileDayStatus } from '@/domain/occurrences';
 import type { Profile } from '@/domain/types';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { getProfileTypeMeta } from '@/theme/profile-types';
+import { getProfileTypeMeta, resolveProfileAccentColor } from '@/theme/profile-types';
 
 interface ProfileCardProps {
   profile: Profile;
@@ -37,7 +37,7 @@ export function ProfileCard({ profile, status, nextTime, onPress }: ProfileCardP
       accessibilityLabel={`${profile.name}, ${headline.label}${nextTime ? `, próximo às ${nextTime}` : ''}`}
       onPress={onPress}
       style={styles.pressable}>
-      <Card style={styles.card}>
+      <Card style={[styles.card, { borderColor: resolveProfileAccentColor(profile) }]}>
         <Avatar emoji={profile.avatar} tint={meta.tint} size={44} />
         <ThemedText variant="subtitle">{profile.name}</ThemedText>
         <View style={styles.statusRow}>

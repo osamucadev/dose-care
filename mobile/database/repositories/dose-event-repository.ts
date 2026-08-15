@@ -1,6 +1,7 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
 import type { DoseEvent } from '@/domain/types';
+import { assertValidDoseEvent, type DoseEventCandidate } from '@/domain/validation';
 
 interface DoseEventRow {
   id: string;
@@ -16,7 +17,7 @@ interface DoseEventRow {
 }
 
 function toDoseEvent(row: DoseEventRow): DoseEvent {
-  return {
+  const candidate: DoseEventCandidate = {
     id: row.id,
     profileId: row.profile_id,
     medicationId: row.medication_id,
@@ -25,15 +26,26 @@ function toDoseEvent(row: DoseEventRow): DoseEvent {
     quantitySnapshot: row.quantity_snapshot,
     scheduledAt: row.scheduled_at,
     occurredAt: row.occurred_at,
-    status: row.status as DoseEvent['status'],
+    status: row.status,
     createdAt: row.created_at,
   };
+
+  // Same validator used before INSERT (see create() below) — a
+  // corrupted row is caught the moment it is read, not trusted just
+  // because it made it into the database.
+  assertValidDoseEvent(candidate);
+  return candidate;
 }
 
-/** Thrown when an occurrence already has a recorded event (double action). */
+/**
+ * Thrown when an occurrence already has a recorded event — either a
+ * genuine double action (two taps before the UI could refresh) or a
+ * retry after the network/DB hiccuped. Phrased gently on purpose: this
+ * is informational, not a failure the user caused.
+ */
 export class DoseAlreadyResolvedError extends Error {
   constructor() {
-    super('Esta dose já foi registrada.');
+    super('Essa dose já foi registrada — nada a fazer por aqui.');
     this.name = 'DoseAlreadyResolvedError';
   }
 }
@@ -59,7 +71,21 @@ export class DoseEventRepository {
     return rows.map(toDoseEvent);
   }
 
+  /**
+   * Inserts a dose event. `assertValidDoseEvent` runs first — before
+   * any SQL — so a malformed event never reaches the database; TypeScript
+   * alone isn't trusted here, since `event` could originate from a
+   * caller that bypassed the type system (or from stale/corrupted state).
+   * The UNIQUE(medication_id, scheduled_at) constraint (see
+   * migrations/001_initial.ts) remains the last line of defense against
+   * a duplicate registration for the same occurrence — the UI is
+   * expected to already prevent this via the synchronous lock in
+   * `useDoseActionHandler`, but the constraint keeps that a guarantee,
+   * not just a convention.
+   */
   async create(event: DoseEvent): Promise<void> {
+    assertValidDoseEvent(event);
+
     try {
       await this.db.runAsync(
         `INSERT INTO dose_events

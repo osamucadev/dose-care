@@ -20,6 +20,13 @@ export function getDatabase(): Promise<SQLite.SQLiteDatabase> {
 
 async function openDatabase(): Promise<SQLite.SQLiteDatabase> {
   const db = await SQLite.openDatabaseAsync(DATABASE_NAME);
+
+  // Connection-level pragmas. Both are no-ops (or outright disallowed)
+  // inside a transaction, so they must run here — before any migration
+  // opens its own transaction — rather than inside runMigrations.
+  await db.execAsync('PRAGMA journal_mode = WAL;');
+  await db.execAsync('PRAGMA foreign_keys = ON;');
+
   await runMigrations(db);
   return db;
 }

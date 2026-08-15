@@ -5,7 +5,9 @@ import type { DoseEvent, DoseEventStatus, DoseOccurrence } from './types';
  * occurrence. Snapshots the medication fields as they are right now, so
  * later renaming/editing the medication never rewrites this entry.
  * id/occurredAt are injected instead of generated here to keep this
- * function pure and independently testable.
+ * function pure and independently testable — `occurredAt` is expected
+ * to be a UTC ISO 8601 timestamp (see `domain/datetime.ts#nowUtcIso`),
+ * while `occurrence.scheduledAt` stays a local civil-time string.
  */
 export function createDoseEventFromOccurrence(
   occurrence: DoseOccurrence,

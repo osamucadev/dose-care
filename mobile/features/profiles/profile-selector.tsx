@@ -4,7 +4,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { ThemedText } from '@/components/ui/themed-text';
 import type { Profile } from '@/domain/types';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { getProfileTypeMeta } from '@/theme/profile-types';
+import { getProfileTypeMeta, resolveProfileAccentColor } from '@/theme/profile-types';
 import { spacing } from '@/theme/tokens';
 
 interface ProfileSelectorProps {
@@ -40,7 +40,10 @@ export function ProfileSelector({ profiles, selectedId, onSelect }: ProfileSelec
             onPress={() => onSelect(profile.id)}
             style={[
               styles.profileChip,
-              { backgroundColor: selected ? meta.tint : surface, borderColor: selected ? meta.color : border },
+              {
+                backgroundColor: selected ? meta.tint : surface,
+                borderColor: selected ? resolveProfileAccentColor(profile) : border,
+              },
             ]}>
             <Avatar emoji={profile.avatar} tint={meta.tint} size={28} />
             <ThemedText variant="label">{profile.name}</ThemedText>

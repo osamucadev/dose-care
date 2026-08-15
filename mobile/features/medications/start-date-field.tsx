@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ui/themed-text';
-import { parseLocalDateTime, toLocalDateString } from '@/domain/datetime';
+import { parseScheduledLocalDateTime, toLocalDateString } from '@/domain/datetime';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { radius, spacing } from '@/theme/tokens';
 
@@ -41,7 +41,7 @@ export function StartDateField({ value, onChange, error }: StartDateFieldProps) 
       ) : null}
       {showPicker ? (
         <DateTimePicker
-          value={parseLocalDateTime(`${value}T00:00`)}
+          value={parseScheduledLocalDateTime(`${value}T00:00`)}
           mode="date"
           display={Platform.OS === 'ios' ? 'inline' : 'default'}
           onChange={handleChange}

@@ -1,4 +1,4 @@
-import type { ProfileType } from '@/domain/types';
+import type { Profile, ProfileType } from '@/domain/types';
 
 export interface ProfileTypeMeta {
   type: ProfileType;
@@ -60,4 +60,17 @@ const BY_TYPE: Record<ProfileType, ProfileTypeMeta> = Object.fromEntries(
 
 export function getProfileTypeMeta(type: ProfileType): ProfileTypeMeta {
   return BY_TYPE[type];
+}
+
+/**
+ * Resolves the accent color to show for a profile: `Profile.color` is
+ * already persisted by the create/edit form (currently always the
+ * selected type's default, since there is no dedicated color picker
+ * yet), so the UI must not silently ignore it and re-derive the type's
+ * color instead. Falls back to the type default only if the stored
+ * value is missing or blank.
+ */
+export function resolveProfileAccentColor(profile: Pick<Profile, 'color' | 'type'>): string {
+  const stored = profile.color?.trim();
+  return stored ? stored : getProfileTypeMeta(profile.type).color;
 }

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const PROFILE_TYPE_VALUES = ['child', 'adult', 'elderly', 'pet', 'plant'] as const;
+import { PROFILE_TYPE_VALUES } from '@/domain/types';
 
 export const profileFormSchema = z.object({
   name: z.string().trim().min(1, 'Informe um nome.').max(60, 'Nome muito longo.'),
