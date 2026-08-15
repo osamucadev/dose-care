@@ -1,0 +1,33 @@
+import { useFocusEffect } from '@react-navigation/native';
+import { useLocalSearchParams } from 'expo-router';
+import { useCallback } from 'react';
+
+import { ErrorState } from '@/components/ui/error-state';
+import { LoadingState } from '@/components/ui/loading-state';
+import { ScreenContainer } from '@/components/ui/screen-container';
+import { HistoryList } from '@/features/history/history-list';
+import { useHistory } from '@/hooks/use-history';
+
+export default function ProfileHistoryScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { events, loading, error, refresh } = useHistory(id);
+
+  useFocusEffect(
+    useCallback(() => {
+      refresh();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+  );
+
+  return (
+    <ScreenContainer>
+      {loading ? (
+        <LoadingState label="Carregando histórico…" />
+      ) : error ? (
+        <ErrorState onRetry={refresh} />
+      ) : (
+        <HistoryList events={events} />
+      )}
+    </ScreenContainer>
+  );
+}
