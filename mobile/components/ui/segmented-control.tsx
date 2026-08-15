@@ -23,6 +23,11 @@ interface SegmentedControlProps<T extends string> {
  * alone: the selected segment also gets a filled background *and* a
  * "✓" prefix on its label, and `accessibilityRole`/`accessibilityState`
  * carry the same information to screen readers.
+ *
+ * Tapping the already-selected segment is guaranteed to be a no-op —
+ * `onChange` simply isn't called — so screens can wire their "same
+ * tab" callback however they like (including navigation) without
+ * worrying about it firing redundantly or stacking a duplicate route.
  */
 export function SegmentedControl<T extends string>({
   options,
@@ -48,7 +53,9 @@ export function SegmentedControl<T extends string>({
             accessibilityRole="tab"
             accessibilityState={{ selected }}
             accessibilityLabel={option.label}
-            onPress={() => onChange(option.value)}
+            onPress={() => {
+              if (!selected) onChange(option.value);
+            }}
             style={[styles.segment, selected && { backgroundColor: tint }]}>
             <ThemedText variant="label" style={{ color: selected ? '#FFFFFF' : text }}>
               {selected ? '✓ ' : ''}

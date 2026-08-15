@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { ScreenContainer } from '@/components/ui/screen-container';
 import { ThemedText } from '@/components/ui/themed-text';
 import { toLocalDateString } from '@/domain/datetime';
 import { computeNowAndNext, computeProfileDayStatus } from '@/domain/occurrences';
+import { reconcileSelectedProfileId } from '@/domain/profile-selection';
 import { doseDayTimeLabel } from '@/features/doses/dose-time';
 import { NextPreview } from '@/features/doses/next-preview';
 import { NowCard } from '@/features/doses/now-card';
@@ -42,6 +43,15 @@ export default function HomeScreen() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
   );
+
+  // Drops a selection that no longer exists (e.g. the profile was just
+  // soft-deleted) back to "Todos". Gated on a settled, successful
+  // fetch so a transient loading/error state — where `profiles` is
+  // momentarily `[]` — never clears a still-valid selection.
+  useEffect(() => {
+    if (profilesLoading || profilesError) return;
+    setSelectedProfileId((current) => reconcileSelectedProfileId(current, profiles));
+  }, [profiles, profilesLoading, profilesError]);
 
   const profilesById = useMemo(() => Object.fromEntries(profiles.map((p) => [p.id, p])), [profiles]);
   const profileNameById = useMemo(

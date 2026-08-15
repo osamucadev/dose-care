@@ -106,7 +106,11 @@ export default function ProfileScreen() {
       <ProfileNavTabs
         active="overview"
         onSelectOverview={() => {}}
-        onSelectHistory={() => router.push(`/profile/${profile.id}/history`)}
+        // replace, not push: History's "Visão geral" tab replaces back
+        // to this route too, so neither tab stacks a duplicate copy of
+        // the other — switching between them stays a single screen in
+        // the navigation stack.
+        onSelectHistory={() => router.replace(`/profile/${profile.id}/history`)}
       />
 
       {actionError ? (
