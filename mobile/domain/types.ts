@@ -8,6 +8,13 @@ export interface Profile {
   avatar: string;
   color: string;
   notes: string | null;
+  /**
+   * Soft-delete flag. "Excluir perfil" in the UI only ever flips this
+   * to false — the row, its medications and its DoseEvents are never
+   * physically removed. Inactive profiles are excluded from the normal
+   * profile listing (see ProfileRepository.listAll).
+   */
+  active: boolean;
   /** UTC ISO 8601 timestamp. */
   createdAt: string;
 }

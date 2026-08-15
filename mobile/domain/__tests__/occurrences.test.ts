@@ -268,6 +268,26 @@ describe('computeNowAndNext', () => {
     expect(result.next).toBeNull();
     expect(result.upcomingToday).toEqual([]);
   });
+
+  it('reclassifies a dose from "next" to "now" as the clock advances past its scheduledAt, with no change to the occurrences themselves', () => {
+    // This is the pure-domain half of the reactive-clock fix: the same
+    // `occurrences` array, recomputed with a later `now`, must move a
+    // dose from "next" to "now" on its own — nothing about the
+    // occurrence changes, only the clock does.
+    const occurrences = generateOccurrencesForDate(
+      [makeMedication({ times: ['17:17'] })],
+      '2026-08-15',
+      []
+    );
+
+    const before = computeNowAndNext(occurrences, new Date(2026, 7, 15, 17, 16));
+    expect(before.now).toBeNull();
+    expect(before.next?.scheduledAt).toBe('2026-08-15T17:17');
+
+    const after = computeNowAndNext(occurrences, new Date(2026, 7, 15, 17, 17));
+    expect(after.now?.scheduledAt).toBe('2026-08-15T17:17');
+    expect(after.next).toBeNull();
+  });
 });
 
 describe('computeProfileDayStatus', () => {

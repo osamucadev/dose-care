@@ -5,7 +5,7 @@ import { minTouchTarget, radius, spacing } from '@/theme/tokens';
 
 import { ThemedText } from './themed-text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive';
 
 interface ButtonProps extends Omit<PressableProps, 'style'> {
   label: string;
@@ -19,12 +19,13 @@ export function Button({ label, variant = 'primary', loading, fullWidth, disable
   const surface = useThemeColor({}, 'surface');
   const border = useThemeColor({}, 'border');
   const text = useThemeColor({}, 'text');
+  const danger = useThemeColor({}, 'danger');
 
   const isDisabled = disabled || loading;
 
-  const backgroundColor = variant === 'primary' ? tint : variant === 'secondary' ? surface : 'transparent';
-  const borderColor = variant === 'primary' ? tint : border;
-  const labelColor = variant === 'primary' ? '#FFFFFF' : text;
+  const backgroundColor = variant === 'primary' ? tint : surface;
+  const borderColor = variant === 'primary' ? tint : variant === 'destructive' ? danger : border;
+  const labelColor = variant === 'primary' ? '#FFFFFF' : variant === 'destructive' ? danger : text;
 
   return (
     <Pressable
@@ -35,7 +36,7 @@ export function Button({ label, variant = 'primary', loading, fullWidth, disable
         styles.base,
         fullWidth && styles.fullWidth,
         {
-          backgroundColor,
+          backgroundColor: variant === 'ghost' ? 'transparent' : backgroundColor,
           borderColor,
           borderWidth: variant === 'ghost' ? 0 : 1,
           opacity: isDisabled ? 0.5 : pressed ? 0.85 : 1,

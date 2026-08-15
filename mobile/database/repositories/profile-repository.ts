@@ -12,12 +12,16 @@ interface ProfileRow {
   avatar: string;
   color: string;
   notes: string | null;
+  active: number;
   created_at: string;
 }
 
 function toProfile(row: ProfileRow): Profile {
   if (!isValidProfileType(row.type)) {
     throw new InvalidPersistedDataError(`Profile ${row.id} has an unknown type: ${row.type}.`);
+  }
+  if (row.active !== 0 && row.active !== 1) {
+    throw new InvalidPersistedDataError(`Profile ${row.id} has an invalid active flag: ${row.active}.`);
   }
 
   return {
@@ -27,6 +31,7 @@ function toProfile(row: ProfileRow): Profile {
     avatar: row.avatar,
     color: row.color,
     notes: row.notes,
+    active: row.active === 1,
     createdAt: row.created_at,
   };
 }
@@ -50,13 +55,22 @@ export interface UpdateProfileInput {
 export class ProfileRepository {
   constructor(private readonly db: SQLiteDatabase) {}
 
-  async listAll(): Promise<Profile[]> {
-    const rows = await this.db.getAllAsync<ProfileRow>(
-      'SELECT * FROM profiles ORDER BY created_at ASC;'
-    );
+  /**
+   * Active profiles by default — this is what the Home screen, the
+   * profile selector and the aggregated cards use. Pass
+   * `includeInactive` for a future archived-profiles view; nothing in
+   * this MVP calls it yet.
+   */
+  async listAll(options: { includeInactive?: boolean } = {}): Promise<Profile[]> {
+    const rows = options.includeInactive
+      ? await this.db.getAllAsync<ProfileRow>('SELECT * FROM profiles ORDER BY created_at ASC;')
+      : await this.db.getAllAsync<ProfileRow>(
+          'SELECT * FROM profiles WHERE active = 1 ORDER BY created_at ASC;'
+        );
     return rows.map(toProfile);
   }
 
+  /** Unfiltered by active — used to look a specific profile up by id regardless of its state. */
   async getById(id: string): Promise<Profile | null> {
     const row = await this.db.getFirstAsync<ProfileRow>(
       'SELECT * FROM profiles WHERE id = ?;',
@@ -89,6 +103,7 @@ export class ProfileRepository {
       avatar: input.avatar,
       color: input.color,
       notes: input.notes ?? null,
+      active: true,
       createdAt,
     };
   }
@@ -104,5 +119,14 @@ export class ProfileRepository {
       input.notes ?? null,
       id
     );
+  }
+
+  /**
+   * Soft-delete/restore. Only ever touches `profiles.active` — the
+   * profile row, its medications and its dose_events are untouched, so
+   * history stays intact.
+   */
+  async setActive(id: string, active: boolean): Promise<void> {
+    await this.db.runAsync('UPDATE profiles SET active = ? WHERE id = ?;', active ? 1 : 0, id);
   }
 }

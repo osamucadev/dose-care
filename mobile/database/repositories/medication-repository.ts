@@ -66,9 +66,21 @@ export class MedicationRepository {
     return rows.map(toMedication);
   }
 
+  /**
+   * Active medications across every profile, for the Home aggregated
+   * view. A medication being `active` is not enough on its own — its
+   * profile must also be active, or a "deleted" (soft) profile would
+   * keep generating dose occurrences forever. Enforced here with an
+   * EXISTS subquery rather than trusting the caller to also filter the
+   * profile list, since this is the query that actually feeds
+   * occurrence generation.
+   */
   async listActiveForAllProfiles(): Promise<Medication[]> {
     const rows = await this.db.getAllAsync<MedicationRow>(
-      'SELECT * FROM medications WHERE active = 1 ORDER BY created_at ASC;'
+      `SELECT m.* FROM medications m
+       WHERE m.active = 1
+         AND EXISTS (SELECT 1 FROM profiles p WHERE p.id = m.profile_id AND p.active = 1)
+       ORDER BY m.created_at ASC;`
     );
     return rows.map(toMedication);
   }

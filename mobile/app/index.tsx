@@ -20,6 +20,7 @@ import { ProfileSelector } from '@/features/profiles/profile-selector';
 import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
 import { useDoses } from '@/hooks/use-doses';
 import { useProfiles } from '@/hooks/use-profiles';
+import { useReactiveNow } from '@/hooks/use-reactive-now';
 import { getProfileTypeMeta } from '@/theme/profile-types';
 import { spacing } from '@/theme/tokens';
 
@@ -29,6 +30,10 @@ export default function HomeScreen() {
   const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses, recordDose } = useDoses();
   const { actingOccurrenceId, actionError, performDoseAction, clearActionError } = useDoseActionHandler(recordDose);
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
+  // Called on foreground return and on local day rollover — see
+  // useReactiveNow. Regular minute ticks reclassify Agora/Próximo from
+  // the occurrences already in memory and never touch SQLite.
+  const now = useReactiveNow({ onStale: refreshDoses });
 
   useFocusEffect(
     useCallback(() => {
@@ -78,7 +83,6 @@ export default function HomeScreen() {
     );
   }
 
-  const now = new Date();
   const todayStr = toLocalDateString(now);
   const nowNext = computeNowAndNext(visibleOccurrences, now);
   const nowProfile = nowNext.now ? profilesById[nowNext.now.profileId] : undefined;

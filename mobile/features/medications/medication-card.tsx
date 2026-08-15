@@ -10,9 +10,11 @@ interface MedicationCardProps {
   medication: Medication;
   onEdit: () => void;
   onToggleActive: () => void;
+  /** True while an activate/deactivate request for this medication is in flight. */
+  busy?: boolean;
 }
 
-export function MedicationCard({ medication, onEdit, onToggleActive }: MedicationCardProps) {
+export function MedicationCard({ medication, onEdit, onToggleActive, busy }: MedicationCardProps) {
   return (
     <Card>
       <View style={styles.header}>
@@ -29,11 +31,12 @@ export function MedicationCard({ medication, onEdit, onToggleActive }: Medicatio
       ) : null}
 
       <View style={styles.actions}>
-        <Button label="Editar" variant="secondary" onPress={onEdit} />
+        <Button label="Editar" variant="secondary" onPress={onEdit} disabled={busy} />
         <Button
           label={medication.active ? 'Desativar' : 'Reativar'}
           variant="ghost"
           onPress={onToggleActive}
+          loading={busy}
         />
       </View>
     </Card>

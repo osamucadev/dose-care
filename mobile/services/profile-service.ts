@@ -21,3 +21,14 @@ export async function updateProfile(id: string, input: UpdateProfileInput): Prom
   const { profiles } = await getRepositories();
   await profiles.update(id, input);
 }
+
+/**
+ * Soft-delete: the UI presents this as "Excluir perfil," but it only
+ * flips `active` to false. The profile row, its medications and its
+ * DoseEvents all remain in the database — nothing is physically
+ * deleted, and no foreign key here cascades a delete.
+ */
+export async function deactivateProfile(id: string): Promise<void> {
+  const { profiles } = await getRepositories();
+  await profiles.setActive(id, false);
+}

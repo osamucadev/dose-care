@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar } from '@/components/ui/avatar';
@@ -15,10 +15,13 @@ import { NextPreview } from '@/features/doses/next-preview';
 import { NowCard } from '@/features/doses/now-card';
 import { UpcomingList } from '@/features/doses/upcoming-list';
 import { MedicationCard } from '@/features/medications/medication-card';
+import { ProfileNavTabs } from '@/features/profiles/profile-nav-tabs';
 import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
 import { useDoses } from '@/hooks/use-doses';
+import { useMedicationToggleHandler } from '@/hooks/use-medication-toggle-handler';
 import { useMedications } from '@/hooks/use-medications';
 import { useProfile } from '@/hooks/use-profile';
+import { useReactiveNow } from '@/hooks/use-reactive-now';
 import { getProfileTypeMeta, resolveProfileAccentColor } from '@/theme/profile-types';
 import { spacing } from '@/theme/tokens';
 
@@ -35,7 +38,16 @@ export default function ProfileScreen() {
   } = useMedications(id, { includeInactive: true });
   const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses, recordDose } = useDoses(id);
   const { actingOccurrenceId, actionError, performDoseAction, clearActionError } = useDoseActionHandler(recordDose);
-  const [medicationActionError, setMedicationActionError] = useState<Error | null>(null);
+  const {
+    togglingMedicationId,
+    toggleError,
+    performToggle,
+    clearToggleError,
+  } = useMedicationToggleHandler(setActive, refreshDoses);
+  // Called on foreground return and on local day rollover; regular
+  // minute ticks just reclassify Agora/Próximo from occurrences already
+  // in memory, no SQLite access.
+  const now = useReactiveNow({ onStale: refreshDoses });
 
   useFocusEffect(
     useCallback(() => {
@@ -64,7 +76,6 @@ export default function ProfileScreen() {
 
   const meta = getProfileTypeMeta(profile.type);
   const accentColor = resolveProfileAccentColor(profile);
-  const now = new Date();
   const nowNext = computeNowAndNext(occurrences, now);
 
   return (
@@ -91,6 +102,12 @@ export default function ProfileScreen() {
           <ThemedText variant="muted">{meta.label}</ThemedText>
         </View>
       </View>
+
+      <ProfileNavTabs
+        active="overview"
+        onSelectOverview={() => {}}
+        onSelectHistory={() => router.push(`/profile/${profile.id}/history`)}
+      />
 
       {actionError ? (
         <ErrorState message="Não foi possível registrar essa dose agora." onRetry={clearActionError} />
@@ -124,10 +141,10 @@ export default function ProfileScreen() {
       <View style={styles.section}>
         <ThemedText variant="subtitle">Rotina</ThemedText>
 
-        {medicationActionError ? (
+        {toggleError ? (
           <ErrorState
             message="Não foi possível atualizar esse medicamento agora."
-            onRetry={() => setMedicationActionError(null)}
+            onRetry={clearToggleError}
           />
         ) : null}
 
@@ -148,12 +165,9 @@ export default function ProfileScreen() {
               <MedicationCard
                 key={medication.id}
                 medication={medication}
+                busy={togglingMedicationId === medication.id}
                 onEdit={() => router.push(`/medication/${medication.id}/edit`)}
-                onToggleActive={() => {
-                  setActive(medication.id, !medication.active).catch((err: unknown) => {
-                    setMedicationActionError(err instanceof Error ? err : new Error(String(err)));
-                  });
-                }}
+                onToggleActive={() => performToggle(medication.id, !medication.active)}
               />
             ))}
             <Button
@@ -164,8 +178,6 @@ export default function ProfileScreen() {
           </View>
         )}
       </View>
-
-      <Button label="Ver histórico" variant="ghost" onPress={() => router.push(`/profile/${profile.id}/history`)} />
     </ScreenContainer>
   );
 }

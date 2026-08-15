@@ -1,0 +1,30 @@
+import { migrations } from '../migrations';
+
+describe('migrations index', () => {
+  it('lists every migration in ascending version order, starting at 1', () => {
+    expect(migrations.map((m) => m.version)).toEqual([1, 2]);
+  });
+
+  it('keeps migration 001 exactly as the initial schema — no active column on profiles', () => {
+    const initial = migrations[0];
+    expect(initial.version).toBe(1);
+    expect(initial.name).toBe('initial_schema');
+
+    const profilesBlock = /CREATE TABLE IF NOT EXISTS profiles\s*\(([\s\S]*?)\);/.exec(initial.up);
+    expect(profilesBlock).not.toBeNull();
+    expect(profilesBlock![1]).not.toMatch(/active/i);
+
+    // Sanity: the other two tables from 001 are still there too.
+    expect(initial.up).toContain('CREATE TABLE IF NOT EXISTS medications');
+    expect(initial.up).toContain('CREATE TABLE IF NOT EXISTS dose_events');
+  });
+
+  it('migration 002 only adds Profile.active, with a safe default and a self-contained CHECK', () => {
+    const second = migrations[1];
+    expect(second.version).toBe(2);
+    expect(second.up).toMatch(/ALTER TABLE profiles ADD COLUMN active INTEGER NOT NULL DEFAULT 1/i);
+    expect(second.up).toMatch(/CHECK\s*\(\s*active\s+IN\s*\(\s*0\s*,\s*1\s*\)\s*\)/i);
+    // Only touches `profiles` — never medications or dose_events.
+    expect(second.up).not.toMatch(/CREATE TABLE|medications|dose_events/i);
+  });
+});

@@ -1,4 +1,5 @@
 import { initialSchema } from './001_initial';
+import { profileActiveColumn } from './002_profile_active';
 import type { Migration } from './types';
 
 /**
@@ -16,6 +17,6 @@ import type { Migration } from './types';
  *     schema half-applied — but that guarantee only holds if past
  *     migrations stay exactly as they were when they ran.
  */
-export const migrations: Migration[] = [initialSchema];
+export const migrations: Migration[] = [initialSchema, profileActiveColumn];
 
 export type { Migration };
