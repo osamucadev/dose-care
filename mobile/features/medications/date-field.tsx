@@ -7,13 +7,17 @@ import { parseScheduledLocalDateTime, toLocalDateString } from '@/domain/datetim
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { radius, spacing } from '@/theme/tokens';
 
-interface StartDateFieldProps {
+interface DateFieldProps {
+  label: string;
   value: string;
   onChange: (dateStr: string) => void;
   error?: string;
+  /** Local "YYYY-MM-DD" — the picker (and native UI) won't allow an earlier date. */
+  minimumDate?: string;
 }
 
-export function StartDateField({ value, onChange, error }: StartDateFieldProps) {
+/** A single local-date picker: tap to open the native date picker, styled like the rest of the form. */
+export function DateField({ label, value, onChange, error, minimumDate }: DateFieldProps) {
   const [showPicker, setShowPicker] = useState(false);
   const border = useThemeColor({}, error ? 'danger' : 'border');
   const surface = useThemeColor({}, 'surface');
@@ -26,10 +30,10 @@ export function StartDateField({ value, onChange, error }: StartDateFieldProps) 
 
   return (
     <View style={styles.container}>
-      <ThemedText variant="label">Início *</ThemedText>
+      <ThemedText variant="label">{label}</ThemedText>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`Data de início: ${value}`}
+        accessibilityLabel={`${label}: ${value}`}
         onPress={() => setShowPicker(true)}
         style={[styles.field, { borderColor: border, backgroundColor: surface }]}>
         <ThemedText variant="body">{value}</ThemedText>
@@ -43,6 +47,7 @@ export function StartDateField({ value, onChange, error }: StartDateFieldProps) 
         <DateTimePicker
           value={parseScheduledLocalDateTime(`${value}T00:00`)}
           mode="date"
+          minimumDate={minimumDate ? parseScheduledLocalDateTime(`${minimumDate}T00:00`) : undefined}
           display={Platform.OS === 'ios' ? 'inline' : 'default'}
           onChange={handleChange}
         />

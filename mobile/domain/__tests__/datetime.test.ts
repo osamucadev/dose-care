@@ -1,6 +1,8 @@
 import {
   addDaysToLocalDateString,
+  daysBetweenLocalDates,
   formatUtcIsoToLocalTime,
+  inclusiveDaySpan,
   isValidLocalDateString,
   isValidScheduledLocalDateTime,
   isValidTimeString,
@@ -46,6 +48,50 @@ describe('local date/time helpers', () => {
     expect(addDaysToLocalDateString('2026-08-15', 1)).toBe('2026-08-16');
     expect(addDaysToLocalDateString('2026-08-31', 1)).toBe('2026-09-01');
     expect(addDaysToLocalDateString('2026-12-31', 1)).toBe('2027-01-01');
+  });
+});
+
+describe('daysBetweenLocalDates', () => {
+  it('is zero for the same date', () => {
+    expect(daysBetweenLocalDates('2026-08-15', '2026-08-15')).toBe(0);
+  });
+
+  it('counts plain same-month differences', () => {
+    expect(daysBetweenLocalDates('2026-08-15', '2026-08-18')).toBe(3);
+  });
+
+  it('is negative when the second date comes first', () => {
+    expect(daysBetweenLocalDates('2026-08-18', '2026-08-15')).toBe(-3);
+  });
+
+  it('counts correctly across a month boundary', () => {
+    // Jan has 31 days: Jan 30 -> Feb 2 is 3 days.
+    expect(daysBetweenLocalDates('2026-01-30', '2026-02-02')).toBe(3);
+  });
+
+  it('counts correctly across a year boundary', () => {
+    expect(daysBetweenLocalDates('2026-12-30', '2027-01-02')).toBe(3);
+  });
+
+  it('handles a leap-year February correctly', () => {
+    // 2028 is a leap year: Feb has 29 days.
+    expect(daysBetweenLocalDates('2028-02-28', '2028-03-01')).toBe(2);
+    // 2026 is not: Feb has 28 days.
+    expect(daysBetweenLocalDates('2026-02-28', '2026-03-01')).toBe(1);
+  });
+});
+
+describe('inclusiveDaySpan', () => {
+  it('is 1 for a single-day treatment (start === end)', () => {
+    expect(inclusiveDaySpan('2026-08-15', '2026-08-15')).toBe(1);
+  });
+
+  it('counts both the start and end date', () => {
+    expect(inclusiveDaySpan('2026-08-15', '2026-08-22')).toBe(8);
+  });
+
+  it('counts correctly across a month/year boundary', () => {
+    expect(inclusiveDaySpan('2026-12-30', '2027-01-02')).toBe(4);
   });
 });
 

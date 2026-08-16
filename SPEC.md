@@ -924,21 +924,37 @@ Por padrão, utilizar a data atual.
 
 # 38. Data de término
 
-Opcional:
+Todo medicamento de rotina possui uma modalidade de término:
+
+```text
+Duração do tratamento:
+( ) Contínuo
+( ) Até uma data
+( ) Por quantidade de doses
+```
+
+Contínuo (padrão):
 
 ```text
 Término:
 [ sem data de término ]
 ```
 
-ou:
+Até uma data:
 
 ```text
 Até:
 30/08/2026
 ```
 
-Isso permite representar tratamentos temporários.
+Por quantidade de doses:
+
+```text
+Quantidade de doses:
+[ 10 ]
+```
+
+Isso permite representar tratamentos contínuos ou temporários, seja por data final, seja por um número fixo de doses programadas.
 
 ---
 

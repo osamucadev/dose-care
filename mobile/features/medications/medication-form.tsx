@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
@@ -7,9 +7,10 @@ import { TextField } from '@/components/ui/text-field';
 import { toLocalDateString } from '@/domain/datetime';
 import { spacing } from '@/theme/tokens';
 
+import { DateField } from './date-field';
 import { medicationFormSchema, type MedicationFormValues } from './medication-schema';
-import { StartDateField } from './start-date-field';
 import { TimesEditor } from './times-editor';
+import { TreatmentEndSection } from './treatment-end-section';
 
 interface MedicationFormProps {
   defaultValues?: Partial<MedicationFormValues>;
@@ -21,6 +22,7 @@ export function MedicationForm({ defaultValues, onSubmit, submitLabel }: Medicat
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<MedicationFormValues>({
     resolver: zodResolver(medicationFormSchema),
@@ -31,9 +33,18 @@ export function MedicationForm({ defaultValues, onSubmit, submitLabel }: Medicat
       notes: '',
       times: [],
       startDate: toLocalDateString(new Date()),
+      endMode: 'ongoing',
+      endDate: '',
+      totalScheduledDoses: '',
       ...defaultValues,
     },
   });
+
+  const startDate = useWatch({ control, name: 'startDate' });
+  const times = useWatch({ control, name: 'times' });
+  const endMode = useWatch({ control, name: 'endMode' });
+  const endDate = useWatch({ control, name: 'endDate' });
+  const totalScheduledDoses = useWatch({ control, name: 'totalScheduledDoses' });
 
   return (
     <View style={styles.form}>
@@ -95,8 +106,35 @@ export function MedicationForm({ defaultValues, onSubmit, submitLabel }: Medicat
         control={control}
         name="startDate"
         render={({ field }) => (
-          <StartDateField value={field.value} onChange={field.onChange} error={errors.startDate?.message} />
+          <DateField label="Início *" value={field.value} onChange={field.onChange} error={errors.startDate?.message} />
         )}
+      />
+
+      <TreatmentEndSection
+        endMode={endMode}
+        onChangeEndMode={(mode) => {
+          setValue('endMode', mode, { shouldValidate: true });
+          // Clear whichever field doesn't apply to the new mode, so
+          // switching back and forth never leaves a stale value behind
+          // from a previously-selected mode.
+          if (mode === 'ongoing') {
+            setValue('endDate', '');
+            setValue('totalScheduledDoses', '');
+          } else if (mode === 'end_date') {
+            setValue('totalScheduledDoses', '');
+            if (!endDate) setValue('endDate', startDate);
+          } else {
+            setValue('endDate', '');
+          }
+        }}
+        startDate={startDate}
+        timesCount={times.length}
+        endDate={endDate ?? ''}
+        onChangeEndDate={(value) => setValue('endDate', value, { shouldValidate: true })}
+        endDateError={errors.endDate?.message}
+        totalScheduledDoses={totalScheduledDoses ?? ''}
+        onChangeTotalScheduledDoses={(value) => setValue('totalScheduledDoses', value, { shouldValidate: true })}
+        totalScheduledDosesError={errors.totalScheduledDoses?.message}
       />
 
       <Controller

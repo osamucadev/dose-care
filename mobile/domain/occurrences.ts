@@ -1,5 +1,6 @@
 import {
   addDaysToLocalDateString,
+  daysBetweenLocalDates,
   parseScheduledLocalDateTime,
   toLocalDateString,
   toScheduledLocalDateTime,
@@ -7,10 +8,68 @@ import {
 import type { DoseEvent, DoseOccurrence, Medication } from './types';
 
 /**
+ * The 0-based ordinal position a fixed time occupies in a medication's
+ * overall dose schedule, counting every fixed time on every day since
+ * `startDate`: day 0's first time is ordinal 0, its second time is
+ * ordinal 1, day 1's first time is ordinal `timesPerDay`, and so on.
+ * Used to decide whether a given occurrence is still within a
+ * `dose_count`-limited treatment's total — a skipped dose still
+ * consumes its ordinal, nothing here creates a replacement for it.
+ *
+ * `timeIndex` must be the time's index within `Medication.times`
+ * (already sorted ascending), so ordinals within a day increase with
+ * time-of-day.
+ */
+export function scheduledDoseOrdinal(
+  startDateStr: string,
+  dateStr: string,
+  timeIndex: number,
+  timesPerDay: number
+): number {
+  const daysSinceStart = daysBetweenLocalDates(startDateStr, dateStr);
+  return daysSinceStart * timesPerDay + timeIndex;
+}
+
+export interface DoseCountDurationEstimate {
+  /** Calendar days the treatment spans — the last day may have fewer than `timesPerDay` occurrences. */
+  days: number;
+  /** True when `totalScheduledDoses` divides evenly into `timesPerDay` (every day, including the last, is fully occupied). */
+  exact: boolean;
+  /** How many occurrences land on the final day (always between 1 and `timesPerDay`). */
+  dosesOnLastDay: number;
+}
+
+/**
+ * Organizational estimate only — never a medical recommendation.
+ * E.g. 60 scheduled doses at 2 fixed times/day span roughly 30 days.
+ * When `totalScheduledDoses` isn't an exact multiple of `timesPerDay`,
+ * `exact` is false and the caller should say so: the last day only
+ * gets `dosesOnLastDay` of the treatment's occurrences, not a full day.
+ */
+export function estimateDoseCountDuration(
+  totalScheduledDoses: number,
+  timesPerDay: number
+): DoseCountDurationEstimate {
+  const days = Math.ceil(totalScheduledDoses / timesPerDay);
+  const dosesOnLastDay = totalScheduledDoses - (days - 1) * timesPerDay;
+  return { days, exact: dosesOnLastDay === timesPerDay, dosesOnLastDay };
+}
+
+/**
  * Builds the doses expected on `dateStr` for the given medications.
- * Only active medications whose startDate has already begun produce
+ * Only active medications whose startDate has already begun, and whose
+ * treatment-end configuration still covers `dateStr`, produce
  * occurrences — this list is never persisted, it is recomputed from the
  * Medication config plus whatever DoseEvents already exist for that day.
+ *
+ * Treatment end modes:
+ * - `ongoing`: no upper bound, unchanged behavior.
+ * - `end_date`: no occurrences after `endDate` — `dateStr === endDate`
+ *   still generates normally (inclusive).
+ * - `dose_count`: only the first `totalScheduledDoses` ordinal
+ *   positions (see `scheduledDoseOrdinal`) generate; this is computed
+ *   directly from the date, never by walking every day since
+ *   `startDate`, so a start date far in the past stays cheap.
  */
 export function generateOccurrencesForDate(
   medications: Medication[],
@@ -22,8 +81,17 @@ export function generateOccurrencesForDate(
   for (const medication of medications) {
     if (!medication.active) continue;
     if (medication.startDate > dateStr) continue;
+    if (medication.endMode === 'end_date' && medication.endDate !== null && dateStr > medication.endDate) {
+      continue;
+    }
 
-    for (const time of medication.times) {
+    for (let timeIndex = 0; timeIndex < medication.times.length; timeIndex++) {
+      if (medication.endMode === 'dose_count' && medication.totalScheduledDoses !== null) {
+        const ordinal = scheduledDoseOrdinal(medication.startDate, dateStr, timeIndex, medication.times.length);
+        if (ordinal >= medication.totalScheduledDoses) continue;
+      }
+
+      const time = medication.times[timeIndex];
       const scheduledAt = toScheduledLocalDateTime(dateStr, time);
       const event = events.find(
         (e) => e.medicationId === medication.id && e.scheduledAt === scheduledAt

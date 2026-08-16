@@ -19,6 +19,9 @@ export interface Profile {
   createdAt: string;
 }
 
+export const TREATMENT_END_MODE_VALUES = ['ongoing', 'end_date', 'dose_count'] as const;
+export type TreatmentEndMode = (typeof TREATMENT_END_MODE_VALUES)[number];
+
 export interface Medication {
   id: string;
   profileId: string;
@@ -31,6 +34,24 @@ export interface Medication {
   /** Local calendar date (YYYY-MM-DD) the routine starts being active. */
   startDate: string;
   active: boolean;
+  /**
+   * How the treatment's routine occurrences come to an end:
+   * - `ongoing`: no end — endDate and totalScheduledDoses are both null.
+   * - `end_date`: occurrences stop after endDate (inclusive) —
+   *   totalScheduledDoses is null.
+   * - `dose_count`: occurrences stop once totalScheduledDoses
+   *   positions have been scheduled (skipped doses still count) —
+   *   endDate is null.
+   * These three combinations are mutually exclusive; see
+   * `domain/validation.ts#assertValidTreatmentEndMode` for the single
+   * place that enforces it (SQLite's ALTER TABLE cannot express a
+   * cross-column CHECK for this).
+   */
+  endMode: TreatmentEndMode;
+  /** Local calendar date (YYYY-MM-DD), inclusive. Only set when endMode is `end_date`. */
+  endDate: string | null;
+  /** Positive integer. Only set when endMode is `dose_count`. Counts scheduled doses, not pills/capsules/ml. */
+  totalScheduledDoses: number | null;
   /** UTC ISO 8601 timestamps. */
   createdAt: string;
   updatedAt: string;

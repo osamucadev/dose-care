@@ -16,6 +16,7 @@ O MVP inclui:
 - exclusão lógica de perfis, preservando seus dados e histórico;
 - cadastro e edição de medicamentos de rotina;
 - um ou mais horários fixos por medicamento;
+- tratamentos contínuos, com data final ou por quantidade de doses programadas;
 - ativação e desativação de medicamentos;
 - visão agregada de todos os perfis;
 - identificação da dose que precisa de atenção agora;
@@ -159,7 +160,6 @@ As telas não executam SQL diretamente. O acesso aos dados passa por repositóri
 
 Algumas evoluções previstas são:
 
-- tratamentos contínuos, com data final ou quantidade de doses;
 - medicamentos de uso SOS;
 - adiamento de doses;
 - notificações locais;

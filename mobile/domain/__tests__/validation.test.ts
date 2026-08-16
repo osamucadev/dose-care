@@ -1,9 +1,11 @@
-import type { DoseEventCandidate } from '../validation';
+import type { DoseEventCandidate, MedicationInputToValidate, TreatmentEndModeCandidate } from '../validation';
 import {
   InvalidPersistedDataError,
+  MAX_TOTAL_SCHEDULED_DOSES,
   assertValidDoseEvent,
   assertValidMedicationInput,
   assertValidProfileInput,
+  assertValidTreatmentEndMode,
   isValidDoseEventStatus,
   isValidProfileType,
   parseMedicationTimes,
@@ -49,37 +51,189 @@ describe('isValidProfileType / isValidDoseEventStatus', () => {
   });
 });
 
+function makeMedicationInput(overrides: Partial<MedicationInputToValidate> = {}): MedicationInputToValidate {
+  return {
+    name: 'Losartana',
+    times: ['08:00'],
+    startDate: '2026-08-15',
+    endMode: 'ongoing',
+    endDate: null,
+    totalScheduledDoses: null,
+    ...overrides,
+  };
+}
+
 describe('assertValidMedicationInput', () => {
   it('returns times deduplicated and sorted when the input is valid', () => {
-    const result = assertValidMedicationInput({
-      name: 'Losartana',
-      times: ['20:00', '08:00', '08:00'],
-      startDate: '2026-08-15',
-    });
-    expect(result).toEqual(['08:00', '20:00']);
+    const result = assertValidMedicationInput(makeMedicationInput({ times: ['20:00', '08:00', '08:00'] }));
+    expect(result.times).toEqual(['08:00', '20:00']);
+    expect(result.endMode).toBe('ongoing');
   });
 
   it('rejects a blank name', () => {
-    expect(() =>
-      assertValidMedicationInput({ name: '   ', times: ['08:00'], startDate: '2026-08-15' })
-    ).toThrow(InvalidPersistedDataError);
+    expect(() => assertValidMedicationInput(makeMedicationInput({ name: '   ' }))).toThrow(
+      InvalidPersistedDataError
+    );
   });
 
   it('rejects an empty times list', () => {
-    expect(() =>
-      assertValidMedicationInput({ name: 'Losartana', times: [], startDate: '2026-08-15' })
-    ).toThrow(InvalidPersistedDataError);
+    expect(() => assertValidMedicationInput(makeMedicationInput({ times: [] }))).toThrow(
+      InvalidPersistedDataError
+    );
   });
 
   it('rejects an invalid time', () => {
-    expect(() =>
-      assertValidMedicationInput({ name: 'Losartana', times: ['8h'], startDate: '2026-08-15' })
-    ).toThrow(InvalidPersistedDataError);
+    expect(() => assertValidMedicationInput(makeMedicationInput({ times: ['8h'] }))).toThrow(
+      InvalidPersistedDataError
+    );
   });
 
   it('rejects an invalid start date', () => {
+    expect(() => assertValidMedicationInput(makeMedicationInput({ startDate: '2026-02-30' }))).toThrow(
+      InvalidPersistedDataError
+    );
+  });
+
+  it('normalizes endDate/totalScheduledDoses to null for whichever field does not apply to endMode', () => {
+    const result = assertValidMedicationInput(
+      makeMedicationInput({ endMode: 'end_date', endDate: '2026-08-20' })
+    );
+    expect(result.endDate).toBe('2026-08-20');
+    expect(result.totalScheduledDoses).toBeNull();
+  });
+
+  it('rejects an end-mode combination that assertValidTreatmentEndMode would reject', () => {
     expect(() =>
-      assertValidMedicationInput({ name: 'Losartana', times: ['08:00'], startDate: '2026-02-30' })
+      assertValidMedicationInput(makeMedicationInput({ endMode: 'end_date', endDate: '2026-08-01' }))
+    ).toThrow(InvalidPersistedDataError); // 2026-08-01 is before startDate 2026-08-15
+  });
+});
+
+function makeEndModeCandidate(
+  overrides: Partial<TreatmentEndModeCandidate> = {}
+): TreatmentEndModeCandidate {
+  return {
+    endMode: 'ongoing',
+    endDate: null,
+    totalScheduledDoses: null,
+    startDate: '2026-08-15',
+    ...overrides,
+  };
+}
+
+describe('assertValidTreatmentEndMode', () => {
+  it('accepts ongoing with no end date and no dose count', () => {
+    expect(() => assertValidTreatmentEndMode(makeEndModeCandidate())).not.toThrow();
+  });
+
+  it('rejects ongoing with an end date', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(makeEndModeCandidate({ endDate: '2026-09-01' }))
+    ).toThrow(InvalidPersistedDataError);
+  });
+
+  it('rejects ongoing with a total scheduled doses count', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(makeEndModeCandidate({ totalScheduledDoses: 10 }))
+    ).toThrow(InvalidPersistedDataError);
+  });
+
+  it('rejects an unknown end mode', () => {
+    expect(() => assertValidTreatmentEndMode(makeEndModeCandidate({ endMode: 'forever' }))).toThrow(
+      InvalidPersistedDataError
+    );
+  });
+
+  it('accepts end_date with a valid date on/after startDate', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'end_date', endDate: '2026-08-15' })
+      )
+    ).not.toThrow(); // same day as startDate — inclusive, must be allowed
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'end_date', endDate: '2026-08-22' })
+      )
+    ).not.toThrow();
+  });
+
+  it('rejects end_date with a date before startDate', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'end_date', endDate: '2026-08-14' })
+      )
+    ).toThrow(InvalidPersistedDataError);
+  });
+
+  it('rejects end_date with a missing or malformed date', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(makeEndModeCandidate({ endMode: 'end_date', endDate: null }))
+    ).toThrow(InvalidPersistedDataError);
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'end_date', endDate: '2026-02-30' })
+      )
+    ).toThrow(InvalidPersistedDataError);
+  });
+
+  it('rejects end_date with a total scheduled doses count also set', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'end_date', endDate: '2026-09-01', totalScheduledDoses: 5 })
+      )
+    ).toThrow(InvalidPersistedDataError);
+  });
+
+  it('accepts dose_count with a positive integer', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'dose_count', totalScheduledDoses: 6 })
+      )
+    ).not.toThrow();
+  });
+
+  it('rejects dose_count with a zero, negative, or non-integer count', () => {
+    for (const value of [0, -1, 1.5]) {
+      expect(() =>
+        assertValidTreatmentEndMode(
+          makeEndModeCandidate({ endMode: 'dose_count', totalScheduledDoses: value })
+        )
+      ).toThrow(InvalidPersistedDataError);
+    }
+  });
+
+  it('rejects dose_count with a missing count', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'dose_count', totalScheduledDoses: null })
+      )
+    ).toThrow(InvalidPersistedDataError);
+  });
+
+  it('rejects dose_count above the maximum', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({
+          endMode: 'dose_count',
+          totalScheduledDoses: MAX_TOTAL_SCHEDULED_DOSES + 1,
+        })
+      )
+    ).toThrow(InvalidPersistedDataError);
+  });
+
+  it('accepts dose_count exactly at the maximum', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'dose_count', totalScheduledDoses: MAX_TOTAL_SCHEDULED_DOSES })
+      )
+    ).not.toThrow();
+  });
+
+  it('rejects dose_count with an end date also set', () => {
+    expect(() =>
+      assertValidTreatmentEndMode(
+        makeEndModeCandidate({ endMode: 'dose_count', totalScheduledDoses: 6, endDate: '2026-09-01' })
+      )
     ).toThrow(InvalidPersistedDataError);
   });
 });

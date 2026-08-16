@@ -5,6 +5,7 @@ import { ErrorState } from '@/components/ui/error-state';
 import { LoadingState } from '@/components/ui/loading-state';
 import { ScreenContainer } from '@/components/ui/screen-container';
 import { MedicationForm } from '@/features/medications/medication-form';
+import { toMedicationRoutineInput } from '@/features/medications/medication-form-values';
 import { useMedication } from '@/hooks/use-medication';
 import * as medicationService from '@/services/medication-service';
 
@@ -42,17 +43,16 @@ export default function EditMedicationScreen() {
           notes: medication.notes ?? '',
           times: medication.times,
           startDate: medication.startDate,
+          endMode: medication.endMode,
+          endDate: medication.endDate ?? '',
+          totalScheduledDoses:
+            medication.totalScheduledDoses !== null ? String(medication.totalScheduledDoses) : '',
         }}
         onSubmit={async (values) => {
           try {
             await medicationService.updateMedication(medication.id, {
               profileId: medication.profileId,
-              name: values.name,
-              dosage: values.dosage || null,
-              quantityPerDose: values.quantityPerDose || null,
-              notes: values.notes || null,
-              times: values.times,
-              startDate: values.startDate,
+              ...toMedicationRoutineInput(values),
             });
             router.back();
           } catch (err) {

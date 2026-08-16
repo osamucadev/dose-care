@@ -2,8 +2,13 @@ import * as Crypto from 'expo-crypto';
 import type { SQLiteDatabase } from 'expo-sqlite';
 
 import { nowUtcIso } from '@/domain/datetime';
-import type { Medication } from '@/domain/types';
-import { InvalidPersistedDataError, assertValidMedicationInput, parseMedicationTimes } from '@/domain/validation';
+import type { Medication, TreatmentEndMode } from '@/domain/types';
+import {
+  InvalidPersistedDataError,
+  assertValidMedicationInput,
+  assertValidTreatmentEndMode,
+  parseMedicationTimes,
+} from '@/domain/validation';
 
 interface MedicationRow {
   id: string;
@@ -15,6 +20,9 @@ interface MedicationRow {
   times: string;
   start_date: string;
   active: number;
+  end_mode: string;
+  end_date: string | null;
+  total_scheduled_doses: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -23,6 +31,19 @@ function toMedication(row: MedicationRow): Medication {
   if (row.active !== 0 && row.active !== 1) {
     throw new InvalidPersistedDataError(`Medication ${row.id} has an invalid active flag: ${row.active}.`);
   }
+
+  // Same validator used before INSERT/UPDATE (see create()/update()
+  // below) — a corrupted row (or one from before migration 003, which
+  // defaults every existing medication to 'ongoing') is caught the
+  // moment it is read, not trusted just because it made it into the
+  // database.
+  const endModeCandidate = {
+    endMode: row.end_mode,
+    endDate: row.end_date,
+    totalScheduledDoses: row.total_scheduled_doses,
+    startDate: row.start_date,
+  };
+  assertValidTreatmentEndMode(endModeCandidate);
 
   return {
     id: row.id,
@@ -34,6 +55,9 @@ function toMedication(row: MedicationRow): Medication {
     times: parseMedicationTimes(row.times),
     startDate: row.start_date,
     active: row.active === 1,
+    endMode: endModeCandidate.endMode,
+    endDate: endModeCandidate.endDate,
+    totalScheduledDoses: endModeCandidate.totalScheduledDoses,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -48,6 +72,11 @@ export interface MedicationRoutineInput {
   /** Fixed daily times as "HH:mm", at least one required. */
   times: string[];
   startDate: string;
+  endMode: TreatmentEndMode;
+  /** Required (and only meaningful) when endMode is `end_date`. */
+  endDate?: string | null;
+  /** Required (and only meaningful) when endMode is `dose_count`. */
+  totalScheduledDoses?: number | null;
 }
 
 export class MedicationRepository {
@@ -94,22 +123,32 @@ export class MedicationRepository {
   }
 
   async create(input: MedicationRoutineInput): Promise<Medication> {
-    const times = assertValidMedicationInput(input);
+    const normalized = assertValidMedicationInput({
+      name: input.name,
+      times: input.times,
+      startDate: input.startDate,
+      endMode: input.endMode,
+      endDate: input.endDate ?? null,
+      totalScheduledDoses: input.totalScheduledDoses ?? null,
+    });
     const id = Crypto.randomUUID();
     const timestamp = nowUtcIso();
 
     await this.db.runAsync(
       `INSERT INTO medications
-        (id, profile_id, name, dosage, quantity_per_dose, notes, times, start_date, active, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?);`,
+        (id, profile_id, name, dosage, quantity_per_dose, notes, times, start_date, active, end_mode, end_date, total_scheduled_doses, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?);`,
       id,
       input.profileId,
       input.name,
       input.dosage ?? null,
       input.quantityPerDose ?? null,
       input.notes ?? null,
-      JSON.stringify(times),
+      JSON.stringify(normalized.times),
       input.startDate,
+      normalized.endMode,
+      normalized.endDate,
+      normalized.totalScheduledDoses,
       timestamp,
       timestamp
     );
@@ -121,9 +160,12 @@ export class MedicationRepository {
       dosage: input.dosage ?? null,
       quantityPerDose: input.quantityPerDose ?? null,
       notes: input.notes ?? null,
-      times,
+      times: normalized.times,
       startDate: input.startDate,
       active: true,
+      endMode: normalized.endMode,
+      endDate: normalized.endDate,
+      totalScheduledDoses: normalized.totalScheduledDoses,
       createdAt: timestamp,
       updatedAt: timestamp,
     };
@@ -135,25 +177,40 @@ export class MedicationRepository {
    * stays exactly as it was.
    *
    * Explicit MVP decision (no schedule versioning yet): the new config
+   * — including a changed endMode, endDate or totalScheduledDoses —
    * takes effect immediately for every occurrence that has not been
    * acted on. Since occurrences are computed at read time from the
    * current row (see `domain/occurrences.ts`), a still-pending dose for
    * "today at 20:00" simply stops existing if this edit removes 20:00
-   * from `times` — there is nothing to "un-schedule" because it was
-   * never a persisted row. Only a recorded DoseEvent is immutable.
+   * from `times`, moves `endDate` earlier, or lowers
+   * `totalScheduledDoses` below its ordinal position — there is
+   * nothing to "un-schedule" because it was never a persisted row.
+   * Only a recorded DoseEvent is immutable; the pending count is always
+   * whatever the current configuration says it is.
    */
   async update(id: string, input: MedicationRoutineInput): Promise<void> {
-    const times = assertValidMedicationInput(input);
+    const normalized = assertValidMedicationInput({
+      name: input.name,
+      times: input.times,
+      startDate: input.startDate,
+      endMode: input.endMode,
+      endDate: input.endDate ?? null,
+      totalScheduledDoses: input.totalScheduledDoses ?? null,
+    });
     await this.db.runAsync(
       `UPDATE medications
-       SET name = ?, dosage = ?, quantity_per_dose = ?, notes = ?, times = ?, start_date = ?, updated_at = ?
+       SET name = ?, dosage = ?, quantity_per_dose = ?, notes = ?, times = ?, start_date = ?,
+           end_mode = ?, end_date = ?, total_scheduled_doses = ?, updated_at = ?
        WHERE id = ?;`,
       input.name,
       input.dosage ?? null,
       input.quantityPerDose ?? null,
       input.notes ?? null,
-      JSON.stringify(times),
+      JSON.stringify(normalized.times),
       input.startDate,
+      normalized.endMode,
+      normalized.endDate,
+      normalized.totalScheduledDoses,
       nowUtcIso(),
       id
     );

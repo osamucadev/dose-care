@@ -32,6 +32,29 @@ export function addDaysToLocalDateString(dateStr: string, days: number): string 
   return toLocalDateString(new Date(year, month - 1, day + days));
 }
 
+/**
+ * Whole calendar days from `fromDateStr` to `toDateStr` (negative if
+ * `toDateStr` comes first). Deliberately built from `Date.UTC`, not the
+ * local `Date` constructor: this is civil-date arithmetic, not
+ * wall-clock arithmetic, and dividing a *local* time difference by
+ * 24h breaks across DST transitions (a local day can be 23 or 25
+ * hours). Building both instants as UTC midnight from the same y/m/d
+ * triples sidesteps DST entirely — UTC never observes it — so the
+ * division below is always an exact whole number of days.
+ */
+export function daysBetweenLocalDates(fromDateStr: string, toDateStr: string): number {
+  const [y1, m1, d1] = fromDateStr.split('-').map(Number);
+  const [y2, m2, d2] = toDateStr.split('-').map(Number);
+  const utcFrom = Date.UTC(y1, m1 - 1, d1);
+  const utcTo = Date.UTC(y2, m2 - 1, d2);
+  return Math.round((utcTo - utcFrom) / 86_400_000);
+}
+
+/** Length in days of a treatment from `startDateStr` to `endDateStr`, counting both ends. */
+export function inclusiveDaySpan(startDateStr: string, endDateStr: string): number {
+  return daysBetweenLocalDates(startDateStr, endDateStr) + 1;
+}
+
 // ---------------------------------------------------------------------
 // Local wall-clock time — "HH:mm". Used for Medication.times entries.
 // ---------------------------------------------------------------------

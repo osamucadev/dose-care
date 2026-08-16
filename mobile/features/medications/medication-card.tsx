@@ -6,6 +6,8 @@ import { ThemedText } from '@/components/ui/themed-text';
 import type { Medication } from '@/domain/types';
 import { spacing } from '@/theme/tokens';
 
+import { formatTreatmentEndSummary } from './treatment-summary';
+
 interface MedicationCardProps {
   medication: Medication;
   onEdit: () => void;
@@ -29,6 +31,7 @@ export function MedicationCard({ medication, onEdit, onToggleActive, busy }: Med
       {medication.quantityPerDose ? (
         <ThemedText variant="muted">{medication.quantityPerDose} por dose</ThemedText>
       ) : null}
+      <ThemedText variant="muted">{formatTreatmentEndSummary(medication)}</ThemedText>
 
       <View style={styles.actions}>
         <Button label="Editar" variant="secondary" onPress={onEdit} disabled={busy} />

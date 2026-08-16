@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ErrorState } from '@/components/ui/error-state';
 import { ScreenContainer } from '@/components/ui/screen-container';
 import { MedicationForm } from '@/features/medications/medication-form';
+import { toMedicationRoutineInput } from '@/features/medications/medication-form-values';
 import * as medicationService from '@/services/medication-service';
 
 export default function NewMedicationScreen() {
@@ -20,12 +21,7 @@ export default function NewMedicationScreen() {
           try {
             await medicationService.createMedication({
               profileId,
-              name: values.name,
-              dosage: values.dosage || null,
-              quantityPerDose: values.quantityPerDose || null,
-              notes: values.notes || null,
-              times: values.times,
-              startDate: values.startDate,
+              ...toMedicationRoutineInput(values),
             });
             router.back();
           } catch (err) {

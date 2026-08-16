@@ -1,8 +1,10 @@
 import {
   computeNowAndNext,
   computeProfileDayStatus,
+  estimateDoseCountDuration,
   generateOccurrencesForDate,
   generateOccurrencesForDateRange,
+  scheduledDoseOrdinal,
 } from '../occurrences';
 import type { DoseEvent, Medication } from '../types';
 
@@ -17,6 +19,9 @@ function makeMedication(overrides: Partial<Medication> = {}): Medication {
     times: ['08:00', '20:00'],
     startDate: '2026-08-01',
     active: true,
+    endMode: 'ongoing',
+    endDate: null,
+    totalScheduledDoses: null,
     createdAt: '2026-08-01T00:00:00.000Z',
     updatedAt: '2026-08-01T00:00:00.000Z',
     ...overrides,
@@ -312,5 +317,241 @@ describe('computeProfileDayStatus', () => {
     ];
     const occurrences = generateOccurrencesForDate([makeMedication()], '2026-08-15', events);
     expect(computeProfileDayStatus(occurrences, new Date(2026, 7, 15, 21, 0))).toBe('ok');
+  });
+});
+
+describe('scheduledDoseOrdinal', () => {
+  it('is 0 for the first time on the start date itself', () => {
+    expect(scheduledDoseOrdinal('2026-08-15', '2026-08-15', 0, 2)).toBe(0);
+  });
+
+  it('increases with the time-of-day index within the same day', () => {
+    expect(scheduledDoseOrdinal('2026-08-15', '2026-08-15', 1, 2)).toBe(1);
+  });
+
+  it('jumps by timesPerDay for each day since the start', () => {
+    expect(scheduledDoseOrdinal('2026-08-15', '2026-08-16', 0, 2)).toBe(2);
+    expect(scheduledDoseOrdinal('2026-08-15', '2026-08-16', 1, 2)).toBe(3);
+    expect(scheduledDoseOrdinal('2026-08-15', '2026-08-17', 0, 2)).toBe(4);
+  });
+
+  it('is correct across a month/year boundary', () => {
+    // 2026-12-30 -> 2027-01-02 is 3 days later.
+    expect(scheduledDoseOrdinal('2026-12-30', '2027-01-02', 0, 1)).toBe(3);
+  });
+
+  it('works with a single fixed time per day', () => {
+    expect(scheduledDoseOrdinal('2026-08-15', '2026-08-15', 0, 1)).toBe(0);
+    expect(scheduledDoseOrdinal('2026-08-15', '2026-08-20', 0, 1)).toBe(5);
+  });
+});
+
+describe('estimateDoseCountDuration', () => {
+  it('60 doses at 2 fixed times/day span exactly 30 days', () => {
+    const estimate = estimateDoseCountDuration(60, 2);
+    expect(estimate).toEqual({ days: 30, exact: true, dosesOnLastDay: 2 });
+  });
+
+  it('flags a non-exact estimate and reports how many doses land on the last day', () => {
+    // 5 doses at 2/day: day1 (2) + day2 (2) + day3 (1) = 3 days, last day partial.
+    const estimate = estimateDoseCountDuration(5, 2);
+    expect(estimate).toEqual({ days: 3, exact: false, dosesOnLastDay: 1 });
+  });
+
+  it('is exact for a single time per day', () => {
+    const estimate = estimateDoseCountDuration(10, 1);
+    expect(estimate).toEqual({ days: 10, exact: true, dosesOnLastDay: 1 });
+  });
+
+  it('is exact for a single scheduled dose', () => {
+    const estimate = estimateDoseCountDuration(1, 2);
+    expect(estimate).toEqual({ days: 1, exact: false, dosesOnLastDay: 1 });
+  });
+});
+
+describe('generateOccurrencesForDate — endMode "end_date"', () => {
+  it('generates normally on the end date itself (inclusive)', () => {
+    const medication = makeMedication({ endMode: 'end_date', endDate: '2026-08-15', times: ['08:00'] });
+    const occurrences = generateOccurrencesForDate([medication], '2026-08-15', []);
+    expect(occurrences.map((o) => o.scheduledAt)).toEqual(['2026-08-15T08:00']);
+  });
+
+  it('generates nothing the day after the end date', () => {
+    const medication = makeMedication({ endMode: 'end_date', endDate: '2026-08-15', times: ['08:00'] });
+    const occurrences = generateOccurrencesForDate([medication], '2026-08-16', []);
+    expect(occurrences).toHaveLength(0);
+  });
+
+  it('still generates normally on any date up to and including the end date', () => {
+    const medication = makeMedication({ endMode: 'end_date', endDate: '2026-08-20', times: ['08:00'] });
+    const occurrences = generateOccurrencesForDate([medication], '2026-08-10', []);
+    expect(occurrences).toHaveLength(1);
+  });
+});
+
+describe('generateOccurrencesForDate — endMode "dose_count"', () => {
+  it('a single scheduled dose only ever generates once, even with two fixed times per day', () => {
+    const medication = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 1,
+      times: ['08:00', '20:00'],
+      startDate: '2026-08-15',
+    });
+
+    const day1 = generateOccurrencesForDate([medication], '2026-08-15', []);
+    expect(day1.map((o) => o.scheduledAt)).toEqual(['2026-08-15T08:00']);
+
+    const day2 = generateOccurrencesForDate([medication], '2026-08-16', []);
+    expect(day2).toHaveLength(0);
+  });
+
+  it('a count smaller than the first day\'s times only generates that many on day 1', () => {
+    const medication = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 1,
+      times: ['08:00', '20:00'],
+      startDate: '2026-08-15',
+    });
+    const day1 = generateOccurrencesForDate([medication], '2026-08-15', []);
+    expect(day1.map((o) => o.scheduledAt)).toEqual(['2026-08-15T08:00']);
+  });
+
+  it('a count that is an exact multiple of timesPerDay stops cleanly at the end of a day', () => {
+    // 4 doses at 2/day = exactly 2 full days, nothing on day 3.
+    const medication = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 4,
+      times: ['08:00', '20:00'],
+      startDate: '2026-08-15',
+    });
+
+    expect(generateOccurrencesForDate([medication], '2026-08-15', [])).toHaveLength(2);
+    expect(generateOccurrencesForDate([medication], '2026-08-16', [])).toHaveLength(2);
+    expect(generateOccurrencesForDate([medication], '2026-08-17', [])).toHaveLength(0);
+  });
+
+  it('a count that ends mid-day only generates the remaining time(s) on the last day', () => {
+    // The task's worked example: 5 doses at 08:00/20:00 starting day 1
+    // -> day1: 08:00,20:00; day2: 08:00,20:00; day3: 08:00 only.
+    const medication = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 5,
+      times: ['08:00', '20:00'],
+      startDate: '2026-08-15',
+    });
+
+    expect(generateOccurrencesForDate([medication], '2026-08-15', []).map((o) => o.scheduledAt)).toEqual([
+      '2026-08-15T08:00',
+      '2026-08-15T20:00',
+    ]);
+    expect(generateOccurrencesForDate([medication], '2026-08-16', []).map((o) => o.scheduledAt)).toEqual([
+      '2026-08-16T08:00',
+      '2026-08-16T20:00',
+    ]);
+    expect(generateOccurrencesForDate([medication], '2026-08-17', []).map((o) => o.scheduledAt)).toEqual([
+      '2026-08-17T08:00',
+    ]);
+  });
+
+  it('a skipped dose does not extend the treatment — no automatic replacement occurrence', () => {
+    // 6 doses at 08:00/20:00 => exactly 3 days. Skip the very first one
+    // and confirm the total across the 3-day window stays 6, with no
+    // 4th day appearing to compensate.
+    const medication = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 6,
+      times: ['08:00', '20:00'],
+      startDate: '2026-08-15',
+    });
+    const skippedEvent = makeEvent({ scheduledAt: '2026-08-15T08:00', status: 'skipped' });
+
+    const window = generateOccurrencesForDateRange(
+      [medication],
+      '2026-08-15',
+      '2026-08-18',
+      [skippedEvent]
+    );
+
+    expect(window).toHaveLength(6);
+    expect(window.find((o) => o.scheduledAt === '2026-08-15T08:00')?.status).toBe('skipped');
+    expect(window.some((o) => o.scheduledAt.startsWith('2026-08-18'))).toBe(false);
+  });
+
+  it('counts ordinals from startDate even when startDate is far in the future', () => {
+    const medication = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 2,
+      times: ['08:00'],
+      startDate: '2030-01-01',
+    });
+
+    expect(generateOccurrencesForDate([medication], '2030-01-01', [])).toHaveLength(1);
+    expect(generateOccurrencesForDate([medication], '2030-01-02', [])).toHaveLength(1);
+    expect(generateOccurrencesForDate([medication], '2030-01-03', [])).toHaveLength(0);
+  });
+
+  it('computes the ordinal directly instead of walking every day since a distant startDate', () => {
+    // startDate is years in the past; only the single requested date is
+    // generated — if this walked day-by-day it would still return the
+    // right answer, but this test exists to pin the *contract* (single
+    // day in, single day of occurrences out) rather than performance.
+    const medication = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 100_000,
+      times: ['08:00'],
+      startDate: '2000-01-01',
+    });
+
+    const occurrences = generateOccurrencesForDate([medication], '2026-08-15', []);
+    expect(occurrences).toHaveLength(1);
+    expect(occurrences[0].scheduledAt).toBe('2026-08-15T08:00');
+  });
+});
+
+describe('generateOccurrencesForDate — editing preserves history', () => {
+  it('shrinking totalScheduledDoses removes future pending occurrences but leaves a recorded event snapshot untouched', () => {
+    const recordedEvent = makeEvent({ scheduledAt: '2026-08-15T08:00', status: 'taken' });
+    const original = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 6,
+      times: ['08:00', '20:00'],
+      startDate: '2026-08-15',
+    });
+    const edited: Medication = { ...original, totalScheduledDoses: 2 };
+
+    // Day 1 (ordinals 0 and 1) is still within the new, smaller limit —
+    // the recorded event is unaffected either way.
+    const day1Before = generateOccurrencesForDate([original], '2026-08-15', [recordedEvent]);
+    const day1After = generateOccurrencesForDate([edited], '2026-08-15', [recordedEvent]);
+    expect(day1Before.find((o) => o.scheduledAt === '2026-08-15T08:00')?.status).toBe('taken');
+    expect(day1After.find((o) => o.scheduledAt === '2026-08-15T08:00')?.status).toBe('taken');
+    expect(day1After).toHaveLength(2);
+
+    // Day 2 (ordinals 2 and 3) was valid before the edit, but the new
+    // limit of 2 cuts it off entirely — nothing was ever recorded for
+    // it, so there is nothing to preserve.
+    const day2Before = generateOccurrencesForDate([original], '2026-08-16', []);
+    const day2After = generateOccurrencesForDate([edited], '2026-08-16', []);
+    expect(day2Before).toHaveLength(2);
+    expect(day2After).toHaveLength(0);
+  });
+
+  it('switching from dose_count to ongoing keeps the recorded event and resumes generating occurrences', () => {
+    const recordedEvent = makeEvent({ scheduledAt: '2026-08-15T08:00', status: 'taken' });
+    const limited = makeMedication({
+      endMode: 'dose_count',
+      totalScheduledDoses: 2,
+      times: ['08:00'],
+      startDate: '2026-08-15',
+    });
+    const madeOngoing: Medication = { ...limited, endMode: 'ongoing', totalScheduledDoses: null };
+
+    // Previously cut off at day 2 (ordinal >= 2).
+    expect(generateOccurrencesForDate([limited], '2026-08-17', [])).toHaveLength(0);
+    // Now ongoing: day 3 generates again, and day 1's event is untouched.
+    expect(generateOccurrencesForDate([madeOngoing], '2026-08-17', [])).toHaveLength(1);
+    const day1 = generateOccurrencesForDate([madeOngoing], '2026-08-15', [recordedEvent]);
+    expect(day1[0].status).toBe('taken');
+    expect(day1[0].event).toEqual(recordedEvent);
   });
 });
