@@ -237,12 +237,22 @@ describe('computeNowAndNext', () => {
     expect(result.now?.scheduledAt).toBe('2026-08-15T07:00');
     // 12:00 is the first strictly-future dose — "next".
     expect(result.next?.scheduledAt).toBe('2026-08-15T12:00');
-    // The list keeps the other overdue dose (08:00, unlabeled) and the
-    // remaining future one (18:00), but never repeats 07:00 or 12:00.
-    expect(result.upcomingToday.map((o) => o.scheduledAt)).toEqual([
-      '2026-08-15T08:00',
-      '2026-08-15T18:00',
-    ]);
+    // Only the remaining future dose (18:00) is listed: never 07:00 or
+    // 12:00 again, and never 08:00, whose time already passed.
+    expect(result.upcomingToday.map((o) => o.scheduledAt)).toEqual(['2026-08-15T18:00']);
+  });
+
+  it('never lists an overdue dose as upcoming, even when there is no future dose left today', () => {
+    const occurrences = generateOccurrencesForDate(
+      [makeMedication({ times: ['01:20', '01:24', '01:31'] })],
+      '2026-08-15',
+      []
+    );
+
+    const result = computeNowAndNext(occurrences, new Date(2026, 7, 15, 1, 31));
+
+    expect(result.now?.scheduledAt).toBe('2026-08-15T01:20');
+    expect(result.upcomingToday).toEqual([]);
   });
 
   it('upcomingToday only contains occurrences from today, never from the lookahead window', () => {

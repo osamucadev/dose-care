@@ -161,7 +161,7 @@ export interface NowNextResult {
   now: DoseOccurrence | null;
   /** The first still-pending dose strictly in the future (scheduledAt > now) — may be tomorrow. */
   next: DoseOccurrence | null;
-  /** Every other still-pending dose scheduled *today*, excluding `now` and `next`. */
+  /** Every other still-pending dose scheduled later *today* (strictly in the future), excluding `next`. */
   upcomingToday: DoseOccurrence[];
 }
 
@@ -177,12 +177,12 @@ export interface NowNextResult {
  *   today's doses are all resolved or already surfaced as `now`,
  *   tomorrow — callers must pass in an `occurrences` list that already
  *   covers that lookahead window (see `generateOccurrencesForDateRange`).
- * - `upcomingToday` lists every other still-pending dose scheduled
- *   *today*, excluding whichever occurrence is already shown as `now`
- *   or `next`, so the "Próximas doses de hoje" list never repeats what
- *   the two highlighted cards already display. Other overdue doses
- *   besides `now` can still appear here — they are simply never
- *   labeled "next".
+ * - `upcomingToday` lists the other still-pending doses scheduled
+ *   later *today*: strictly in the future, excluding `next`, so the
+ *   "Próximos" list never repeats the highlighted cards and never
+ *   presents a dose whose time already passed as upcoming. Overdue
+ *   doses besides `now` are not listed; each one becomes `now` in turn
+ *   once the older one is resolved.
  */
 export function computeNowAndNext(occurrences: DoseOccurrence[], now: Date): NowNextResult {
   const todayStr = toLocalDateString(now);
@@ -197,7 +197,7 @@ export function computeNowAndNext(occurrences: DoseOccurrence[], now: Date): Now
   const next = strictlyFuture[0] ?? null;
 
   const highlightedIds = new Set([current?.id, next?.id].filter((id): id is string => Boolean(id)));
-  const upcomingToday = filterTodayOccurrences(pending, todayStr).filter((o) => !highlightedIds.has(o.id));
+  const upcomingToday = filterTodayOccurrences(strictlyFuture, todayStr).filter((o) => !highlightedIds.has(o.id));
 
   return { now: current, next, upcomingToday };
 }
