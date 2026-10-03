@@ -1,7 +1,7 @@
 import { StyleSheet, View, type ViewProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { radius, spacing } from '@/theme/tokens';
+import { radius, shadow, spacing } from '@/theme/tokens';
 
 export function Card({ style, ...rest }: ViewProps) {
   const backgroundColor = useThemeColor({}, 'surface');
@@ -16,10 +16,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: spacing.lg,
     gap: spacing.sm,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 1,
+    ...shadow,
   },
 });

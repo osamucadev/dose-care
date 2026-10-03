@@ -35,16 +35,16 @@ export function SegmentedControl<T extends string>({
   onChange,
   accessibilityLabel,
 }: SegmentedControlProps<T>) {
-  const surface = useThemeColor({}, 'surface');
-  const border = useThemeColor({}, 'border');
+  const tintSoft = useThemeColor({}, 'tintSoft');
   const tint = useThemeColor({}, 'tint');
+  const onTint = useThemeColor({}, 'onTint');
   const text = useThemeColor({}, 'text');
 
   return (
     <View
       accessibilityRole="tablist"
       accessibilityLabel={accessibilityLabel}
-      style={[styles.container, { backgroundColor: surface, borderColor: border }]}>
+      style={[styles.container, { backgroundColor: tintSoft }]}>
       {options.map((option) => {
         const selected = option.value === value;
         return (
@@ -57,7 +57,7 @@ export function SegmentedControl<T extends string>({
               if (!selected) onChange(option.value);
             }}
             style={[styles.segment, selected && { backgroundColor: tint }]}>
-            <ThemedText variant="label" style={{ color: selected ? '#FFFFFF' : text }}>
+            <ThemedText variant="label" style={{ color: selected ? onTint : text }}>
               {selected ? '✓ ' : ''}
               {option.label}
             </ThemedText>
@@ -71,16 +71,16 @@ export function SegmentedControl<T extends string>({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    borderWidth: 1,
-    borderRadius: radius.pill,
-    padding: spacing.xs / 2,
-    gap: spacing.xs / 2,
+    borderRadius: radius.md,
+    padding: spacing.xs,
+    gap: spacing.xs,
   },
   segment: {
     flex: 1,
     minHeight: minTouchTarget,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: radius.pill,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.xs,
   },
 });

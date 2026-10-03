@@ -1,4 +1,6 @@
+import type { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
+import type { SvgProps } from 'react-native-svg';
 
 import { spacing } from '@/theme/tokens';
 
@@ -7,6 +9,8 @@ import { ThemedText } from './themed-text';
 
 interface EmptyStateProps {
   emoji?: string;
+  /** An illustration from assets/svg/illustrations, shown instead of the emoji. */
+  illustration?: FC<SvgProps>;
   title: string;
   description?: string;
   actionLabel?: string;
@@ -14,10 +18,23 @@ interface EmptyStateProps {
 }
 
 /** Gentle, welcoming empty state — never phrased as a warning or failure. */
-export function EmptyState({ emoji = '🌿', title, description, actionLabel, onAction }: EmptyStateProps) {
+export function EmptyState({
+  emoji = '🌿',
+  illustration: Illustration,
+  title,
+  description,
+  actionLabel,
+  onAction,
+}: EmptyStateProps) {
   return (
     <View style={styles.container}>
-      <ThemedText style={styles.emoji}>{emoji}</ThemedText>
+      {Illustration ? (
+        <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+          <Illustration width={240} height={180} />
+        </View>
+      ) : (
+        <ThemedText style={styles.emoji}>{emoji}</ThemedText>
+      )}
       <ThemedText variant="subtitle" style={styles.center}>
         {title}
       </ThemedText>

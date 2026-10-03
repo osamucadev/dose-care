@@ -1,21 +1,33 @@
-import { ActivityIndicator, Pressable, StyleSheet, type PressableProps } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View, type PressableProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { minTouchTarget, radius, spacing } from '@/theme/tokens';
 
+import { Icon, type IconName } from './icon';
 import { ThemedText } from './themed-text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive';
+/**
+ * - `primary`: filled teal, the one main action of a block.
+ * - `secondary`: outlined, for alternatives next to a primary action.
+ * - `soft`: soft teal fill, for "add" style actions that sit in a list.
+ * - `ghost`: text only.
+ * - `destructive`: outlined in the danger color.
+ */
+export type ButtonVariant = 'primary' | 'secondary' | 'soft' | 'ghost' | 'destructive';
 
 interface ButtonProps extends Omit<PressableProps, 'style'> {
   label: string;
   variant?: ButtonVariant;
+  /** Leading icon. Decorative: the label stays the accessible name. */
+  icon?: IconName;
   loading?: boolean;
   fullWidth?: boolean;
 }
 
-export function Button({ label, variant = 'primary', loading, fullWidth, disabled, ...rest }: ButtonProps) {
+export function Button({ label, variant = 'primary', icon, loading, fullWidth, disabled, ...rest }: ButtonProps) {
   const tint = useThemeColor({}, 'tint');
+  const onTint = useThemeColor({}, 'onTint');
+  const tintSoft = useThemeColor({}, 'tintSoft');
   const surface = useThemeColor({}, 'surface');
   const border = useThemeColor({}, 'border');
   const text = useThemeColor({}, 'text');
@@ -23,9 +35,14 @@ export function Button({ label, variant = 'primary', loading, fullWidth, disable
 
   const isDisabled = disabled || loading;
 
-  const backgroundColor = variant === 'primary' ? tint : surface;
-  const borderColor = variant === 'primary' ? tint : variant === 'destructive' ? danger : border;
-  const labelColor = variant === 'primary' ? '#FFFFFF' : variant === 'destructive' ? danger : text;
+  const palette: Record<ButtonVariant, { background: string; border: string; label: string }> = {
+    primary: { background: tint, border: tint, label: onTint },
+    secondary: { background: surface, border, label: text },
+    soft: { background: tintSoft, border: tintSoft, label: tint },
+    ghost: { background: 'transparent', border: 'transparent', label: tint },
+    destructive: { background: surface, border: danger, label: danger },
+  };
+  const colors = palette[variant];
 
   return (
     <Pressable
@@ -36,19 +53,22 @@ export function Button({ label, variant = 'primary', loading, fullWidth, disable
         styles.base,
         fullWidth && styles.fullWidth,
         {
-          backgroundColor: variant === 'ghost' ? 'transparent' : backgroundColor,
-          borderColor,
+          backgroundColor: colors.background,
+          borderColor: colors.border,
           borderWidth: variant === 'ghost' ? 0 : 1,
           opacity: isDisabled ? 0.5 : pressed ? 0.85 : 1,
         },
       ]}
       {...rest}>
       {loading ? (
-        <ActivityIndicator color={labelColor} />
+        <ActivityIndicator color={colors.label} />
       ) : (
-        <ThemedText variant="label" style={{ color: labelColor }}>
-          {label}
-        </ThemedText>
+        <View style={styles.content}>
+          {icon ? <Icon name={icon} size={18} color={colors.label} /> : null}
+          <ThemedText variant="label" style={[styles.label, { color: colors.label }]}>
+            {label}
+          </ThemedText>
+        </View>
       )}
     </Pressable>
   );
@@ -63,4 +83,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   fullWidth: { alignSelf: 'stretch' },
+  content: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  label: { fontSize: 15 },
 });
