@@ -5,9 +5,11 @@ import { StatusBar } from 'expo-status-bar';
 import { Logo } from '@/components/ui/logo';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useDoseReminders } from '@/hooks/use-dose-reminders';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme() ?? 'light';
+  useDoseReminders();
   const palette = Colors[colorScheme];
 
   const navigationTheme = colorScheme === 'dark' ? DarkTheme : DefaultTheme;
