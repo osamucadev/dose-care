@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { minTouchTarget, radius, spacing } from '@/theme/tokens';
 
+import { Icon } from './icon';
 import { ThemedText } from './themed-text';
 
 export interface SegmentedOption<T extends string> {
@@ -21,7 +22,7 @@ interface SegmentedControlProps<T extends string> {
  * A tab-like control built from plain `Pressable`/`View` — no new
  * dependency, no global tab bar. Selection is never signaled by color
  * alone: the selected segment also gets a filled background *and* a
- * "✓" prefix on its label, and `accessibilityRole`/`accessibilityState`
+ * check icon before its label, and `accessibilityRole`/`accessibilityState`
  * carry the same information to screen readers.
  *
  * Tapping the already-selected segment is guaranteed to be a no-op —
@@ -57,10 +58,12 @@ export function SegmentedControl<T extends string>({
               if (!selected) onChange(option.value);
             }}
             style={[styles.segment, selected && { backgroundColor: tint }]}>
-            <ThemedText variant="label" style={{ color: selected ? onTint : text }}>
-              {selected ? '✓ ' : ''}
-              {option.label}
-            </ThemedText>
+            <View style={styles.segmentContent}>
+              {selected ? <Icon name="check" size={14} color={onTint} /> : null}
+              <ThemedText variant="label" style={{ color: selected ? onTint : text }}>
+                {option.label}
+              </ThemedText>
+            </View>
           </Pressable>
         );
       })}
@@ -83,4 +86,5 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
     paddingHorizontal: spacing.xs,
   },
+  segmentContent: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
 });

@@ -14,13 +14,17 @@ import ChevronRight from '@/assets/svg/icons/chevron-right.svg';
 import Circle from '@/assets/svg/icons/circle.svg';
 import Clock from '@/assets/svg/icons/clock.svg';
 import Close from '@/assets/svg/icons/close.svg';
+import Dot from '@/assets/svg/icons/dot.svg';
 import Edit from '@/assets/svg/icons/edit.svg';
 import History from '@/assets/svg/icons/history.svg';
 import Home from '@/assets/svg/icons/home.svg';
 import HomeFilled from '@/assets/svg/icons/home-filled.svg';
+import Leaf from '@/assets/svg/icons/leaf.svg';
 import Mail from '@/assets/svg/icons/mail.svg';
+import Minus from '@/assets/svg/icons/minus.svg';
 import Moon from '@/assets/svg/icons/moon.svg';
 import More from '@/assets/svg/icons/more.svg';
+import Package from '@/assets/svg/icons/package.svg';
 import Pill from '@/assets/svg/icons/pill.svg';
 import Plus from '@/assets/svg/icons/plus.svg';
 import Profiles from '@/assets/svg/icons/profiles.svg';
@@ -42,13 +46,17 @@ const ICONS = {
   circle: Circle,
   clock: Clock,
   close: Close,
+  dot: Dot,
   edit: Edit,
   history: History,
   home: Home,
   'home-filled': HomeFilled,
+  leaf: Leaf,
   mail: Mail,
+  minus: Minus,
   moon: Moon,
   more: More,
+  package: Package,
   pill: Pill,
   plus: Plus,
   profiles: Profiles,

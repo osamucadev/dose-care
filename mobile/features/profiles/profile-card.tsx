@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar } from '@/components/ui/avatar';
-import { Icon } from '@/components/ui/icon';
+import { Icon, type IconName } from '@/components/ui/icon';
 import { ThemedText } from '@/components/ui/themed-text';
 import type { ProfileDayStatus } from '@/domain/occurrences';
 import type { Profile } from '@/domain/types';
@@ -18,11 +18,11 @@ interface ProfileCardProps {
   onPress: () => void;
 }
 
-const HEADLINE: Record<ProfileDayStatus, { symbol: string; label: string }> = {
-  now: { symbol: '●', label: 'Agora' },
-  next: { symbol: '✓', label: 'Tudo ok' },
-  ok: { symbol: '✓', label: 'Tudo ok' },
-  none: { symbol: '·', label: 'Nenhum cuidado hoje' },
+const HEADLINE: Record<ProfileDayStatus, { icon: IconName; label: string }> = {
+  now: { icon: 'dot', label: 'Agora' },
+  next: { icon: 'check', label: 'Tudo ok' },
+  ok: { icon: 'check', label: 'Tudo ok' },
+  none: { icon: 'minus', label: 'Nenhum cuidado hoje' },
 };
 
 export function ProfileCard({ profile, status, nextTime, onPress }: ProfileCardProps) {
@@ -48,9 +48,12 @@ export function ProfileCard({ profile, status, nextTime, onPress }: ProfileCardP
         <ThemedText variant="subtitle" style={styles.name}>
           {profile.name}
         </ThemedText>
-        <ThemedText variant="label" style={{ color: headlineColor }}>
-          {headline.symbol} {headline.label}
-        </ThemedText>
+        <View style={styles.status}>
+          <Icon name={headline.icon} size={14} color={headlineColor} />
+          <ThemedText variant="label" style={{ color: headlineColor }}>
+            {headline.label}
+          </ThemedText>
+        </View>
         {nextTime ? <ThemedText variant="muted">Próximo: {nextTime}</ThemedText> : null}
       </View>
       <Icon name="chevron-right" size={20} />
@@ -70,4 +73,5 @@ const styles = StyleSheet.create({
   },
   text: { flex: 1, gap: 2 },
   name: { fontSize: 17, lineHeight: 22 },
+  status: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
 });

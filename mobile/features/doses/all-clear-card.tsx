@@ -17,8 +17,9 @@ export function AllClearCard() {
         <Icon name="check" size={22} color={success} />
       </View>
       <ThemedText variant="subtitle" style={styles.text}>
-        Tudo certo por aqui 🌿
+        Tudo certo por aqui
       </ThemedText>
+      <Icon name="leaf" size={22} color={success} />
     </Card>
   );
 }
