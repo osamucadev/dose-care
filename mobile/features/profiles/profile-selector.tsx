@@ -6,7 +6,7 @@ import type { Profile } from '@/domain/types';
 import { useProfileSurface } from '@/hooks/use-profile-surface';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { getProfileTypeMeta } from '@/theme/profile-types';
-import { radius, spacing } from '@/theme/tokens';
+import { minTouchTarget, radius, spacing } from '@/theme/tokens';
 
 interface ProfileSelectorProps {
   profiles: Profile[];
@@ -85,7 +85,7 @@ function ProfileChip({ profile, selected, onPress }: { profile: Profile; selecte
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: spacing.sm, paddingVertical: spacing.xs },
   chip: {
-    minHeight: 44,
+    minHeight: minTouchTarget,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: radius.pill,

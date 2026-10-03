@@ -7,7 +7,7 @@ import { Icon } from '@/components/ui/icon';
 import { ThemedText } from '@/components/ui/themed-text';
 import { toLocalTimeString } from '@/domain/datetime';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { radius, spacing } from '@/theme/tokens';
+import { minTouchTarget, radius, spacing } from '@/theme/tokens';
 
 interface TimesEditorProps {
   value: string[];
@@ -20,7 +20,7 @@ export function TimesEditor({ value, onChange, error }: TimesEditorProps) {
   const [pickerValue, setPickerValue] = useState(new Date());
   const tint = useThemeColor({}, 'tint');
   const tintSoft = useThemeColor({}, 'tintSoft');
-  const border = useThemeColor({}, 'border');
+  const inputBorder = useThemeColor({}, 'inputBorder');
   const danger = useThemeColor({}, 'danger');
 
   function addTime(timeStr: string) {
@@ -53,7 +53,8 @@ export function TimesEditor({ value, onChange, error }: TimesEditorProps) {
               accessibilityRole="button"
               accessibilityLabel={`Remover horário ${time}`}
               onPress={() => removeTime(time)}
-              hitSlop={8}>
+              hitSlop={8}
+              style={styles.removeButton}>
               <Icon name="close" size={16} color={tint} />
             </Pressable>
           </View>
@@ -77,7 +78,7 @@ export function TimesEditor({ value, onChange, error }: TimesEditorProps) {
       />
 
       {showPicker ? (
-        <View style={[styles.pickerWrap, { borderColor: border }]}>
+        <View style={[styles.pickerWrap, { borderColor: inputBorder }]}>
           <DateTimePicker
             value={pickerValue}
             mode="time"
@@ -115,10 +116,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    minHeight: 44,
-    paddingHorizontal: spacing.md,
+    minHeight: minTouchTarget,
+    paddingLeft: spacing.md,
+    paddingRight: spacing.xs,
     borderRadius: radius.pill,
   },
+  removeButton: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
   pickerWrap: { borderWidth: 1, borderRadius: radius.md, padding: spacing.sm, gap: spacing.sm },
   iosActions: { flexDirection: 'row', gap: spacing.sm },
   grow: { flex: 1 },

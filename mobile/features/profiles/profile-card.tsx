@@ -37,7 +37,7 @@ export function ProfileCard({ profile, status, nextTime, onPress }: ProfileCardP
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${profile.name}, ${headline.label}${nextTime ? `, próximo às ${nextTime}` : ''}`}
+      accessibilityLabel={`${profile.name}, ${headline.label}${nextTime ? `, próximo: ${nextTime}` : ''}`}
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,

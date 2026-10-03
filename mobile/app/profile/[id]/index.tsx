@@ -26,7 +26,7 @@ import { useProfile } from '@/hooks/use-profile';
 import { useReactiveNow } from '@/hooks/use-reactive-now';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { getProfileTypeMeta } from '@/theme/profile-types';
-import { spacing } from '@/theme/tokens';
+import { minTouchTarget, spacing } from '@/theme/tokens';
 
 export default function ProfileScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -197,5 +197,11 @@ const styles = StyleSheet.create({
   section: { gap: spacing.md },
   medicationList: { gap: spacing.md },
   headerText: { flex: 1, gap: 2 },
-  editButton: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.xs },
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    minHeight: minTouchTarget,
+    paddingHorizontal: spacing.xs,
+  },
 });
