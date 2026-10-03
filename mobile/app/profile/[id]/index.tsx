@@ -7,10 +7,12 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
+import { Icon } from '@/components/ui/icon';
 import { LoadingState } from '@/components/ui/loading-state';
 import { ScreenContainer } from '@/components/ui/screen-container';
 import { ThemedText } from '@/components/ui/themed-text';
 import { computeNowAndNext } from '@/domain/occurrences';
+import { AllClearCard } from '@/features/doses/all-clear-card';
 import { NextPreview } from '@/features/doses/next-preview';
 import { NowCard } from '@/features/doses/now-card';
 import { UpcomingList } from '@/features/doses/upcoming-list';
@@ -22,7 +24,8 @@ import { useMedicationToggleHandler } from '@/hooks/use-medication-toggle-handle
 import { useMedications } from '@/hooks/use-medications';
 import { useProfile } from '@/hooks/use-profile';
 import { useReactiveNow } from '@/hooks/use-reactive-now';
-import { getProfileTypeMeta, resolveProfileAccentColor } from '@/theme/profile-types';
+import { useThemeColor } from '@/hooks/use-theme-color';
+import { getProfileTypeMeta } from '@/theme/profile-types';
 import { spacing } from '@/theme/tokens';
 
 export default function ProfileScreen() {
@@ -48,6 +51,7 @@ export default function ProfileScreen() {
   // minute ticks just reclassify Agora/Próximo from occurrences already
   // in memory, no SQLite access.
   const now = useReactiveNow({ onStale: refreshDoses });
+  const tint = useThemeColor({}, 'tint');
 
   useFocusEffect(
     useCallback(() => {
@@ -75,7 +79,6 @@ export default function ProfileScreen() {
   }
 
   const meta = getProfileTypeMeta(profile.type);
-  const accentColor = resolveProfileAccentColor(profile);
   const nowNext = computeNowAndNext(occurrences, now);
 
   return (
@@ -88,16 +91,20 @@ export default function ProfileScreen() {
               accessibilityRole="button"
               accessibilityLabel="Editar perfil"
               hitSlop={8}
+              style={styles.editButton}
               onPress={() => router.push(`/profile/${profile.id}/edit`)}>
-              <ThemedText style={{ color: accentColor }}>✎ Editar</ThemedText>
+              <Icon name="edit" size={18} color={tint} />
+              <ThemedText variant="label" style={{ color: tint }}>
+                Editar
+              </ThemedText>
             </Pressable>
           ),
         }}
       />
 
       <View style={styles.header}>
-        <Avatar emoji={profile.avatar} tint={meta.tint} size={56} />
-        <View>
+        <Avatar emoji={profile.avatar} tint={meta.tint} size={64} />
+        <View style={styles.headerText}>
           <ThemedText variant="title">{profile.name}</ThemedText>
           <ThemedText variant="muted">{meta.label}</ThemedText>
         </View>
@@ -129,9 +136,7 @@ export default function ProfileScreen() {
           onSkip={() => nowNext.now && performDoseAction(nowNext.now, 'skipped')}
         />
       ) : (
-        <View style={styles.okBanner}>
-          <ThemedText variant="subtitle">Tudo certo por aqui 🌿</ThemedText>
-        </View>
+        <AllClearCard />
       )}
 
       {nowNext.next ? <NextPreview occurrence={nowNext.next} /> : null}
@@ -160,7 +165,7 @@ export default function ProfileScreen() {
           <EmptyState
             title="Nenhum medicamento de rotina"
             description="Medicamentos recorrentes aparecerão aqui e poderão gerar lembretes."
-            actionLabel="+ Adicionar medicamento (Rotina)"
+            actionLabel="Adicionar medicamento (Rotina)"
             onAction={() => router.push({ pathname: '/medication/new', params: { profileId: profile.id } })}
           />
         ) : (
@@ -175,8 +180,9 @@ export default function ProfileScreen() {
               />
             ))}
             <Button
-              label="+ Adicionar medicamento (Rotina)"
-              variant="secondary"
+              label="Adicionar medicamento (Rotina)"
+              icon="plus"
+              variant="soft"
               onPress={() => router.push({ pathname: '/medication/new', params: { profileId: profile.id } })}
             />
           </View>
@@ -190,5 +196,6 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   section: { gap: spacing.md },
   medicationList: { gap: spacing.md },
-  okBanner: { paddingVertical: spacing.md },
+  headerText: { flex: 1, gap: 2 },
+  editButton: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.xs },
 });
