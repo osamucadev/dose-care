@@ -4,14 +4,18 @@ import { Platform } from 'react-native';
 import { getRepositories } from '@/database/repositories';
 import { addDaysToLocalDateString, toLocalDateString } from '@/domain/datetime';
 import { generateOccurrencesForDateRange } from '@/domain/occurrences';
-import { planReminders, REMINDER_WINDOW_DAYS } from '@/domain/reminders';
+import { mergeReminderPlans, planReminders, planRestockReminders, REMINDER_WINDOW_DAYS } from '@/domain/reminders';
+
+import { listRestockItems } from './stock-queries';
 
 /**
- * Local dose reminders, delivered by the OS even when the app is closed.
+ * Local dose and restock reminders, delivered by the OS even when the app
+ * is closed.
  *
  * Nothing here is a source of truth: the scheduled notifications are a
  * disposable copy of the pending occurrences for the next
- * `REMINDER_WINDOW_DAYS`. Every sync cancels them all and schedules the
+ * `REMINDER_WINDOW_DAYS`, plus a daily reminder for each medication whose
+ * stock is low. Every sync cancels them all and schedules the
  * current plan again, so edits, deactivations, soft-deleted profiles
  * and recorded doses are reflected without tracking individual ids.
  *
@@ -43,7 +47,7 @@ export function configureReminders(): Promise<void> {
       if (Platform.OS === 'android') {
         await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
           name: 'Lembretes de doses',
-          description: 'Avisos no horário de cada dose da rotina.',
+          description: 'Avisos no horário de cada dose da rotina e quando o estoque estiver acabando.',
           importance: Notifications.AndroidImportance.HIGH,
           vibrationPattern: [0, 250, 250, 250],
           lightColor: '#1F6F72',
@@ -139,7 +143,11 @@ async function syncOnce(): Promise<void> {
 
   const occurrences = generateOccurrencesForDateRange(meds, todayStr, lastDayStr, eventsByDay.flat());
   const profileNameById = Object.fromEntries(activeProfiles.map((p) => [p.id, p.name]));
-  const plan = planReminders(occurrences, profileNameById, now);
+  const restockItems = await listRestockItems();
+  const plan = mergeReminderPlans([
+    planReminders(occurrences, profileNameById, now),
+    planRestockReminders(restockItems, profileNameById, now),
+  ]);
 
   await Notifications.cancelAllScheduledNotificationsAsync();
   for (const item of plan) {

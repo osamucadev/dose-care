@@ -1,4 +1,5 @@
-import { parseScheduledLocalDateTime } from './datetime';
+import { parseScheduledLocalDateTime, toLocalDateString } from './datetime';
+import { needsRestock, type StockStatus } from './stock';
 import type { DoseOccurrence } from './types';
 
 /**
@@ -60,4 +61,75 @@ export function planReminders(
       title: profileNameById[occurrence.profileId],
       body: reminderBody(occurrence),
     }));
+}
+
+/** Local time of the daily restock reminder: a calm morning moment, not tied to any dose. */
+export const RESTOCK_REMINDER_TIME = '09:00';
+
+export interface RestockItem {
+  medicationId: string;
+  profileId: string;
+  medicationName: string;
+  dosage: string | null;
+  status: StockStatus;
+}
+
+function doseCountLabel(n: number): string {
+  return n === 1 ? '1 dose' : `${n} doses`;
+}
+
+/**
+ * Restock reminder text. Informative, never alarming: running low is
+ * something to plan for, not a failure.
+ */
+export function restockBody(item: RestockItem, profileName: string): string {
+  const what = item.dosage ? `${item.medicationName} ${item.dosage}` : item.medicationName;
+  if (item.status.level === 'out') {
+    return `O estoque de ${what} (${profileName}) acabou. Quando comprar, registre no app.`;
+  }
+  return `Restam ${doseCountLabel(item.status.remaining)} de ${what} (${profileName}). Que tal providenciar mais?`;
+}
+
+/**
+ * One reminder per day at `RESTOCK_REMINDER_TIME` for every medication at
+ * or below the low-stock threshold, for each of the next `days` days
+ * (starting today if that time has not passed yet). Any stock change
+ * triggers a new sync, so these stop as soon as a refill is recorded.
+ */
+export function planRestockReminders(
+  items: RestockItem[],
+  profileNameById: Record<string, string>,
+  now: Date,
+  days: number = REMINDER_WINDOW_DAYS
+): ReminderPlanItem[] {
+  const [hour, minute] = RESTOCK_REMINDER_TIME.split(':').map(Number);
+  const firstOffset = now < new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute) ? 0 : 1;
+  const plan: ReminderPlanItem[] = [];
+
+  for (const item of items) {
+    const profileName = profileNameById[item.profileId];
+    if (profileName === undefined || !needsRestock(item.status)) continue;
+    for (let offset = firstOffset; offset < firstOffset + days; offset++) {
+      const fireAt = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset, hour, minute);
+      plan.push({
+        id: `restock_${item.medicationId}_${toLocalDateString(fireAt)}`,
+        profileId: item.profileId,
+        fireAt,
+        title: `Estoque de ${item.medicationName}`,
+        body: restockBody(item, profileName),
+      });
+    }
+  }
+  return plan;
+}
+
+/** Dose and restock reminders together, earliest first, within the OS limit. */
+export function mergeReminderPlans(
+  plans: ReminderPlanItem[][],
+  limit: number = MAX_SCHEDULED_REMINDERS
+): ReminderPlanItem[] {
+  return plans
+    .flat()
+    .sort((a, b) => a.fireAt.getTime() - b.fireAt.getTime())
+    .slice(0, limit);
 }
