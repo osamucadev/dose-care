@@ -26,7 +26,7 @@ export function NextPreview({ occurrence, profile }: NextPreviewProps) {
       <ThemedText variant="label">PRÓXIMO</ThemedText>
       <View style={styles.row}>
         {profile ? (
-          <Avatar emoji={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={40} />
+          <Avatar avatar={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={40} />
         ) : null}
         <View style={styles.text}>
           {profile ? <ThemedText variant="label">{profile.name}</ThemedText> : null}

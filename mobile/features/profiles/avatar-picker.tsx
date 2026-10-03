@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Avatar, isIllustratedAvatar } from '@/components/ui/avatar';
+import { Avatar, avatarAccessibilityLabel } from '@/components/ui/avatar';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { radius, spacing } from '@/theme/tokens';
 
@@ -25,7 +25,7 @@ export function AvatarPicker({ options, value, onChange, tint }: AvatarPickerPro
             key={avatar}
             accessibilityRole="radio"
             accessibilityState={{ selected }}
-            accessibilityLabel={isIllustratedAvatar(avatar) ? 'Avatar ilustrado' : `Avatar ${avatar}`}
+            accessibilityLabel={avatarAccessibilityLabel(avatar)}
             onPress={() => onChange(avatar)}
             style={[
               styles.option,
@@ -35,7 +35,7 @@ export function AvatarPicker({ options, value, onChange, tint }: AvatarPickerPro
                 borderWidth: selected ? 2.5 : 1.5,
               },
             ]}>
-            <Avatar emoji={avatar} tint="transparent" size={40} />
+            <Avatar avatar={avatar} tint="transparent" size={40} />
           </Pressable>
         );
       })}

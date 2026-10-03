@@ -64,7 +64,7 @@ export default function ProfileScreen() {
       />
 
       <View style={styles.header}>
-        <Avatar emoji={vm.avatar} tint={vm.avatarTint} size={64} />
+        <Avatar avatar={vm.avatar} tint={vm.avatarTint} size={64} />
         <View style={styles.headerText}>
           <ThemedText variant="title">{vm.name}</ThemedText>
           <ThemedText variant="muted">{vm.typeLabel}</ThemedText>

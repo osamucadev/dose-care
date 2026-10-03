@@ -38,7 +38,7 @@ export function UpcomingList({ title, occurrences, profilesById, emptyLabel }: U
                 key={occurrence.id}
                 style={[styles.row, index > 0 && { borderTopWidth: 1, borderTopColor: border }]}>
                 {profile ? (
-                  <Avatar emoji={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={40} />
+                  <Avatar avatar={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={40} />
                 ) : null}
                 <View style={styles.text}>
                   {profile ? <ThemedText variant="label">{profile.name}</ThemedText> : null}

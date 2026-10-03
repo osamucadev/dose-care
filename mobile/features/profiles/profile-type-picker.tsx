@@ -37,7 +37,7 @@ export function ProfileTypePicker({ value, onChange }: ProfileTypePickerProps) {
               index > 0 && { borderTopWidth: 1, borderTopColor: border },
               selected && { backgroundColor: tintSoft },
             ]}>
-            <Avatar emoji={meta.defaultAvatar} tint={meta.tint} size={32} />
+            <Avatar avatar={meta.defaultAvatar} tint={meta.tint} size={32} />
             <ThemedText variant="body" style={[styles.label, selected && styles.selectedLabel]}>
               {meta.label}
             </ThemedText>

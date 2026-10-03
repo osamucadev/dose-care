@@ -48,7 +48,7 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
   return (
     <View style={styles.form}>
       <View style={styles.preview}>
-        <Avatar emoji={selectedAvatar} tint={meta.tint} size={104} />
+        <Avatar avatar={selectedAvatar} tint={meta.tint} size={104} />
       </View>
 
       <Controller

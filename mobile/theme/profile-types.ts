@@ -4,13 +4,13 @@ export interface ProfileTypeMeta {
   type: ProfileType;
   label: string;
   /**
-   * Persisted as-is in `Profile.avatar`. Either an emoji or an
-   * illustrated avatar key such as `svg:child` (see
-   * `components/ui/avatar.tsx`); older profiles keep their emoji.
+   * Persisted as-is in `Profile.avatar`: an illustrated avatar key such
+   * as `svg:child` (see `components/ui/avatar.tsx`). Profiles created
+   * with an emoji before 1.1.0 were converted by migration 004.
    */
   defaultAvatar: string;
   avatarOptions: string[];
-  /** Used sparingly: borders, badges, small accents — never large fills. */
+  /** Used sparingly: borders, badges, small accents, never large fills. */
   color: string;
   /** Very soft tint, safe as a card/badge background in both themes. */
   tint: string;
@@ -21,7 +21,7 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     type: 'child',
     label: 'Criança',
     defaultAvatar: 'svg:child',
-    avatarOptions: ['svg:child', '👶', '🧒', '👦', '👧'],
+    avatarOptions: ['svg:child', 'svg:girl', 'svg:baby'],
     color: '#D49A2A',
     tint: '#FEF4D5',
   },
@@ -29,7 +29,7 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     type: 'adult',
     label: 'Adulto',
     defaultAvatar: 'svg:adult',
-    avatarOptions: ['svg:adult', '🧑', '👨', '👩'],
+    avatarOptions: ['svg:adult', 'svg:man'],
     color: '#4F86C6',
     tint: '#E6F1FE',
   },
@@ -37,7 +37,7 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     type: 'elderly',
     label: 'Idoso',
     defaultAvatar: 'svg:elderly',
-    avatarOptions: ['svg:elderly', '👵', '👴'],
+    avatarOptions: ['svg:elderly', 'svg:elderly-man'],
     color: '#8F6FBF',
     tint: '#F4E7F9',
   },
@@ -45,7 +45,7 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     type: 'pet',
     label: 'Pet',
     defaultAvatar: 'svg:pet',
-    avatarOptions: ['svg:pet', '🐾', '🐶', '🐱', '🐰', '🐦'],
+    avatarOptions: ['svg:pet', 'svg:cat', 'svg:rabbit', 'svg:bird'],
     color: '#3E9A8C',
     tint: '#E1F3E4',
   },
@@ -53,7 +53,7 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     type: 'plant',
     label: 'Planta',
     defaultAvatar: 'svg:plant',
-    avatarOptions: ['svg:plant', '🌿', '🌱', '🪴', '🌵', '🌻'],
+    avatarOptions: ['svg:plant', 'svg:potted-plant', 'svg:cactus', 'svg:sunflower'],
     color: '#5A9A5E',
     tint: '#E6F7E2',
   },

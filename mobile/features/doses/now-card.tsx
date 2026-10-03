@@ -40,7 +40,7 @@ export function NowCard({ occurrence, profileName, profileAvatar, profileTint, o
       </View>
 
       <View style={styles.headerRow}>
-        {profileAvatar ? <Avatar emoji={profileAvatar} tint={profileTint ?? tint} size={52} /> : null}
+        {profileAvatar ? <Avatar avatar={profileAvatar} tint={profileTint ?? tint} size={52} /> : null}
         <View style={styles.headerText}>
           {profileName ? <ThemedText variant="subtitle">{profileName}</ThemedText> : null}
           <ThemedText variant={profileName ? 'body' : 'subtitle'}>

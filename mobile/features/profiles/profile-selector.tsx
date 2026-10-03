@@ -74,7 +74,7 @@ function ProfileChip({ profile, selected, onPress }: { profile: Profile; selecte
           borderColor: selected ? tint : idle.border,
         },
       ]}>
-      <Avatar emoji={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={30} />
+      <Avatar avatar={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={30} />
       <ThemedText variant="label" style={{ color: selected ? onTint : undefined }}>
         {profile.name}
       </ThemedText>
