@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
+import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/text-field';
 import { ThemedText } from '@/components/ui/themed-text';
@@ -41,10 +42,15 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
   });
 
   const selectedType = watch('type');
+  const selectedAvatar = watch('avatar');
   const meta = getProfileTypeMeta(selectedType);
 
   return (
     <View style={styles.form}>
+      <View style={styles.preview}>
+        <Avatar emoji={selectedAvatar} tint={meta.tint} size={104} />
+      </View>
+
       <Controller
         control={control}
         name="name"
@@ -62,7 +68,7 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
       />
 
       <View style={styles.field}>
-        <ThemedText variant="label">Tipo *</ThemedText>
+        <ThemedText variant="label">Tipo de perfil *</ThemedText>
         <Controller
           control={control}
           name="type"
@@ -129,5 +135,6 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
 
 const styles = StyleSheet.create({
   form: { gap: spacing.lg },
+  preview: { alignItems: 'center' },
   field: { gap: spacing.xs },
 });

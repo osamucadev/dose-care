@@ -1,12 +1,14 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar } from '@/components/ui/avatar';
-import { Card } from '@/components/ui/card';
+import { Icon } from '@/components/ui/icon';
 import { ThemedText } from '@/components/ui/themed-text';
 import type { ProfileDayStatus } from '@/domain/occurrences';
 import type { Profile } from '@/domain/types';
+import { useProfileSurface } from '@/hooks/use-profile-surface';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { getProfileTypeMeta, resolveProfileAccentColor } from '@/theme/profile-types';
+import { getProfileTypeMeta } from '@/theme/profile-types';
+import { minTouchTarget, radius, spacing } from '@/theme/tokens';
 
 interface ProfileCardProps {
   profile: Profile;
@@ -25,6 +27,7 @@ const HEADLINE: Record<ProfileDayStatus, { symbol: string; label: string }> = {
 
 export function ProfileCard({ profile, status, nextTime, onPress }: ProfileCardProps) {
   const meta = getProfileTypeMeta(profile.type);
+  const surface = useProfileSurface(profile);
   const tint = useThemeColor({}, 'tint');
   const success = useThemeColor({}, 'success');
   const muted = useThemeColor({}, 'textMuted');
@@ -36,23 +39,35 @@ export function ProfileCard({ profile, status, nextTime, onPress }: ProfileCardP
       accessibilityRole="button"
       accessibilityLabel={`${profile.name}, ${headline.label}${nextTime ? `, próximo às ${nextTime}` : ''}`}
       onPress={onPress}
-      style={styles.pressable}>
-      <Card style={[styles.card, { borderColor: resolveProfileAccentColor(profile) }]}>
-        <Avatar emoji={profile.avatar} tint={meta.tint} size={44} />
-        <ThemedText variant="subtitle">{profile.name}</ThemedText>
-        <View style={styles.statusRow}>
-          <ThemedText variant="label" style={{ color: headlineColor }}>
-            {headline.symbol} {headline.label}
-          </ThemedText>
-        </View>
+      style={({ pressed }) => [
+        styles.card,
+        { backgroundColor: surface.background, borderColor: surface.border, opacity: pressed ? 0.85 : 1 },
+      ]}>
+      <Avatar emoji={profile.avatar} tint={meta.tint} size={48} />
+      <View style={styles.text}>
+        <ThemedText variant="subtitle" style={styles.name}>
+          {profile.name}
+        </ThemedText>
+        <ThemedText variant="label" style={{ color: headlineColor }}>
+          {headline.symbol} {headline.label}
+        </ThemedText>
         {nextTime ? <ThemedText variant="muted">Próximo: {nextTime}</ThemedText> : null}
-      </Card>
+      </View>
+      <Icon name="chevron-right" size={20} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  pressable: { minWidth: 150, flexGrow: 1, flexBasis: '45%' },
-  card: { alignItems: 'flex-start' },
-  statusRow: { flexDirection: 'row' },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    minHeight: minTouchTarget,
+    padding: spacing.md,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+  },
+  text: { flex: 1, gap: 2 },
+  name: { fontSize: 17, lineHeight: 22 },
 });

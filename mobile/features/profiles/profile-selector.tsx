@@ -3,9 +3,10 @@ import { Pressable, ScrollView, StyleSheet } from 'react-native';
 import { Avatar } from '@/components/ui/avatar';
 import { ThemedText } from '@/components/ui/themed-text';
 import type { Profile } from '@/domain/types';
+import { useProfileSurface } from '@/hooks/use-profile-surface';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { getProfileTypeMeta, resolveProfileAccentColor } from '@/theme/profile-types';
-import { spacing } from '@/theme/tokens';
+import { getProfileTypeMeta } from '@/theme/profile-types';
+import { radius, spacing } from '@/theme/tokens';
 
 interface ProfileSelectorProps {
   profiles: Profile[];
@@ -13,74 +14,69 @@ interface ProfileSelectorProps {
   onSelect: (id: string | null) => void;
 }
 
+/**
+ * Horizontal "Todos / profile" filter. The selected chip is always the
+ * solid teal one, whatever its profile type, and also exposes
+ * `accessibilityState.selected`, so selection never relies on a pastel
+ * difference alone.
+ */
 export function ProfileSelector({ profiles, selectedId, onSelect }: ProfileSelectorProps) {
   const surface = useThemeColor({}, 'surface');
   const border = useThemeColor({}, 'border');
   const tint = useThemeColor({}, 'tint');
+  const onTint = useThemeColor({}, 'onTint');
+  const allSelected = selectedId === null;
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
-      <Chip
-        label="Todos"
-        selected={selectedId === null}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Todos"
+        accessibilityState={{ selected: allSelected }}
         onPress={() => onSelect(null)}
-        surface={surface}
-        border={border}
-        tint={tint}
-      />
-      {profiles.map((profile) => {
-        const meta = getProfileTypeMeta(profile.type);
-        const selected = selectedId === profile.id;
-        return (
-          <Pressable
-            key={profile.id}
-            accessibilityRole="button"
-            accessibilityLabel={profile.name}
-            accessibilityState={{ selected }}
-            onPress={() => onSelect(profile.id)}
-            style={[
-              styles.profileChip,
-              {
-                backgroundColor: selected ? meta.tint : surface,
-                borderColor: selected ? resolveProfileAccentColor(profile) : border,
-              },
-            ]}>
-            <Avatar emoji={profile.avatar} tint={meta.tint} size={28} />
-            <ThemedText variant="label">{profile.name}</ThemedText>
-          </Pressable>
-        );
-      })}
+        style={[
+          styles.chip,
+          styles.allChip,
+          { backgroundColor: allSelected ? tint : surface, borderColor: allSelected ? tint : border },
+        ]}>
+        <ThemedText variant="label" style={{ color: allSelected ? onTint : undefined }}>
+          Todos
+        </ThemedText>
+      </Pressable>
+      {profiles.map((profile) => (
+        <ProfileChip
+          key={profile.id}
+          profile={profile}
+          selected={selectedId === profile.id}
+          onPress={() => onSelect(profile.id)}
+        />
+      ))}
     </ScrollView>
   );
 }
 
-function Chip({
-  label,
-  selected,
-  onPress,
-  surface,
-  border,
-  tint,
-}: {
-  label: string;
-  selected: boolean;
-  onPress: () => void;
-  surface: string;
-  border: string;
-  tint: string;
-}) {
+function ProfileChip({ profile, selected, onPress }: { profile: Profile; selected: boolean; onPress: () => void }) {
+  const tint = useThemeColor({}, 'tint');
+  const onTint = useThemeColor({}, 'onTint');
+  const idle = useProfileSurface(profile);
+
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={profile.name}
       accessibilityState={{ selected }}
       onPress={onPress}
       style={[
         styles.chip,
-        { backgroundColor: selected ? tint : surface, borderColor: selected ? tint : border },
+        styles.profileChip,
+        {
+          backgroundColor: selected ? tint : idle.background,
+          borderColor: selected ? tint : idle.border,
+        },
       ]}>
-      <ThemedText variant="label" style={{ color: selected ? '#FFFFFF' : undefined }}>
-        {label}
+      <Avatar emoji={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={30} />
+      <ThemedText variant="label" style={{ color: selected ? onTint : undefined }}>
+        {profile.name}
       </ThemedText>
     </Pressable>
   );
@@ -90,18 +86,11 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: spacing.sm, paddingVertical: spacing.xs },
   chip: {
     minHeight: 44,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-    borderRadius: 999,
-    borderWidth: 1.5,
-  },
-  profileChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.xs,
-    minHeight: 44,
-    paddingHorizontal: spacing.md,
-    borderRadius: 999,
+    borderRadius: radius.pill,
     borderWidth: 1.5,
   },
+  allChip: { paddingHorizontal: spacing.lg },
+  profileChip: { gap: spacing.xs, paddingLeft: spacing.xs, paddingRight: spacing.md },
 });

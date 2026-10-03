@@ -1,36 +1,41 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { ThemedText } from '@/components/ui/themed-text';
+import { Avatar, isIllustratedAvatar } from '@/components/ui/avatar';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { radius, spacing } from '@/theme/tokens';
 
 interface AvatarPickerProps {
   options: string[];
   value: string;
-  onChange: (emoji: string) => void;
+  onChange: (avatar: string) => void;
   tint: string;
 }
 
 export function AvatarPicker({ options, value, onChange, tint }: AvatarPickerProps) {
   const surface = useThemeColor({}, 'surface');
   const border = useThemeColor({}, 'border');
+  const accent = useThemeColor({}, 'tint');
 
   return (
     <View style={styles.row} accessibilityRole="radiogroup">
-      {options.map((emoji) => {
-        const selected = emoji === value;
+      {options.map((avatar) => {
+        const selected = avatar === value;
         return (
           <Pressable
-            key={emoji}
+            key={avatar}
             accessibilityRole="radio"
             accessibilityState={{ selected }}
-            accessibilityLabel={`Avatar ${emoji}`}
-            onPress={() => onChange(emoji)}
+            accessibilityLabel={isIllustratedAvatar(avatar) ? 'Avatar ilustrado' : `Avatar ${avatar}`}
+            onPress={() => onChange(avatar)}
             style={[
               styles.option,
-              { backgroundColor: selected ? tint : surface, borderColor: selected ? tint : border },
+              {
+                backgroundColor: selected ? tint : surface,
+                borderColor: selected ? accent : border,
+                borderWidth: selected ? 2.5 : 1.5,
+              },
             ]}>
-            <ThemedText style={styles.emoji}>{emoji}</ThemedText>
+            <Avatar emoji={avatar} tint="transparent" size={40} />
           </Pressable>
         );
       })}
@@ -41,15 +46,10 @@ export function AvatarPicker({ options, value, onChange, tint }: AvatarPickerPro
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   option: {
-    width: 52,
-    height: 52,
-    borderRadius: radius.md,
-    borderWidth: 1.5,
+    width: 56,
+    height: 56,
+    borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // lineHeight explicit and larger than fontSize: ThemedText's default
-  // (body) lineHeight is 21, shorter than this emoji's fontSize, which
-  // clips it instead of just adding breathing room.
-  emoji: { fontSize: 24, lineHeight: 28 },
 });
