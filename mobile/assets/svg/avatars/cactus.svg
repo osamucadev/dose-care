@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-cactus"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#DCF0D3"/>
+<g clip-path="url(#clip-cactus)">
+  <path d="M41 70 V34 a7 7 0 0 1 14 0 V70 Z" fill="#5FA86A"/>
+  <path d="M41 56 H35 a6 6 0 0 1 -6 -6 V42 a3.5 3.5 0 0 1 7 0 V49 H41 Z" fill="#5FA86A"/>
+  <path d="M55 50 H61 a6 6 0 0 0 6 -6 V38 a3.5 3.5 0 0 0 -7 0 V43 H55 Z" fill="#5FA86A"/>
+  <path d="M48 32 V66" stroke="#4E9A5C" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M44 40 h1.5 M51 46 h1.5 M44 52 h1.5 M51 58 h1.5 M32 46 h1.5 M62 41 h1.5" stroke="#E9F4E4" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="48" cy="27" r="3.5" fill="#F29E8E"/>
+  <path d="M33 70 H63 L59 88 H37 Z" fill="#D9875A"/>
+  <rect x="31" y="66" width="34" height="7" rx="2.5" fill="#C9744A"/>
+</g>
+</svg>

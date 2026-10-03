@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-sunflower"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#DCF0D3"/>
+<g clip-path="url(#clip-sunflower)">
+  <path d="M48 50 V88" stroke="#3F8A4E" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M48 74 C40 74 32 68 31 60 C40 60 47 65 48 74 Z" fill="#5FA86A"/>
+  <path d="M48 68 C56 68 64 62 65 54 C56 54 49 59 48 68 Z" fill="#4E9A5C"/>
+  <ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(0 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(30 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(60 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(90 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(120 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(150 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(180 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(210 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(240 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(270 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(300 48 36)"/><ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate(330 48 36)"/>
+  <circle cx="48" cy="36" r="10" fill="#8A5A32"/>
+  <circle cx="45" cy="33" r="1.4" fill="#6B4426"/><circle cx="51" cy="34" r="1.4" fill="#6B4426"/><circle cx="47" cy="39" r="1.4" fill="#6B4426"/><circle cx="52" cy="39" r="1.2" fill="#6B4426"/>
+</g>
+</svg>

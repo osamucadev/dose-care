@@ -124,12 +124,155 @@ def plant_figure():
   <path d="M46 60 C40 56 34 51 29 45 M50 54 C56 50 62 45 67 39 M48 42 V25" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="1.5" stroke-linecap="round"/>'''
 
 
+def baby_figure():
+    return f'''
+  <path d="M18 100 C20 80 32 74 48 74 C64 74 76 80 78 100 Z" fill="#9CC3E8"/>
+  <circle cx="48" cy="80" r="5" fill="#FFFFFF" opacity="0.7"/>
+  <circle cx="25" cy="50" r="5.5" fill="{C['skin']}"/>
+  <circle cx="71" cy="50" r="5.5" fill="{C['skin']}"/>
+  <circle cx="48" cy="49" r="24" fill="{C['skin']}"/>
+  <path d="M44 26 C44 20 52 19 52 24 C52 27 48 28 47 26" stroke="#C7783E" stroke-width="3" stroke-linecap="round"/>''' + face_features(eye_y=50, spread=9)
+
+
+def girl_figure():
+    return f'''
+  <circle cx="22" cy="44" r="9" fill="#7A4A2E"/>
+  <circle cx="74" cy="44" r="9" fill="#7A4A2E"/>
+  <circle cx="26" cy="38" r="3" fill="#F29E8E"/>
+  <circle cx="70" cy="38" r="3" fill="#F29E8E"/>
+  <path d="M16 100 C18 78 31 71 48 71 C65 71 78 78 80 100 Z" fill="#F2A7B5"/>
+  <rect x="42" y="60" width="12" height="13" rx="5" fill="{C['skin_shadow']}"/>
+  <ellipse cx="48" cy="47" rx="21" ry="22" fill="{C['skin']}"/>
+  <path d="M27 47 C25 29 35 21 48 21 C61 21 71 29 69 47 C66 40 62 34 56 32 C50 36 40 35 34 33 C30 37 28 41 27 47 Z" fill="#7A4A2E"/>''' + face_features()
+
+
+def man_figure():
+    return f'''
+  <path d="M15 100 C17 79 31 73 48 73 C65 73 79 79 81 100 Z" fill="#5E9C8F"/>
+  <path d="M40 73 L48 82 L56 73" fill="#E9F2EF"/>
+  <rect x="42" y="60" width="12" height="14" rx="5" fill="{C['skin_dark']}"/>
+  <circle cx="28" cy="48" r="5" fill="#EDBB94"/>
+  <circle cx="68" cy="48" r="5" fill="#EDBB94"/>
+  <ellipse cx="48" cy="47" rx="19" ry="21" fill="#EDBB94"/>
+  <path d="M29 44 C28 28 38 22 49 23 C60 24 68 30 67 43 C63 36 56 33 50 32 C43 33 35 37 29 44 Z" fill="#3A2C25"/>''' + face_features() + '''
+  <path d="M36 58 C40 67 56 67 60 58 C58 64 38 64 36 58 Z" fill="#3A2C25" opacity="0.85"/>'''
+
+
+def elderly_man_figure():
+    return f'''
+  <path d="M15 100 C17 79 31 73 48 73 C65 73 79 79 81 100 Z" fill="#9C8BC0"/>
+  <path d="M38 74 C42 80 54 80 58 74" stroke="#857AAE" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="42" y="60" width="12" height="14" rx="5" fill="{C['skin_dark']}"/>
+  <circle cx="27" cy="49" r="5" fill="#F3C7A6"/>
+  <circle cx="69" cy="49" r="5" fill="#F3C7A6"/>
+  <ellipse cx="48" cy="48" rx="20" ry="21" fill="#F3C7A6"/>
+  <path d="M27 50 C25 40 28 34 33 32 C32 38 32 44 31 50 Z M69 50 C71 40 68 34 63 32 C64 38 64 44 65 50 Z" fill="#DAD4D0"/>''' + face_features(eye_y=50) + f'''
+  <path d="M41 57.5 C44 55.5 52 55.5 55 57.5 C52 59 44 59 41 57.5 Z" fill="#CFC8C3"/>
+  <circle cx="40" cy="50" r="6.2" stroke="#8A6A5A" stroke-width="1.8"/>
+  <circle cx="56" cy="50" r="6.2" stroke="#8A6A5A" stroke-width="1.8"/>
+  <path d="M46.2 49.5 Q48 48 49.8 49.5" stroke="#8A6A5A" stroke-width="1.8" stroke-linecap="round"/>'''
+
+
+def cat_figure():
+    return f'''
+  <path d="M24 100 C26 82 36 76 48 76 C60 76 70 82 72 100 Z" fill="#E59A52"/>
+  <path d="M28 46 L30 22 L44 34 Z" fill="#E59A52"/>
+  <path d="M68 46 L66 22 L52 34 Z" fill="#E59A52"/>
+  <path d="M31 40 L32 28 L40 35 Z M65 40 L64 28 L56 35 Z" fill="#F6C6A8"/>
+  <ellipse cx="48" cy="52" rx="22" ry="20" fill="#E59A52"/>
+  <path d="M41 33 C43 37 53 37 55 33 M38 38 C42 42 54 42 58 38" stroke="#C97A35" stroke-width="2.4" stroke-linecap="round"/>
+  <ellipse cx="48" cy="61" rx="10" ry="7" fill="#FBE3D0"/>
+  <path d="M45.5 57 H50.5 L48 60 Z" fill="#B85F55"/>
+  <ellipse cx="39.5" cy="50" rx="2.6" ry="3.4" fill="#3A2A22"/>
+  <ellipse cx="56.5" cy="50" rx="2.6" ry="3.4" fill="#3A2A22"/>
+  <path d="M48 60 V62 M44 63.5 Q48 66.5 52 63.5 M30 58 H39 M30 63 L39 61 M66 58 H57 M66 63 L57 61" stroke="#8A5530" stroke-width="1.6" stroke-linecap="round"/>'''
+
+
+def rabbit_figure():
+    return f'''
+  <path d="M24 100 C26 82 36 76 48 76 C60 76 70 82 72 100 Z" fill="#E7E1DA"/>
+  <ellipse cx="38" cy="22" rx="6.5" ry="18" fill="#E7E1DA"/>
+  <ellipse cx="58" cy="22" rx="6.5" ry="18" fill="#E7E1DA"/>
+  <ellipse cx="38" cy="23" rx="3" ry="13" fill="#F4C3C8"/>
+  <ellipse cx="58" cy="23" rx="3" ry="13" fill="#F4C3C8"/>
+  <ellipse cx="48" cy="54" rx="21" ry="19" fill="#F3EEE8"/>
+  <circle cx="39.5" cy="51" r="2.7" fill="#3A2A22"/>
+  <circle cx="56.5" cy="51" r="2.7" fill="#3A2A22"/>
+  <circle cx="34" cy="58" r="3.4" fill="{C['cheek']}" opacity="0.45"/>
+  <circle cx="62" cy="58" r="3.4" fill="{C['cheek']}" opacity="0.45"/>
+  <path d="M45.5 57 H50.5 L48 59.5 Z" fill="#D98A94"/>
+  <path d="M48 59.5 V62 M44.5 63 Q48 66 51.5 63" stroke="#9C8478" stroke-width="1.6" stroke-linecap="round"/>'''
+
+
+def bird_figure():
+    return f'''
+  <ellipse cx="48" cy="84" rx="26" ry="4" fill="#9CC98F"/>
+  <path d="M30 84 C24 66 30 40 48 34 C66 40 72 66 66 84 Z" fill="#F6C94F"/>
+  <path d="M60 58 C70 60 74 70 70 78 C64 74 58 68 60 58 Z" fill="#E8B23A"/>
+  <circle cx="48" cy="36" r="17" fill="#F6C94F"/>
+  <path d="M46 20 C46 14 52 13 53 18" stroke="#E8B23A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M43 40 L48 46 L53 40 Z" fill="#E9874A"/>
+  <circle cx="41" cy="34" r="2.6" fill="#3A2A22"/>
+  <circle cx="55" cy="34" r="2.6" fill="#3A2A22"/>
+  <circle cx="37" cy="40" r="3.2" fill="{C['cheek']}" opacity="0.5"/>
+  <circle cx="59" cy="40" r="3.2" fill="{C['cheek']}" opacity="0.5"/>
+  <path d="M42 84 V90 M54 84 V90" stroke="#E9874A" stroke-width="2.4" stroke-linecap="round"/>'''
+
+
+def potted_plant_figure():
+    return f'''
+  <path d="M48 58 C36 58 26 48 27 34 C40 34 48 44 48 58 Z" fill="{C['leaf']}"/>
+  <path d="M48 58 C60 58 70 48 69 34 C56 34 48 44 48 58 Z" fill="{C['leaf_dark']}"/>
+  <path d="M48 56 C42 46 42 32 48 22 C54 32 54 46 48 56 Z" fill="{C['leaf_light']}"/>
+  <path d="M48 52 V28 M46 55 C41 50 35 44 31 38 M50 55 C55 50 61 44 65 38" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M33 62 H63 L59 84 H37 Z" fill="{C['terracotta']}"/>
+  <rect x="31" y="58" width="34" height="7" rx="2.5" fill="#C9744A"/>'''
+
+
+def cactus_figure():
+    return f'''
+  <path d="M41 70 V34 a7 7 0 0 1 14 0 V70 Z" fill="#5FA86A"/>
+  <path d="M41 56 H35 a6 6 0 0 1 -6 -6 V42 a3.5 3.5 0 0 1 7 0 V49 H41 Z" fill="#5FA86A"/>
+  <path d="M55 50 H61 a6 6 0 0 0 6 -6 V38 a3.5 3.5 0 0 0 -7 0 V43 H55 Z" fill="#5FA86A"/>
+  <path d="M48 32 V66" stroke="#4E9A5C" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M44 40 h1.5 M51 46 h1.5 M44 52 h1.5 M51 58 h1.5 M32 46 h1.5 M62 41 h1.5" stroke="#E9F4E4" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="48" cy="27" r="3.5" fill="#F29E8E"/>
+  <path d="M33 70 H63 L59 88 H37 Z" fill="{C['terracotta']}"/>
+  <rect x="31" y="66" width="34" height="7" rx="2.5" fill="#C9744A"/>'''
+
+
+def sunflower_figure():
+    petals = ''.join(
+        f'<ellipse cx="48" cy="22" rx="5.5" ry="10" fill="#F6C14F" transform="rotate({a} 48 36)"/>'
+        for a in range(0, 360, 30)
+    )
+    return f'''
+  <path d="M48 50 V88" stroke="#3F8A4E" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M48 74 C40 74 32 68 31 60 C40 60 47 65 48 74 Z" fill="{C['leaf']}"/>
+  <path d="M48 68 C56 68 64 62 65 54 C56 54 49 59 48 68 Z" fill="{C['leaf_dark']}"/>
+  {petals}
+  <circle cx="48" cy="36" r="10" fill="#8A5A32"/>
+  <circle cx="45" cy="33" r="1.4" fill="#6B4426"/><circle cx="51" cy="34" r="1.4" fill="#6B4426"/><circle cx="47" cy="39" r="1.4" fill="#6B4426"/><circle cx="52" cy="39" r="1.2" fill="#6B4426"/>'''
+
+
+CHILD_BG, ADULT_BG, ELDERLY_BG, PET_BG, PLANT_BG = '#FCE3A6', '#D6E6FB', '#EADCF5', '#D3EDD8', '#DCF0D3'
+
 AVATARS = {
-    'child': ('#FCE3A6', child_figure),
-    'adult': ('#D6E6FB', adult_figure),
-    'elderly': ('#EADCF5', elderly_figure),
-    'pet': ('#D3EDD8', dog_figure),
-    'plant': ('#DCF0D3', plant_figure),
+    'child': (CHILD_BG, child_figure),
+    'girl': (CHILD_BG, girl_figure),
+    'baby': (CHILD_BG, baby_figure),
+    'adult': (ADULT_BG, adult_figure),
+    'man': (ADULT_BG, man_figure),
+    'elderly': (ELDERLY_BG, elderly_figure),
+    'elderly-man': (ELDERLY_BG, elderly_man_figure),
+    'pet': (PET_BG, dog_figure),
+    'cat': (PET_BG, cat_figure),
+    'rabbit': (PET_BG, rabbit_figure),
+    'bird': (PET_BG, bird_figure),
+    'plant': (PLANT_BG, plant_figure),
+    'potted-plant': (PLANT_BG, potted_plant_figure),
+    'cactus': (PLANT_BG, cactus_figure),
+    'sunflower': (PLANT_BG, sunflower_figure),
 }
 
 
@@ -211,6 +354,9 @@ ICONS = {
     'edit': '<path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
     'search': '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/>',
     'mail': '<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/>',
+    'leaf': '<path d="M5 19C5 10 11 4.5 19.5 4.5 19.5 13 14 19 5 19z"/><path d="M5 19 14 10"/>',
+    'minus': '<path d="M6 12h12"/>',
+    'package': '<path d="m12 3.5 8 4v9l-8 4-8-4v-9z"/><path d="m4 7.5 8 4 8-4M12 11.5v9"/>',
 }
 
 for name, body in ICONS.items():
@@ -222,6 +368,10 @@ for name, body in ICONS.items():
 write(
     'icons/home-filled.svg',
     svg('0 0 24 24', '<path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4v-5.5H9V20H5a1 1 0 0 1-1-1z" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>', 24, 24),
+)
+write(
+    'icons/dot.svg',
+    svg('0 0 24 24', '<circle cx="12" cy="12" r="5" fill="currentColor"/>', 24, 24),
 )
 write(
     'icons/check-circle.svg',
