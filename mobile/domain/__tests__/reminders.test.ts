@@ -1,4 +1,10 @@
-import { mergeReminderPlans, planReminders, planRestockReminders, reminderBody } from '../reminders';
+import {
+  buildReminderSchedule,
+  mergeReminderPlans,
+  planReminders,
+  planRestockReminders,
+  reminderBody,
+} from '../reminders';
 import type { DoseOccurrence } from '../types';
 
 function makeOccurrence(overrides: Partial<DoseOccurrence> = {}): DoseOccurrence {
@@ -133,5 +139,45 @@ describe('mergeReminderPlans', () => {
   it('interleaves plans by time and applies the limit', () => {
     const at = (h: number) => ({ id: `r${h}`, profileId: 'p', fireAt: new Date(2026, 7, 15, h), title: '', body: '' });
     expect(mergeReminderPlans([[at(8), at(20)], [at(9)]], 2).map((p) => p.id)).toEqual(['r8', 'r9']);
+  });
+});
+
+describe('buildReminderSchedule', () => {
+  const at = (day: number, h: number) => ({
+    id: `r${day}-${h}`,
+    profileId: 'p',
+    fireAt: new Date(2026, 7, day, h),
+    title: '',
+    body: '',
+  });
+
+  it('adds renewal reminders 3, 2 and 1 days before the last reminder, at 09:00', () => {
+    const schedule = buildReminderSchedule([[at(15, 20), at(21, 8)]], NOW);
+    const renewals = schedule.filter((item) => item.id.startsWith('renewal_'));
+    expect(renewals.map((r) => r.fireAt)).toEqual([
+      new Date(2026, 7, 18, 9, 0),
+      new Date(2026, 7, 19, 9, 0),
+      new Date(2026, 7, 20, 9, 0),
+    ]);
+    expect(renewals[0].body).toBe(
+      'Seus lembretes estão programados até 21/08. Abra o DoseCare para programar os próximos dias.'
+    );
+  });
+
+  it('follows the real end when the cap cuts the schedule short', () => {
+    const many = Array.from({ length: 10 }, (_, i) => at(16 + i, 8));
+    const schedule = buildReminderSchedule([many], NOW, 7);
+    // 7 slots, 3 reserved: reminders end on day 19, so renewals start on day 16.
+    expect(schedule.filter((item) => !item.id.startsWith('renewal_'))).toHaveLength(4);
+    expect(schedule.find((item) => item.id === 'renewal_3')?.fireAt).toEqual(new Date(2026, 7, 16, 9, 0));
+  });
+
+  it('skips renewal reminders that would already be in the past', () => {
+    const schedule = buildReminderSchedule([[at(16, 8)]], NOW);
+    expect(schedule.map((item) => item.id)).toEqual(['r16-8']);
+  });
+
+  it('schedules nothing extra when there is nothing to remind', () => {
+    expect(buildReminderSchedule([[], []], NOW)).toEqual([]);
   });
 });

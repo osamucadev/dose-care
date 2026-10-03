@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import { getRepositories } from '@/database/repositories';
 import { addDaysToLocalDateString, toLocalDateString } from '@/domain/datetime';
 import { generateOccurrencesForDateRange } from '@/domain/occurrences';
-import { mergeReminderPlans, planReminders, planRestockReminders, REMINDER_WINDOW_DAYS } from '@/domain/reminders';
+import { buildReminderSchedule, planReminders, planRestockReminders, REMINDER_WINDOW_DAYS } from '@/domain/reminders';
 
 import { listRestockItems } from './stock-queries';
 
@@ -15,7 +15,10 @@ import { listRestockItems } from './stock-queries';
  * Nothing here is a source of truth: the scheduled notifications are a
  * disposable copy of the pending occurrences for the next
  * `REMINDER_WINDOW_DAYS`, plus a daily reminder for each medication whose
- * stock is low. Every sync cancels them all and schedules the
+ * stock is low. A few days before that schedule runs out, renewal
+ * reminders ask the user to open the app, which re-syncs and moves the
+ * whole window forward; anyone who opens the app regularly never sees
+ * them. Every sync cancels them all and schedules the
  * current plan again, so edits, deactivations, soft-deleted profiles
  * and recorded doses are reflected without tracking individual ids.
  *
@@ -144,10 +147,10 @@ async function syncOnce(): Promise<void> {
   const occurrences = generateOccurrencesForDateRange(meds, todayStr, lastDayStr, eventsByDay.flat());
   const profileNameById = Object.fromEntries(activeProfiles.map((p) => [p.id, p.name]));
   const restockItems = await listRestockItems();
-  const plan = mergeReminderPlans([
-    planReminders(occurrences, profileNameById, now),
-    planRestockReminders(restockItems, profileNameById, now),
-  ]);
+  const plan = buildReminderSchedule(
+    [planReminders(occurrences, profileNameById, now), planRestockReminders(restockItems, profileNameById, now)],
+    now
+  );
 
   await Notifications.cancelAllScheduledNotificationsAsync();
   for (const item of plan) {

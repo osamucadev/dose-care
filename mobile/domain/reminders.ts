@@ -133,3 +133,52 @@ export function mergeReminderPlans(
     .sort((a, b) => a.fireAt.getTime() - b.fireAt.getTime())
     .slice(0, limit);
 }
+
+/**
+ * How many days before the last scheduled reminder the app asks to be
+ * opened. Opening it re-syncs and pushes the whole schedule forward, so
+ * someone who opens the app regularly never sees these.
+ */
+export const RENEWAL_DAYS_BEFORE_END = [3, 2, 1] as const;
+
+function shortDate(date: Date): string {
+  return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+/**
+ * "Open the app" reminders near the end of what is scheduled, at
+ * `RESTOCK_REMINDER_TIME` on each of `RENEWAL_DAYS_BEFORE_END` days
+ * before the day of `lastReminderAt`. Only future ones are kept.
+ */
+export function planRenewalReminders(lastReminderAt: Date, now: Date): ReminderPlanItem[] {
+  const [hour, minute] = RESTOCK_REMINDER_TIME.split(':').map(Number);
+  return RENEWAL_DAYS_BEFORE_END.map((daysBefore) => ({
+    id: `renewal_${daysBefore}`,
+    profileId: '',
+    fireAt: new Date(
+      lastReminderAt.getFullYear(),
+      lastReminderAt.getMonth(),
+      lastReminderAt.getDate() - daysBefore,
+      hour,
+      minute
+    ),
+    title: 'DoseCare',
+    body: `Seus lembretes estão programados até ${shortDate(lastReminderAt)}. Abra o DoseCare para programar os próximos dias.`,
+  })).filter((item) => item.fireAt > now);
+}
+
+/**
+ * Everything to hand to the OS: dose and restock reminders, earliest
+ * first, plus the renewal reminders computed from the last of them.
+ * Slots for the renewals are reserved inside `limit`, because when the
+ * cap cuts the schedule short its real end is earlier than the window.
+ */
+export function buildReminderSchedule(
+  plans: ReminderPlanItem[][],
+  now: Date,
+  limit: number = MAX_SCHEDULED_REMINDERS
+): ReminderPlanItem[] {
+  const reminders = mergeReminderPlans(plans, limit - RENEWAL_DAYS_BEFORE_END.length);
+  const last = reminders[reminders.length - 1];
+  return last ? [...reminders, ...planRenewalReminders(last.fireAt, now)] : reminders;
+}
