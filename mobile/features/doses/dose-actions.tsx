@@ -14,10 +14,10 @@ export function DoseActions({ onTaken, onSkip, busy }: DoseActionsProps) {
   return (
     <View style={styles.row}>
       <View style={styles.grow}>
-        <Button label="✓ Tomado" onPress={onTaken} loading={busy} fullWidth />
+        <Button label="Tomado" icon="check" onPress={onTaken} loading={busy} fullWidth />
       </View>
       <View style={styles.grow}>
-        <Button label="× Pular" variant="secondary" onPress={onSkip} disabled={busy} fullWidth />
+        <Button label="Pular" icon="close" variant="secondary" onPress={onSkip} disabled={busy} fullWidth />
       </View>
     </View>
   );

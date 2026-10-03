@@ -1,52 +1,69 @@
 import { StyleSheet, View } from 'react-native';
 
+import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { ThemedText } from '@/components/ui/themed-text';
-import type { DoseOccurrence } from '@/domain/types';
+import type { DoseOccurrence, Profile } from '@/domain/types';
 import { useThemeColor } from '@/hooks/use-theme-color';
+import { getProfileTypeMeta } from '@/theme/profile-types';
 import { spacing } from '@/theme/tokens';
 
 import { doseTimeLabel } from './dose-time';
+import { TimeBadge } from './time-badge';
 
 interface UpcomingListProps {
   title: string;
   occurrences: DoseOccurrence[];
-  /** Resolves a profile's display name for aggregated (all-profiles) lists. */
-  profileNameById?: Record<string, string>;
+  /** Resolves each row's profile for aggregated (all-profiles) lists. */
+  profilesById?: Record<string, Profile>;
   emptyLabel: string;
 }
 
-export function UpcomingList({ title, occurrences, profileNameById, emptyLabel }: UpcomingListProps) {
+export function UpcomingList({ title, occurrences, profilesById, emptyLabel }: UpcomingListProps) {
   const border = useThemeColor({}, 'border');
 
   return (
-    <Card style={styles.card}>
+    <View style={styles.section}>
       <ThemedText variant="subtitle">{title}</ThemedText>
-      {occurrences.length === 0 ? (
-        <ThemedText variant="muted">{emptyLabel}</ThemedText>
-      ) : (
-        occurrences.map((occurrence, index) => (
-          <View
-            key={occurrence.id}
-            style={[styles.row, index > 0 && { borderTopWidth: 1, borderTopColor: border }]}>
-            <ThemedText variant="label" style={styles.time}>
-              {doseTimeLabel(occurrence.scheduledAt)}
-            </ThemedText>
-            <ThemedText variant="body" style={styles.grow}>
-              {profileNameById?.[occurrence.profileId] ? `${profileNameById[occurrence.profileId]} · ` : ''}
-              {occurrence.medicationName}
-              {occurrence.dosage ? ` · ${occurrence.dosage}` : ''}
-            </ThemedText>
-          </View>
-        ))
-      )}
-    </Card>
+      <Card style={styles.card}>
+        {occurrences.length === 0 ? (
+          <ThemedText variant="muted" style={styles.empty}>
+            {emptyLabel}
+          </ThemedText>
+        ) : (
+          occurrences.map((occurrence, index) => {
+            const profile = profilesById?.[occurrence.profileId];
+            return (
+              <View
+                key={occurrence.id}
+                style={[styles.row, index > 0 && { borderTopWidth: 1, borderTopColor: border }]}>
+                {profile ? (
+                  <Avatar emoji={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={40} />
+                ) : null}
+                <View style={styles.text}>
+                  {profile ? <ThemedText variant="label">{profile.name}</ThemedText> : null}
+                  <ThemedText variant="body">
+                    {occurrence.medicationName}
+                    {occurrence.dosage ? ` ${occurrence.dosage}` : ''}
+                  </ThemedText>
+                  {occurrence.quantityPerDose ? (
+                    <ThemedText variant="muted">{occurrence.quantityPerDose}</ThemedText>
+                  ) : null}
+                </View>
+                <TimeBadge label={doseTimeLabel(occurrence.scheduledAt)} />
+              </View>
+            );
+          })
+        )}
+      </Card>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { gap: spacing.sm },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingTop: spacing.sm },
-  time: { width: 48 },
-  grow: { flexShrink: 1 },
+  section: { gap: spacing.md },
+  card: { gap: 0, paddingVertical: spacing.sm },
+  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.md },
+  text: { flex: 1, gap: 2 },
+  empty: { paddingVertical: spacing.sm },
 });

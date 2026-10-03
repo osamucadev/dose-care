@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import CalmIllustration from '@/assets/svg/illustrations/onboarding-calm.svg';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
@@ -12,10 +13,12 @@ import { ThemedText } from '@/components/ui/themed-text';
 import { toLocalDateString } from '@/domain/datetime';
 import { computeNowAndNext, computeProfileDayStatus } from '@/domain/occurrences';
 import { reconcileSelectedProfileId } from '@/domain/profile-selection';
+import { AllClearCard } from '@/features/doses/all-clear-card';
 import { doseDayTimeLabel } from '@/features/doses/dose-time';
 import { NextPreview } from '@/features/doses/next-preview';
 import { NowCard } from '@/features/doses/now-card';
 import { UpcomingList } from '@/features/doses/upcoming-list';
+import { formatHomeDate } from '@/features/home/home-date';
 import { ProfileCard } from '@/features/profiles/profile-card';
 import { ProfileSelector } from '@/features/profiles/profile-selector';
 import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
@@ -54,10 +57,6 @@ export default function HomeScreen() {
   }, [profiles, profilesLoading, profilesError]);
 
   const profilesById = useMemo(() => Object.fromEntries(profiles.map((p) => [p.id, p])), [profiles]);
-  const profileNameById = useMemo(
-    () => Object.fromEntries(profiles.map((p) => [p.id, p.name])),
-    [profiles]
-  );
 
   const visibleOccurrences = selectedProfileId
     ? occurrences.filter((o) => o.profileId === selectedProfileId)
@@ -83,7 +82,7 @@ export default function HomeScreen() {
     return (
       <ScreenContainer>
         <EmptyState
-          emoji="🌿"
+          illustration={CalmIllustration}
           title="Comece adicionando quem você cuida"
           description="Pessoas, pets ou plantas — cada um com sua própria rotina."
           actionLabel="+ Adicionar perfil"
@@ -100,6 +99,10 @@ export default function HomeScreen() {
 
   return (
     <ScreenContainer>
+      <ThemedText variant="subtitle" style={styles.date}>
+        {formatHomeDate(now)}
+      </ThemedText>
+
       <ProfileSelector profiles={profiles} selectedId={selectedProfileId} onSelect={setSelectedProfileId} />
 
       {dosesError ? (
@@ -126,23 +129,26 @@ export default function HomeScreen() {
               onSkip={() => nowNext.now && performDoseAction(nowNext.now, 'skipped')}
             />
           ) : (
-            <View style={styles.okBanner}>
-              <ThemedText variant="subtitle">Tudo certo por aqui 🌿</ThemedText>
-            </View>
+            <AllClearCard />
           )}
 
           {nowNext.next ? (
-            <NextPreview occurrence={nowNext.next} profileName={profileNameById[nowNext.next.profileId]} />
+            <NextPreview
+              occurrence={nowNext.next}
+              profile={selectedProfileId ? undefined : profilesById[nowNext.next.profileId]}
+            />
           ) : null}
 
           {selectedProfileId ? (
             <Button
               label="Ver perfil completo"
+              icon="arrow-right"
               variant="secondary"
               onPress={() => router.push(`/profile/${selectedProfileId}`)}
             />
           ) : (
-            <View style={styles.grid}>
+            <View style={styles.profileList}>
+              <ThemedText variant="subtitle">Perfis</ThemedText>
               {profiles.map((profile) => {
                 const profileOccurrences = occurrences.filter((o) => o.profileId === profile.id);
                 const status = computeProfileDayStatus(profileOccurrences, now);
@@ -160,12 +166,12 @@ export default function HomeScreen() {
             </View>
           )}
 
-          <Button label="+ Adicionar perfil" variant="secondary" onPress={() => router.push('/profile/new')} />
+          <Button label="Adicionar perfil" icon="plus" variant="soft" onPress={() => router.push('/profile/new')} />
 
           <UpcomingList
             title={selectedProfileId ? 'Próximas doses de hoje' : 'Próximos'}
             occurrences={nowNext.upcomingToday.slice(0, 5)}
-            profileNameById={selectedProfileId ? undefined : profileNameById}
+            profilesById={selectedProfileId ? undefined : profilesById}
             emptyLabel="Nenhuma dose pendente por aqui."
           />
         </>
@@ -175,6 +181,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  okBanner: { paddingVertical: spacing.md },
+  date: { marginBottom: -spacing.sm },
+  profileList: { gap: spacing.md },
 });

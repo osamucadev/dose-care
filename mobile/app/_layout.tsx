@@ -2,6 +2,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
+import { Logo } from '@/components/ui/logo';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -21,11 +22,11 @@ export default function RootLayout() {
         screenOptions={{
           headerStyle: { backgroundColor: palette.background },
           headerTintColor: palette.tint,
-          headerTitleStyle: { color: palette.text },
+          headerTitleStyle: { color: palette.text, fontWeight: '700' },
           headerShadowVisible: false,
           contentStyle: { backgroundColor: palette.background },
         }}>
-        <Stack.Screen name="index" options={{ title: 'DoseCare' }} />
+        <Stack.Screen name="index" options={{ title: 'DoseCare', headerTitle: () => <Logo /> }} />
         <Stack.Screen name="profile/new" options={{ title: 'Novo perfil' }} />
         <Stack.Screen name="profile/[id]/index" options={{ title: 'Perfil' }} />
         <Stack.Screen name="profile/[id]/edit" options={{ title: 'Editar perfil' }} />
