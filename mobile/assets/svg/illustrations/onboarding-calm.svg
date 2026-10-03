@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 210" width="280" height="210" fill="none">
+
+  <circle cx="140" cy="112" r="92" fill="#FBF3E2"/>
+  <circle cx="140" cy="112" r="70" stroke="#E7DCC4" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <g transform="translate(96 66) scale(0.92)">
+    <path d="M18 100 C14 56 22 18 48 16 C76 18 82 56 78 100 Z" fill="#6B3F2A"/>
+    <path d="M4 112 C10 90 28 84 48 84 C70 84 86 90 92 112 Z" fill="#B79AD6"/>
+    <rect x="42" y="62" width="12" height="14" rx="5" fill="#E9B48E"/>
+    <ellipse cx="48" cy="47" rx="20" ry="22" fill="#F6C9A0"/>
+    <path d="M27 50 C25 30 35 20 48 20 C63 20 73 31 69 48 C62 43 54 35 50 28 C46 39 37 46 27 50 Z" fill="#6B3F2A"/>
+    
+  <circle cx="40" cy="49" r="2.6" fill="#3B2A24"/>
+  <circle cx="56" cy="49" r="2.6" fill="#3B2A24"/>
+  <circle cx="35" cy="56" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <circle cx="61" cy="56" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <path d="M42 58 Q48 63 54 58" stroke="#A9573F" stroke-width="2.2" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(32 46) scale(0.4792)"><defs><clipPath id="clip-calm-child"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#FCE3A6"/>
+<g clip-path="url(#clip-calm-child)">
+  <path d="M16 100 C18 78 31 71 48 71 C65 71 78 78 80 100 Z" fill="#7DBF8E"/>
+  <path d="M40 71 Q48 78 56 71" stroke="#5FA374" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="42" y="60" width="12" height="13" rx="5" fill="#E8AE85"/>
+  <circle cx="27" cy="49" r="5" fill="#F6C9A0"/>
+  <circle cx="69" cy="49" r="5" fill="#F6C9A0"/>
+  <ellipse cx="48" cy="47" rx="21" ry="22" fill="#F6C9A0"/>
+  <path d="M27 46 C25 29 35 20 48 20 C61 20 71 28 69 44 C65 38 59 34 53 32 C50 37 43 39 37 37 C33 39 29 42 27 46 Z" fill="#D9783A"/>
+  <path d="M45 20 C47 15 52 14 55 17" stroke="#D9783A" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="40" cy="48" r="2.6" fill="#3B2A24"/>
+  <circle cx="56" cy="48" r="2.6" fill="#3B2A24"/>
+  <circle cx="35" cy="55" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <circle cx="61" cy="55" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <path d="M42 57 Q48 62 54 57" stroke="#A9573F" stroke-width="2.2" stroke-linecap="round"/>
+</g><circle cx="48" cy="48" r="49.5" stroke="#FFFFFF" stroke-width="6.26"/></g>
+  <g transform="translate(118 2) scale(0.4583)"><defs><clipPath id="clip-calm-adult"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#D6E6FB"/>
+<g clip-path="url(#clip-calm-adult)">
+  <path d="M23 74 C18 50 22 21 48 20 C74 21 78 50 73 74 Z" fill="#2F2A35"/>
+  <path d="M15 100 C17 79 31 73 48 73 C65 73 79 79 81 100 Z" fill="#6E9BD1"/>
+  <path d="M41 73 L48 81 L55 73" fill="#F2C29E"/>
+  <rect x="42" y="60" width="12" height="14" rx="5" fill="#E9B48E"/>
+  <ellipse cx="48" cy="47" rx="19" ry="21" fill="#F2C29E"/>
+  <path d="M29 47 C28 31 37 24 48 24 C59 24 68 31 67 44 C60 41 53 36 49 30 C45 37 37 43 29 47 Z" fill="#2F2A35"/>
+  <circle cx="40" cy="48" r="2.6" fill="#3B2A24"/>
+  <circle cx="56" cy="48" r="2.6" fill="#3B2A24"/>
+  <circle cx="35" cy="55" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <circle cx="61" cy="55" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <path d="M42 57 Q48 62 54 57" stroke="#A9573F" stroke-width="2.2" stroke-linecap="round"/>
+</g><circle cx="48" cy="48" r="49.5" stroke="#FFFFFF" stroke-width="6.55"/></g>
+  <g transform="translate(204 40) scale(0.4792)"><defs><clipPath id="clip-calm-elderly"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#EADCF5"/>
+<g clip-path="url(#clip-calm-elderly)">
+  <circle cx="48" cy="20" r="9" fill="#CFC8C3"/>
+  <path d="M15 100 C17 79 31 73 48 73 C65 73 79 79 81 100 Z" fill="#B79AD6"/>
+  <path d="M38 74 C42 80 54 80 58 74" stroke="#9C7EC2" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="42" y="60" width="12" height="14" rx="5" fill="#E9B48E"/>
+  <circle cx="27" cy="49" r="5" fill="#F3C7A6"/>
+  <circle cx="69" cy="49" r="5" fill="#F3C7A6"/>
+  <ellipse cx="48" cy="48" rx="20" ry="21" fill="#F3C7A6"/>
+  <path d="M26 50 C22 32 33 23 48 23 C63 23 74 32 70 50 C67 42 61 37 55 36 C51 38 44 38 40 36 C34 37 29 42 26 50 Z" fill="#DAD4D0"/>
+  <path d="M41 51 Q44 50 47 51" stroke="#B9918A" stroke-width="0"/>
+  <circle cx="40" cy="50" r="2.6" fill="#3B2A24"/>
+  <circle cx="56" cy="50" r="2.6" fill="#3B2A24"/>
+  <circle cx="35" cy="57" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <circle cx="61" cy="57" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <path d="M42 59 Q48 64 54 59" stroke="#A9573F" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="40" cy="50" r="6.2" stroke="#8A6A5A" stroke-width="1.8"/>
+  <circle cx="56" cy="50" r="6.2" stroke="#8A6A5A" stroke-width="1.8"/>
+  <path d="M46.2 49.5 Q48 48 49.8 49.5" stroke="#8A6A5A" stroke-width="1.8" stroke-linecap="round"/>
+</g><circle cx="48" cy="48" r="49.5" stroke="#FFFFFF" stroke-width="6.26"/></g>
+  <g transform="translate(30 132) scale(0.4792)"><defs><clipPath id="clip-calm-pet"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#D3EDD8"/>
+<g clip-path="url(#clip-calm-pet)">
+  <path d="M24 100 C26 82 36 75 48 75 C60 75 70 82 72 100 Z" fill="#C79465"/>
+  <path d="M41 75 C44 84 52 84 55 75" fill="#F1DCC4"/>
+  <ellipse cx="48" cy="51" rx="20" ry="20" fill="#C79465"/>
+  <path d="M30 34 C19 36 16 55 22 66 C29 65 32 52 35 41 Z" fill="#6B4630"/>
+  <path d="M66 34 C77 36 80 55 74 66 C67 65 64 52 61 41 Z" fill="#6B4630"/>
+  <path d="M44 32 C45 42 45 50 48 55 C51 50 51 42 52 32 C49 30 47 30 44 32 Z" fill="#F1DCC4"/>
+  <ellipse cx="48" cy="61" rx="11.5" ry="8.5" fill="#F1DCC4"/>
+  <ellipse cx="48" cy="56.5" rx="4.2" ry="3.2" fill="#3A2A22"/>
+  <circle cx="39.5" cy="48" r="2.7" fill="#3A2A22"/>
+  <circle cx="56.5" cy="48" r="2.7" fill="#3A2A22"/>
+  <path d="M48 59.5 V62 M43.5 62.5 Q48 66 52.5 62.5" stroke="#7A4E36" stroke-width="2" stroke-linecap="round"/>
+</g><circle cx="48" cy="48" r="49.5" stroke="#FFFFFF" stroke-width="6.26"/></g>
+  <g transform="translate(206 130) scale(0.4792)"><defs><clipPath id="clip-calm-plant"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#DCF0D3"/>
+<g clip-path="url(#clip-calm-plant)">
+  <ellipse cx="48" cy="78" rx="18" ry="4" fill="#9CC98F"/>
+  <path d="M48 77 V44" stroke="#3F8A4E" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M48 62 C35 64 24 56 24 42 C37 40 47 49 48 62 Z" fill="#5FA86A"/>
+  <path d="M48 56 C59 58 72 49 72 35 C59 33 49 42 48 56 Z" fill="#4E9A5C"/>
+  <path d="M48 46 C41 38 41 26 48 18 C55 26 55 38 48 46 Z" fill="#77BD7F"/>
+  <path d="M46 60 C40 56 34 51 29 45 M50 54 C56 50 62 45 67 39 M48 42 V25" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="1.5" stroke-linecap="round"/>
+</g><circle cx="48" cy="48" r="49.5" stroke="#FFFFFF" stroke-width="6.26"/></g>
+</svg>
