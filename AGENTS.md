@@ -104,6 +104,7 @@ theme/, constants/  tokens visuais e paleta
 ## Lembretes (notificações)
 
 - **Lembretes são uma cópia descartável** das doses pendentes dos próximos 7 dias, mais um aviso diário às 09:00 para cada medicamento com estoque baixo. `syncReminders` cancela tudo e reagenda.
+- **Três avisos de renovação** ("abra o app") ficam 3, 2 e 1 dia antes do último lembrete agendado, com vagas reservadas no limite de 60 (`buildReminderSchedule`). Abrir o app reagenda tudo, então quem abre com frequência nunca os vê.
 - **Leituras de estoque ficam em `services/stock-queries.ts`,** separadas de `stock-service.ts`, porque o serviço de lembretes depende delas e a escrita de estoque depende do serviço de lembretes.
 - **Qualquer escrita que muda doses deve chamar `syncRemindersInBackground()`**, e a falha do lembrete nunca derruba a escrita.
 - **Android:**

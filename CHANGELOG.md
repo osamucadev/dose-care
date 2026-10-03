@@ -6,6 +6,14 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Não lançado]
 
+### Adicionado
+
+- Aviso para abrir o app três, dois e um dia antes do fim dos lembretes programados, para quem passa dias sem abrir o DoseCare. Abrir o app renova a programação.
+
+### Alterado
+
+- A lista "Próximos" vazia agora diz "Por hoje está tudo certo!" quando nada está pendente hoje, e "Nenhuma outra dose para hoje." quando ainda há uma dose em Agora ou em Próximo.
+
 ## [1.1.0] - 2026-10-03
 
 Controle de estoque com aviso de reposição e app inteiramente ilustrado, sem emojis.

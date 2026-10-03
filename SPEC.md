@@ -450,6 +450,15 @@ Mostrar aproximadamente:
 * 5 itens no desktop
 * 5 itens no mobile, com possibilidade de expandir
 
+## Lista vazia
+
+Quando não há outras doses para listar:
+
+* se nada está pendente hoje: "Por hoje está tudo certo!";
+* se ainda há uma dose em Agora ou em Próximo hoje: "Nenhuma outra dose para hoje."
+
+Nunca dizer que está tudo certo enquanto houver dose esperando.
+
 ---
 
 # 16. Clique em um Perfil
@@ -1111,6 +1120,18 @@ Exemplo:
 Nunca gera notificação automática.
 
 O SOS só aparece quando o usuário acessa o perfil.
+
+## Renovação dos lembretes
+
+Adicionado na versão 1.2.0.
+
+Os lembretes ficam programados no próprio aparelho por alguns dias à frente. Abrir o app renova essa programação.
+
+Para quem passa dias sem abrir o app, há um aviso às 09:00 três, dois e um dia antes do último lembrete programado:
+
+> Seus lembretes estão programados até 10/10. Abra o DoseCare para programar os próximos dias.
+
+Quem abre o app com frequência nunca recebe esse aviso, porque cada abertura empurra a programação para frente.
 
 ---
 
