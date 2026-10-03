@@ -1,32 +1,15 @@
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-
 import { ErrorState } from '@/components/ui/error-state';
 import { ScreenContainer } from '@/components/ui/screen-container';
 import { ProfileForm } from '@/features/profiles/profile-form';
-import * as profileService from '@/services/profile-service';
+import { useNewProfileViewModel } from '@/view-models/use-new-profile-view-model';
 
 export default function NewProfileScreen() {
-  const router = useRouter();
-  const [error, setError] = useState<Error | null>(null);
+  const vm = useNewProfileViewModel();
 
   return (
     <ScreenContainer>
-      {error ? <ErrorState onRetry={() => setError(null)} /> : null}
-      <ProfileForm
-        submitLabel="Salvar perfil"
-        onSubmit={async (values) => {
-          try {
-            const profile = await profileService.createProfile({
-              ...values,
-              notes: values.notes || null,
-            });
-            router.replace(`/profile/${profile.id}`);
-          } catch (err) {
-            setError(err instanceof Error ? err : new Error(String(err)));
-          }
-        }}
-      />
+      {vm.hasSubmitError ? <ErrorState onRetry={vm.dismissSubmitError} /> : null}
+      <ProfileForm submitLabel="Salvar perfil" onSubmit={vm.submit} />
     </ScreenContainer>
   );
 }
