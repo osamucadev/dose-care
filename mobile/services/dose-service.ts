@@ -6,6 +6,8 @@ import { createDoseEventFromOccurrence } from '@/domain/dose-events';
 import { generateOccurrencesForDateRange } from '@/domain/occurrences';
 import type { DoseEvent, DoseEventStatus, DoseOccurrence } from '@/domain/types';
 
+import { syncRemindersInBackground } from './reminder-service';
+
 /**
  * Re-exported so callers (hooks, tests) can recognize a duplicate
  * registration with `instanceof` without reaching past the service
@@ -56,6 +58,8 @@ export async function recordDoseAction(
     occurredAt: nowUtcIso(),
   });
   await doseEvents.create(event);
+  // The recorded dose no longer needs its reminder.
+  syncRemindersInBackground();
 }
 
 export async function getHistoryForProfile(profileId: string): Promise<DoseEvent[]> {

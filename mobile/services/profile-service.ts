@@ -2,6 +2,8 @@ import { getRepositories } from '@/database/repositories';
 import type { CreateProfileInput, UpdateProfileInput } from '@/database/repositories';
 import type { Profile } from '@/domain/types';
 
+import { syncRemindersInBackground } from './reminder-service';
+
 export async function listProfiles(): Promise<Profile[]> {
   const { profiles } = await getRepositories();
   return profiles.listAll();
@@ -20,6 +22,8 @@ export async function createProfile(input: CreateProfileInput): Promise<Profile>
 export async function updateProfile(id: string, input: UpdateProfileInput): Promise<void> {
   const { profiles } = await getRepositories();
   await profiles.update(id, input);
+  // Reminder titles carry the profile name.
+  syncRemindersInBackground();
 }
 
 /**
@@ -31,4 +35,5 @@ export async function updateProfile(id: string, input: UpdateProfileInput): Prom
 export async function deactivateProfile(id: string): Promise<void> {
   const { profiles } = await getRepositories();
   await profiles.setActive(id, false);
+  syncRemindersInBackground();
 }
