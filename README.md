@@ -110,19 +110,31 @@ dose-care/
     ├── features/
     ├── hooks/
     ├── services/
-    └── theme/
+    ├── theme/
+    └── view-models/
 ```
 
 Responsabilidades principais:
 
-- `mobile/app`: telas e rotas do Expo Router;
+- `mobile/app`: telas e rotas do Expo Router (Views, apenas renderizam);
 - `mobile/components`: componentes visuais compartilhados;
 - `mobile/database`: conexão SQLite, migrations e repositórios;
 - `mobile/domain`: tipos, validações e regras de negócio puras;
 - `mobile/features`: componentes organizados por área funcional;
 - `mobile/hooks`: integração entre estado React e serviços;
 - `mobile/services`: operações da aplicação e acesso aos repositórios;
-- `mobile/theme`: tokens e definições visuais.
+- `mobile/theme`: tokens e definições visuais;
+- `mobile/view-models`: um ViewModel por tela, com o estado pronto para exibir e os comandos, incluindo a navegação.
+
+## Arquitetura
+
+O app segue MVVM:
+
+- **Model**: `domain`, `database`, `services` e os hooks de dados em `hooks` (por exemplo `useDoses`).
+- **ViewModel**: hooks em `view-models`, como `useHomeViewModel`. Combinam os dados, derivam o que a tela mostra e expõem comandos (`markTaken`, `openProfile`). A lógica de apresentação com regras fica em funções puras testadas, como `buildHomeDosesState`.
+- **View**: as telas em `app` e os componentes em `features` e `components`, que só renderizam.
+
+Uma regra de lint impede que as telas em `app` importem `services`, `database`, `domain`, hooks de dados ou `useRouter`.
 
 ## Modelo de dados
 
