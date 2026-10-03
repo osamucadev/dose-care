@@ -54,7 +54,8 @@
           "icon": "./assets/images/notification-icon.png",
           "color": "#1F6F72"
         }
-      ]
+      ],
+      "./plugins/with-release-signing"
     ],
     "experiments": {
       "typedRoutes": true,
