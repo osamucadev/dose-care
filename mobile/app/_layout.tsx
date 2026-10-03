@@ -35,6 +35,7 @@ export default function RootLayout() {
         <Stack.Screen name="profile/[id]/history" options={{ title: 'Histórico' }} />
         <Stack.Screen name="medication/new" options={{ title: 'Novo medicamento' }} />
         <Stack.Screen name="medication/[id]/edit" options={{ title: 'Editar medicamento' }} />
+        <Stack.Screen name="medication/[id]/stock" options={{ title: 'Estoque' }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

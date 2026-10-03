@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 
 import { computeNowAndNext } from '@/domain/occurrences';
+import type { StockStatus } from '@/domain/stock';
 import type { DoseOccurrence, Medication } from '@/domain/types';
 import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
 import { useDoses } from '@/hooks/use-doses';
@@ -10,6 +11,7 @@ import { useMedicationToggleHandler } from '@/hooks/use-medication-toggle-handle
 import { useMedications } from '@/hooks/use-medications';
 import { useProfile } from '@/hooks/use-profile';
 import { useReactiveNow } from '@/hooks/use-reactive-now';
+import { useStockStatuses } from '@/hooks/use-stock-statuses';
 import { getProfileTypeMeta } from '@/theme/profile-types';
 
 export type ProfileDosesSection =
@@ -20,7 +22,7 @@ export type ProfileDosesSection =
 export type ProfileMedicationsSection =
   | { status: 'loading' }
   | { status: 'error'; retry: () => void }
-  | { status: 'ready'; items: Medication[] };
+  | { status: 'ready'; items: Medication[]; stockByMedication: Record<string, StockStatus> };
 
 export type ProfileViewModel =
   | { status: 'loading' }
@@ -46,6 +48,7 @@ export type ProfileViewModel =
       openHistory: () => void;
       addMedication: () => void;
       editMedication: (id: string) => void;
+      updateStock: (medicationId: string) => void;
     };
 
 export function useProfileViewModel(id: string): ProfileViewModel {
@@ -68,6 +71,9 @@ export function useProfileViewModel(id: string): ProfileViewModel {
   // minute ticks just reclassify Agora/Próximo from occurrences already
   // in memory, no SQLite access.
   const now = useReactiveNow({ onStale: refreshDoses });
+  // Re-read whenever occurrences reload: a dose just marked as taken
+  // consumed stock.
+  const { stockByMedication } = useStockStatuses(medications, occurrences);
 
   useFocusEffect(
     useCallback(() => {
@@ -100,7 +106,7 @@ export function useProfileViewModel(id: string): ProfileViewModel {
       ? { status: 'error', retry: refreshMedications }
       : medicationsLoading
         ? { status: 'loading' }
-        : { status: 'ready', items: medications },
+        : { status: 'ready', items: medications, stockByMedication },
     actingOccurrenceId,
     hasActionError: actionError !== null,
     dismissActionError: clearActionError,
@@ -116,5 +122,6 @@ export function useProfileViewModel(id: string): ProfileViewModel {
     openHistory: () => router.replace(`/profile/${profile.id}/history`),
     addMedication: () => router.push({ pathname: '/medication/new', params: { profileId: profile.id } }),
     editMedication: (medicationId) => router.push(`/medication/${medicationId}/edit`),
+    updateStock: (medicationId) => router.push(`/medication/${medicationId}/stock`),
   };
 }

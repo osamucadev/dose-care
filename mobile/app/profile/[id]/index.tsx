@@ -131,6 +131,8 @@ export default function ProfileScreen() {
                 busy={vm.togglingMedicationId === medication.id}
                 onEdit={() => vm.editMedication(medication.id)}
                 onToggleActive={() => vm.toggleMedication(medication)}
+                stock={medications.stockByMedication[medication.id]}
+                onUpdateStock={() => vm.updateStock(medication.id)}
               />
             ))}
             <Button label="Adicionar medicamento (Rotina)" icon="plus" variant="soft" onPress={vm.addMedication} />
