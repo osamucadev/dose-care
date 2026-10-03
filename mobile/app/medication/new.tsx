@@ -1,34 +1,18 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
 
 import { ErrorState } from '@/components/ui/error-state';
 import { ScreenContainer } from '@/components/ui/screen-container';
 import { MedicationForm } from '@/features/medications/medication-form';
-import { toMedicationRoutineInput } from '@/features/medications/medication-form-values';
-import * as medicationService from '@/services/medication-service';
+import { useNewMedicationViewModel } from '@/view-models/use-new-medication-view-model';
 
 export default function NewMedicationScreen() {
   const { profileId } = useLocalSearchParams<{ profileId: string }>();
-  const router = useRouter();
-  const [error, setError] = useState<Error | null>(null);
+  const vm = useNewMedicationViewModel(profileId);
 
   return (
     <ScreenContainer>
-      {error ? <ErrorState onRetry={() => setError(null)} /> : null}
-      <MedicationForm
-        submitLabel="Salvar medicamento"
-        onSubmit={async (values) => {
-          try {
-            await medicationService.createMedication({
-              profileId,
-              ...toMedicationRoutineInput(values),
-            });
-            router.back();
-          } catch (err) {
-            setError(err instanceof Error ? err : new Error(String(err)));
-          }
-        }}
-      />
+      {vm.hasSubmitError ? <ErrorState onRetry={vm.dismissSubmitError} /> : null}
+      <MedicationForm submitLabel="Salvar medicamento" onSubmit={vm.submit} />
     </ScreenContainer>
   );
 }

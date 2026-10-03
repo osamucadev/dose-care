@@ -1,4 +1,5 @@
 import type { MedicationRoutineInput } from '@/database/repositories';
+import type { Medication } from '@/domain/types';
 
 import type { MedicationFormValues } from './medication-schema';
 
@@ -27,5 +28,24 @@ export function toMedicationRoutineInput(
       values.endMode === 'dose_count' && values.totalScheduledDoses
         ? Number(values.totalScheduledDoses)
         : null,
+  };
+}
+
+/**
+ * The inverse of `toMedicationRoutineInput`: a persisted medication as
+ * the edit form's initial values. Optional text fields become '' and
+ * the dose count becomes text, since TextInput values are strings.
+ */
+export function toMedicationFormValues(medication: Medication): MedicationFormValues {
+  return {
+    name: medication.name,
+    dosage: medication.dosage ?? '',
+    quantityPerDose: medication.quantityPerDose ?? '',
+    notes: medication.notes ?? '',
+    times: medication.times,
+    startDate: medication.startDate,
+    endMode: medication.endMode,
+    endDate: medication.endDate ?? '',
+    totalScheduledDoses: medication.totalScheduledDoses !== null ? String(medication.totalScheduledDoses) : '',
   };
 }
