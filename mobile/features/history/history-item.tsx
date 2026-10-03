@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
+import { Icon } from '@/components/ui/icon';
 import { ThemedText } from '@/components/ui/themed-text';
 import { formatUtcIsoToLocalTime } from '@/domain/datetime';
 import type { DoseEvent } from '@/domain/types';
@@ -16,7 +17,7 @@ export function HistoryItem({ event }: { event: DoseEvent }) {
 
   return (
     <View style={styles.container}>
-      <ThemedText variant="subtitle">
+      <ThemedText variant="subtitle" style={styles.name}>
         {event.medicationNameSnapshot}
         {event.dosageSnapshot ? ` · ${event.dosageSnapshot}` : ''}
       </ThemedText>
@@ -26,13 +27,18 @@ export function HistoryItem({ event }: { event: DoseEvent }) {
         {formatHistoryDate(event.scheduledAt)} · previsto {doseTimeLabel(event.scheduledAt)} · realizado{' '}
         {formatUtcIsoToLocalTime(event.occurredAt)}
       </ThemedText>
-      <ThemedText variant="label" style={{ color: taken ? success : danger }}>
-        {taken ? '✓ Tomado' : '× Pulado'}
-      </ThemedText>
+      <View style={styles.status}>
+        <Icon name={taken ? 'check-circle' : 'close'} size={18} color={taken ? success : danger} />
+        <ThemedText variant="label" style={{ color: taken ? success : danger }}>
+          {taken ? 'Tomado' : 'Pulado'}
+        </ThemedText>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.xs, paddingVertical: spacing.sm },
+  container: { gap: spacing.xs, paddingVertical: spacing.md },
+  name: { fontSize: 17, lineHeight: 22 },
+  status: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
 });

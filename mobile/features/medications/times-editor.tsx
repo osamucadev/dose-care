@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
+import { Icon } from '@/components/ui/icon';
 import { ThemedText } from '@/components/ui/themed-text';
 import { toLocalTimeString } from '@/domain/datetime';
 import { useThemeColor } from '@/hooks/use-theme-color';
@@ -17,7 +18,8 @@ interface TimesEditorProps {
 export function TimesEditor({ value, onChange, error }: TimesEditorProps) {
   const [showPicker, setShowPicker] = useState(false);
   const [pickerValue, setPickerValue] = useState(new Date());
-  const surface = useThemeColor({}, 'surface');
+  const tint = useThemeColor({}, 'tint');
+  const tintSoft = useThemeColor({}, 'tintSoft');
   const border = useThemeColor({}, 'border');
   const danger = useThemeColor({}, 'danger');
 
@@ -45,14 +47,14 @@ export function TimesEditor({ value, onChange, error }: TimesEditorProps) {
 
       <View style={styles.chips}>
         {value.map((time) => (
-          <View key={time} style={[styles.chip, { backgroundColor: surface, borderColor: border }]}>
+          <View key={time} style={[styles.chip, { backgroundColor: tintSoft }]}>
             <ThemedText variant="body">{time}</ThemedText>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`Remover horário ${time}`}
               onPress={() => removeTime(time)}
               hitSlop={8}>
-              <ThemedText style={{ color: danger }}>×</ThemedText>
+              <Icon name="close" size={16} color={tint} />
             </Pressable>
           </View>
         ))}
@@ -65,8 +67,9 @@ export function TimesEditor({ value, onChange, error }: TimesEditorProps) {
       ) : null}
 
       <Button
-        label="+ Adicionar horário"
-        variant="secondary"
+        label="Adicionar horário"
+        icon="plus"
+        variant="soft"
         onPress={() => {
           setPickerValue(new Date());
           setShowPicker(true);
@@ -115,7 +118,6 @@ const styles = StyleSheet.create({
     minHeight: 44,
     paddingHorizontal: spacing.md,
     borderRadius: radius.pill,
-    borderWidth: 1,
   },
   pickerWrap: { borderWidth: 1, borderRadius: radius.md, padding: spacing.sm, gap: spacing.sm },
   iosActions: { flexDirection: 'row', gap: spacing.sm },

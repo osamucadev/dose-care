@@ -2,6 +2,7 @@ import DateTimePicker, { type DateTimePickerEvent } from '@react-native-communit
 import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
+import { Icon } from '@/components/ui/icon';
 import { ThemedText } from '@/components/ui/themed-text';
 import { parseScheduledLocalDateTime, toLocalDateString } from '@/domain/datetime';
 import { useThemeColor } from '@/hooks/use-theme-color';
@@ -37,6 +38,7 @@ export function DateField({ label, value, onChange, error, minimumDate }: DateFi
         onPress={() => setShowPicker(true)}
         style={[styles.field, { borderColor: border, backgroundColor: surface }]}>
         <ThemedText variant="body">{value}</ThemedText>
+        <Icon name="calendar" size={20} />
       </Pressable>
       {error ? (
         <ThemedText variant="muted" style={{ color: danger }}>
@@ -58,5 +60,13 @@ export function DateField({ label, value, onChange, error, minimumDate }: DateFi
 
 const styles = StyleSheet.create({
   container: { gap: spacing.xs },
-  field: { minHeight: 48, justifyContent: 'center', borderWidth: 1, borderRadius: radius.md, paddingHorizontal: spacing.md },
+  field: {
+    minHeight: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+  },
 });
