@@ -9,9 +9,12 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.samuelcaetite.dosecare"
     },
     "android": {
+      "package": "dev.samuelcaetite.dosecare",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#FEFAF2",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
