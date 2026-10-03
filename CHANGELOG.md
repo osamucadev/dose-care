@@ -6,6 +6,10 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Não lançado]
 
+## [1.2.0] - 2026-10-03
+
+Lembretes que não param sem aviso e uma lista "Próximos" mais clara.
+
 ### Adicionado
 
 - Aviso para abrir o app três, dois e um dia antes do fim dos lembretes programados, para quem passa dias sem abrir o DoseCare. Abrir o app renova a programação.
@@ -104,6 +108,7 @@ Primeira versão oficial. App Android instalável por APK, com todos os dados gu
 - **Ainda não existem:** medicamentos SOS, adiamento de dose ("Depois") e recorrências além de horários fixos.
 - **A versão web ainda não abre o banco de dados.**
 
-[Não lançado]: https://github.com/osamucadev/dose-care/compare/v1.1.0...HEAD
+[Não lançado]: https://github.com/osamucadev/dose-care/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/osamucadev/dose-care/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/osamucadev/dose-care/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/osamucadev/dose-care/releases/tag/v1.0.0
