@@ -101,3 +101,19 @@ export interface DoseOccurrence {
   status: DoseOccurrenceStatus;
   event: DoseEvent | null;
 }
+
+/**
+ * How many doses of a medication the user had on hand at a moment. Rows
+ * are immutable: recording a purchase or a recount appends a new one, and
+ * the latest is the base for the current stock (see `domain/stock.ts`).
+ */
+export interface StockCount {
+  id: string;
+  medicationId: string;
+  /** Whole doses, not pills/ml: each dose marked as taken consumes one. */
+  dosesOnHand: number;
+  /** UTC ISO 8601 timestamp of when the user counted. */
+  countedAt: string;
+  /** UTC ISO 8601 timestamp. */
+  createdAt: string;
+}

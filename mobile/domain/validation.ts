@@ -279,3 +279,33 @@ export function assertValidDoseEvent(event: DoseEventCandidate): asserts event i
     throw new InvalidPersistedDataError(`DoseEvent.createdAt is invalid: ${event.createdAt}.`);
   }
 }
+
+/** Upper bound for a stock count; like MAX_TOTAL_SCHEDULED_DOSES, only catches fat-fingered entries. */
+export const MAX_STOCK_DOSES = 100_000;
+
+export interface StockCountCandidate {
+  id: string;
+  medicationId: string;
+  dosesOnHand: number;
+  countedAt: string;
+  createdAt: string;
+}
+
+/** Same role as `assertValidDoseEvent`: checked before INSERT and after reading a row back. */
+export function assertValidStockCount(count: StockCountCandidate): void {
+  if (count.id.trim().length === 0) {
+    throw new InvalidPersistedDataError('StockCount.id must not be empty.');
+  }
+  if (count.medicationId.trim().length === 0) {
+    throw new InvalidPersistedDataError('StockCount.medicationId must not be empty.');
+  }
+  if (!Number.isInteger(count.dosesOnHand) || count.dosesOnHand < 0 || count.dosesOnHand > MAX_STOCK_DOSES) {
+    throw new InvalidPersistedDataError(`StockCount.dosesOnHand is invalid: ${count.dosesOnHand}.`);
+  }
+  if (!isValidUtcIsoTimestamp(count.countedAt)) {
+    throw new InvalidPersistedDataError(`StockCount.countedAt is invalid: ${count.countedAt}.`);
+  }
+  if (!isValidUtcIsoTimestamp(count.createdAt)) {
+    throw new InvalidPersistedDataError(`StockCount.createdAt is invalid: ${count.createdAt}.`);
+  }
+}

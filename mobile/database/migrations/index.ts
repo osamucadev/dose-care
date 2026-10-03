@@ -2,6 +2,7 @@ import { initialSchema } from './001_initial';
 import { profileActiveColumn } from './002_profile_active';
 import { medicationTreatmentEndFields } from './003_medication_treatment_end';
 import { svgAvatars } from './004_svg_avatars';
+import { stockCounts } from './005_stock_counts';
 import type { Migration } from './types';
 
 /**
@@ -24,6 +25,7 @@ export const migrations: Migration[] = [
   profileActiveColumn,
   medicationTreatmentEndFields,
   svgAvatars,
+  stockCounts,
 ];
 
 export type { Migration };

@@ -72,6 +72,20 @@ export class DoseEventRepository {
   }
 
   /**
+   * How many doses of a medication were marked as taken strictly after
+   * `sinceUtcIso` (by when the action happened, not the scheduled time):
+   * what has been consumed since the last stock count.
+   */
+  async countTakenSince(medicationId: string, sinceUtcIso: string): Promise<number> {
+    const row = await this.db.getFirstAsync<{ taken: number }>(
+      "SELECT COUNT(*) AS taken FROM dose_events WHERE medication_id = ? AND status = 'taken' AND occurred_at > ?;",
+      medicationId,
+      sinceUtcIso
+    );
+    return row?.taken ?? 0;
+  }
+
+  /**
    * Inserts a dose event. `assertValidDoseEvent` runs first — before
    * any SQL — so a malformed event never reaches the database; TypeScript
    * alone isn't trusted here, since `event` could originate from a

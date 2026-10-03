@@ -2,17 +2,20 @@ import { getDatabase } from '../client';
 import { DoseEventRepository } from './dose-event-repository';
 import { MedicationRepository } from './medication-repository';
 import { ProfileRepository } from './profile-repository';
+import { StockRepository } from './stock-repository';
 
 export { DoseAlreadyResolvedError, DoseEventRepository } from './dose-event-repository';
 export type { MedicationRoutineInput } from './medication-repository';
 export { MedicationRepository } from './medication-repository';
 export type { CreateProfileInput, UpdateProfileInput } from './profile-repository';
 export { ProfileRepository } from './profile-repository';
+export { StockRepository } from './stock-repository';
 
 export interface Repositories {
   profiles: ProfileRepository;
   medications: MedicationRepository;
   doseEvents: DoseEventRepository;
+  stock: StockRepository;
 }
 
 let repositoriesPromise: Promise<Repositories> | null = null;
@@ -24,6 +27,7 @@ export function getRepositories(): Promise<Repositories> {
       profiles: new ProfileRepository(db),
       medications: new MedicationRepository(db),
       doseEvents: new DoseEventRepository(db),
+      stock: new StockRepository(db),
     }));
   }
   return repositoriesPromise;
