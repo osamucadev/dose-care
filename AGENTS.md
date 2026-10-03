@@ -139,7 +139,8 @@ theme/, constants/  tokens visuais e paleta
 - **O corpo explica o porquê,** não repete o diff.
 - **Cada commit precisa passar typecheck, lint e testes sozinho.**
 - **Nunca commite** segredos, a keystore, `android/`, `ios/`, `dist/`, `.expo/` ou `.yarnrc.yml`.
-- **Commit e push só quando o mantenedor pedir.**
+- **Commit automático:** ao terminar cada tarefa que altera arquivos, commite sem esperar pedido, seguindo as regras acima. Verifique antes (typecheck, lint, testes e, se mudou algo visível, o app rodando) e só então divida em commits pequenos.
+- **Push e releases só quando o mantenedor pedir.** Os commits ficam locais até lá.
 
 ## Escrita
 
