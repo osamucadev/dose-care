@@ -20,7 +20,7 @@ interface DateFieldProps {
 /** A single local-date picker: tap to open the native date picker, styled like the rest of the form. */
 export function DateField({ label, value, onChange, error, minimumDate }: DateFieldProps) {
   const [showPicker, setShowPicker] = useState(false);
-  const border = useThemeColor({}, error ? 'danger' : 'border');
+  const border = useThemeColor({}, error ? 'danger' : 'inputBorder');
   const surface = useThemeColor({}, 'surface');
   const danger = useThemeColor({}, 'danger');
 

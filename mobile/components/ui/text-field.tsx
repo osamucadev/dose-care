@@ -15,7 +15,7 @@ interface TextFieldProps extends TextInputProps {
 export const TextField = forwardRef<TextInput, TextFieldProps>(
   ({ label, error, required, style, ...rest }, ref) => {
     const text = useThemeColor({}, 'text');
-    const border = useThemeColor({}, error ? 'danger' : 'border');
+    const border = useThemeColor({}, error ? 'danger' : 'inputBorder');
     const surface = useThemeColor({}, 'surface');
     const muted = useThemeColor({}, 'textMuted');
 

@@ -17,11 +17,12 @@ interface ProfileTypePickerProps {
 export function ProfileTypePicker({ value, onChange }: ProfileTypePickerProps) {
   const surface = useThemeColor({}, 'surface');
   const border = useThemeColor({}, 'border');
+  const inputBorder = useThemeColor({}, 'inputBorder');
   const tint = useThemeColor({}, 'tint');
   const tintSoft = useThemeColor({}, 'tintSoft');
 
   return (
-    <View style={[styles.list, { backgroundColor: surface, borderColor: border }]} accessibilityRole="radiogroup">
+    <View style={[styles.list, { backgroundColor: surface, borderColor: inputBorder }]} accessibilityRole="radiogroup">
       {PROFILE_TYPES.map((meta, index) => {
         const selected = meta.type === value;
         return (
