@@ -1,6 +1,6 @@
 import type { DoseOccurrence, Profile } from '@/domain/types';
 
-import { buildHomeDosesState, buildRestockRows, HOME_UPCOMING_LIMIT } from '../home-view-state';
+import { buildHomeDosesState, buildRestockRows, HOME_UPCOMING_LIMIT, upcomingEmptyLabel } from '../home-view-state';
 
 function makeProfile(overrides: Partial<Profile> = {}): Profile {
   return {
@@ -125,5 +125,33 @@ describe('buildRestockRows', () => {
 
   it('only shows the selected profile', () => {
     expect(buildRestockRows(items, [florita, nino], 'florita').map((r) => r.medicationId)).toEqual(['m1']);
+  });
+});
+
+describe('upcomingEmptyLabel', () => {
+  const today = '2026-08-15';
+
+  it('says all is fine when nothing is pending today', () => {
+    expect(upcomingEmptyLabel(null, null, today)).toBe('Por hoje está tudo certo!');
+    expect(upcomingEmptyLabel(null, makeOccurrence('florita', '2026-08-16T08:00'), today)).toBe(
+      'Por hoje está tudo certo!'
+    );
+  });
+
+  it('does not say all is fine while a dose waits in Agora', () => {
+    expect(upcomingEmptyLabel(makeOccurrence('florita', '2026-08-15T08:00'), null, today)).toBe(
+      'Nenhuma outra dose para hoje.'
+    );
+  });
+
+  it('does not say all is fine while Próximo is still today', () => {
+    expect(upcomingEmptyLabel(null, makeOccurrence('florita', '2026-08-15T20:00'), today)).toBe(
+      'Nenhuma outra dose para hoje.'
+    );
+  });
+
+  it('reaches the Home state', () => {
+    const state = buildHomeDosesState({ profiles: [florita], occurrences: [], selectedProfileId: null, now: NOW });
+    expect(state.upcomingEmptyLabel).toBe('Por hoje está tudo certo!');
   });
 });

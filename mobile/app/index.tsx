@@ -116,7 +116,7 @@ export default function HomeScreen() {
             title={doses.upcomingTitle}
             occurrences={doses.upcoming}
             profilesById={doses.upcomingProfilesById}
-            emptyLabel="Nenhuma dose pendente por aqui."
+            emptyLabel={doses.upcomingEmptyLabel}
           />
         </>
       )}

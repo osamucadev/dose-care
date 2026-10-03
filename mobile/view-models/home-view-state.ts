@@ -29,11 +29,28 @@ export interface HomeDosesState {
   /** Only in the aggregated view: a filtered view already says whose doses these are. */
   nextProfile: Profile | null;
   upcomingTitle: string;
+  /** Shown when the upcoming list is empty; see `upcomingEmptyLabel`. */
+  upcomingEmptyLabel: string;
   upcoming: DoseOccurrence[];
   /** Only in the aggregated view, for the same reason as `nextProfile`. */
   upcomingProfilesById: Record<string, Profile> | undefined;
   /** One row per profile in the aggregated view; null while a single profile is selected. */
   profileRows: HomeProfileRow[] | null;
+}
+
+/**
+ * What the upcoming-doses list says when it has nothing to list. "Por
+ * hoje está tudo certo!" only when nothing at all is pending today:
+ * with a dose waiting in Agora, or one later today in Próximo, that
+ * would be untrue, so it just says there is no other dose today.
+ */
+export function upcomingEmptyLabel(
+  now: DoseOccurrence | null,
+  next: DoseOccurrence | null,
+  todayStr: string
+): string {
+  const nextIsToday = next !== null && next.scheduledAt.startsWith(`${todayStr}T`);
+  return now === null && !nextIsToday ? 'Por hoje está tudo certo!' : 'Nenhuma outra dose para hoje.';
 }
 
 /**
@@ -67,6 +84,7 @@ export function buildHomeDosesState(input: {
     nextProfile: aggregated ? (nextOwner ?? null) : null,
     upcomingTitle: aggregated ? 'Próximos' : 'Próximas doses de hoje',
     upcoming: nowNext.upcomingToday.slice(0, HOME_UPCOMING_LIMIT),
+    upcomingEmptyLabel: upcomingEmptyLabel(nowNext.now, nowNext.next, todayStr),
     upcomingProfilesById: aggregated ? profilesById : undefined,
     profileRows: aggregated
       ? profiles.map((profile) => {

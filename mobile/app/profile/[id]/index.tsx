@@ -99,7 +99,7 @@ export default function ProfileScreen() {
           <UpcomingList
             title="Próximas doses de hoje"
             occurrences={doses.upcoming}
-            emptyLabel="Nenhuma dose pendente hoje."
+            emptyLabel={doses.upcomingEmptyLabel}
           />
         </>
       )}

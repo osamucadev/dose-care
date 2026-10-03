@@ -2,6 +2,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 
+import { toLocalDateString } from '@/domain/datetime';
 import { computeNowAndNext } from '@/domain/occurrences';
 import type { StockStatus } from '@/domain/stock';
 import type { DoseOccurrence, Medication } from '@/domain/types';
@@ -14,10 +15,18 @@ import { useReactiveNow } from '@/hooks/use-reactive-now';
 import { useStockStatuses } from '@/hooks/use-stock-statuses';
 import { getProfileTypeMeta } from '@/theme/profile-types';
 
+import { upcomingEmptyLabel } from './home-view-state';
+
 export type ProfileDosesSection =
   | { status: 'loading' }
   | { status: 'error'; retry: () => void }
-  | { status: 'ready'; now: DoseOccurrence | null; next: DoseOccurrence | null; upcoming: DoseOccurrence[] };
+  | {
+      status: 'ready';
+      now: DoseOccurrence | null;
+      next: DoseOccurrence | null;
+      upcoming: DoseOccurrence[];
+      upcomingEmptyLabel: string;
+    };
 
 export type ProfileMedicationsSection =
   | { status: 'loading' }
@@ -101,7 +110,13 @@ export function useProfileViewModel(id: string): ProfileViewModel {
       ? { status: 'error', retry: refreshDoses }
       : dosesLoading && occurrences.length === 0
         ? { status: 'loading' }
-        : { status: 'ready', now: nowNext.now, next: nowNext.next, upcoming: nowNext.upcomingToday },
+        : {
+            status: 'ready',
+            now: nowNext.now,
+            next: nowNext.next,
+            upcoming: nowNext.upcomingToday,
+            upcomingEmptyLabel: upcomingEmptyLabel(nowNext.now, nowNext.next, toLocalDateString(now)),
+          },
     medications: medicationsError
       ? { status: 'error', retry: refreshMedications }
       : medicationsLoading
