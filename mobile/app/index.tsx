@@ -11,6 +11,7 @@ import { AllClearCard } from '@/features/doses/all-clear-card';
 import { NextPreview } from '@/features/doses/next-preview';
 import { NowCard } from '@/features/doses/now-card';
 import { UpcomingList } from '@/features/doses/upcoming-list';
+import { RestockList } from '@/features/medications/restock-list';
 import { ProfileCard } from '@/features/profiles/profile-card';
 import { ProfileSelector } from '@/features/profiles/profile-selector';
 import { spacing } from '@/theme/tokens';
@@ -84,6 +85,8 @@ export default function HomeScreen() {
           )}
 
           {doses.next ? <NextPreview occurrence={doses.next} profile={doses.nextProfile ?? undefined} /> : null}
+
+          {vm.restock.length > 0 ? <RestockList rows={vm.restock} onSelect={vm.updateStock} /> : null}
 
           {doses.profileRows ? (
             <View style={styles.profileList}>

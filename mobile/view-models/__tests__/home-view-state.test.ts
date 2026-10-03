@@ -1,6 +1,6 @@
 import type { DoseOccurrence, Profile } from '@/domain/types';
 
-import { buildHomeDosesState, HOME_UPCOMING_LIMIT } from '../home-view-state';
+import { buildHomeDosesState, buildRestockRows, HOME_UPCOMING_LIMIT } from '../home-view-state';
 
 function makeProfile(overrides: Partial<Profile> = {}): Profile {
   return {
@@ -104,5 +104,26 @@ describe('buildHomeDosesState, limits and labels', () => {
   it('reports "none" for a profile without doses', () => {
     const state = buildHomeDosesState({ profiles: [florita], occurrences: [], selectedProfileId: null, now: NOW });
     expect(state.profileRows).toEqual([{ profile: florita, status: 'none', nextTime: null }]);
+  });
+});
+
+describe('buildRestockRows', () => {
+  const status = (remaining: number, base = 30) => ({ base, remaining, level: 'low' as const, daysLeft: remaining });
+  const items = [
+    { medicationId: 'm1', profileId: 'florita', medicationName: 'Losartana', dosage: '50 mg', status: status(3) },
+    { medicationId: 'm2', profileId: 'nino', medicationName: 'Ração', dosage: null, status: status(1) },
+    { medicationId: 'm3', profileId: 'gone', medicationName: 'Outro', dosage: null, status: status(0) },
+  ];
+
+  it('lists the closest to running out first, with a readable label, dropping unlisted profiles', () => {
+    const rows = buildRestockRows(items, [florita, nino], null);
+    expect(rows.map((r) => [r.medicationLabel, r.profile.name])).toEqual([
+      ['Ração', 'Nino'],
+      ['Losartana 50 mg', 'Florita'],
+    ]);
+  });
+
+  it('only shows the selected profile', () => {
+    expect(buildRestockRows(items, [florita, nino], 'florita').map((r) => r.medicationId)).toEqual(['m1']);
   });
 });

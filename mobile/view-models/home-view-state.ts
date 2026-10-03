@@ -1,7 +1,9 @@
 import { toLocalDateString } from '@/domain/datetime';
 import { computeNowAndNext, computeProfileDayStatus, type ProfileDayStatus } from '@/domain/occurrences';
+import type { RestockItem } from '@/domain/reminders';
 import type { DoseOccurrence, Profile } from '@/domain/types';
 import { doseDayTimeLabel } from '@/features/doses/dose-time';
+import type { RestockRow } from '@/features/medications/restock-list';
 import { getProfileTypeMeta } from '@/theme/profile-types';
 
 /** How many upcoming doses the Home lists at most (SPEC §15). */
@@ -78,4 +80,26 @@ export function buildHomeDosesState(input: {
         })
       : null,
   };
+}
+
+/**
+ * "Para repor" rows: low-stock medications of the visible profiles, the
+ * ones closest to running out first. Items of profiles no longer listed
+ * are dropped.
+ */
+export function buildRestockRows(
+  items: RestockItem[],
+  profiles: Profile[],
+  selectedProfileId: string | null
+): RestockRow[] {
+  const profilesById: Record<string, Profile> = Object.fromEntries(profiles.map((p) => [p.id, p]));
+  return items
+    .filter((item) => profilesById[item.profileId] && (selectedProfileId === null || item.profileId === selectedProfileId))
+    .sort((a, b) => a.status.remaining / Math.max(a.status.base, 1) - b.status.remaining / Math.max(b.status.base, 1))
+    .map((item) => ({
+      medicationId: item.medicationId,
+      medicationLabel: item.dosage ? `${item.medicationName} ${item.dosage}` : item.medicationName,
+      profile: profilesById[item.profileId],
+      status: item.status,
+    }));
 }

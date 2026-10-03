@@ -9,8 +9,11 @@ import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
 import { useDoses } from '@/hooks/use-doses';
 import { useProfiles } from '@/hooks/use-profiles';
 import { useReactiveNow } from '@/hooks/use-reactive-now';
+import { useRestockItems } from '@/hooks/use-restock-items';
 
-import { buildHomeDosesState, type HomeDosesState } from './home-view-state';
+import type { RestockRow } from '@/features/medications/restock-list';
+
+import { buildHomeDosesState, buildRestockRows, type HomeDosesState } from './home-view-state';
 
 export type HomeDosesSection =
   | { status: 'loading' }
@@ -28,6 +31,9 @@ export type HomeViewModel =
       selectedProfileId: string | null;
       selectProfile: (id: string | null) => void;
       doses: HomeDosesSection;
+      /** Low-stock medications; empty when nothing needs restocking. */
+      restock: RestockRow[];
+      updateStock: (medicationId: string) => void;
       /** Occurrence whose Tomado/Pular is being saved, to show a busy state. */
       actingOccurrenceId: string | null;
       hasActionError: boolean;
@@ -48,6 +54,9 @@ export function useHomeViewModel(): HomeViewModel {
   // useReactiveNow). Regular minute ticks reclassify Agora/Próximo from
   // the occurrences already in memory and never touch SQLite.
   const now = useReactiveNow({ onStale: refreshDoses });
+  // Re-read whenever occurrences reload: a dose just marked as taken
+  // consumed stock.
+  const { restockItems } = useRestockItems(occurrences);
 
   useFocusEffect(
     useCallback(() => {
@@ -71,6 +80,11 @@ export function useHomeViewModel(): HomeViewModel {
     [profiles, occurrences, selectedProfileId, now]
   );
 
+  const restock = useMemo(
+    () => buildRestockRows(restockItems, profiles, selectedProfileId),
+    [restockItems, profiles, selectedProfileId]
+  );
+
   const addProfile = useCallback(() => router.push('/profile/new'), [router]);
 
   if (profilesLoading) return { status: 'loading' };
@@ -90,6 +104,8 @@ export function useHomeViewModel(): HomeViewModel {
     selectedProfileId,
     selectProfile: setSelectedProfileId,
     doses,
+    restock,
+    updateStock: (medicationId) => router.push(`/medication/${medicationId}/stock`),
     actingOccurrenceId,
     hasActionError: actionError !== null,
     dismissActionError: clearActionError,
