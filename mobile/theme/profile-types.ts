@@ -3,6 +3,11 @@ import type { Profile, ProfileType } from '@/domain/types';
 export interface ProfileTypeMeta {
   type: ProfileType;
   label: string;
+  /**
+   * Persisted as-is in `Profile.avatar`. Either an emoji or an
+   * illustrated avatar key such as `svg:child` (see
+   * `components/ui/avatar.tsx`); older profiles keep their emoji.
+   */
   defaultAvatar: string;
   avatarOptions: string[];
   /** Used sparingly: borders, badges, small accents — never large fills. */
@@ -15,42 +20,42 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
   {
     type: 'child',
     label: 'Criança',
-    defaultAvatar: '👶',
-    avatarOptions: ['👶', '🧒', '👦', '👧'],
-    color: '#D8A83D',
-    tint: '#FBF1D8',
+    defaultAvatar: 'svg:child',
+    avatarOptions: ['svg:child', '👶', '🧒', '👦', '👧'],
+    color: '#D49A2A',
+    tint: '#FEF4D5',
   },
   {
     type: 'adult',
     label: 'Adulto',
-    defaultAvatar: '🧑',
-    avatarOptions: ['🧑', '👨', '👩'],
-    color: '#4C86A8',
-    tint: '#E1EFF5',
+    defaultAvatar: 'svg:adult',
+    avatarOptions: ['svg:adult', '🧑', '👨', '👩'],
+    color: '#4F86C6',
+    tint: '#E6F1FE',
   },
   {
     type: 'elderly',
     label: 'Idoso',
-    defaultAvatar: '👵',
-    avatarOptions: ['👵', '👴'],
-    color: '#8B6FB3',
-    tint: '#EEE6F7',
+    defaultAvatar: 'svg:elderly',
+    avatarOptions: ['svg:elderly', '👵', '👴'],
+    color: '#8F6FBF',
+    tint: '#F4E7F9',
   },
   {
     type: 'pet',
     label: 'Pet',
-    defaultAvatar: '🐾',
-    avatarOptions: ['🐾', '🐶', '🐱', '🐰', '🐦'],
-    color: '#4F9E76',
-    tint: '#E1F2E9',
+    defaultAvatar: 'svg:pet',
+    avatarOptions: ['svg:pet', '🐾', '🐶', '🐱', '🐰', '🐦'],
+    color: '#3E9A8C',
+    tint: '#E1F3E4',
   },
   {
     type: 'plant',
     label: 'Planta',
-    defaultAvatar: '🌿',
-    avatarOptions: ['🌿', '🌱', '🪴', '🌵', '🌻'],
-    color: '#5C8A4F',
-    tint: '#E6F0E1',
+    defaultAvatar: 'svg:plant',
+    avatarOptions: ['svg:plant', '🌿', '🌱', '🪴', '🌵', '🌻'],
+    color: '#5A9A5E',
+    tint: '#E6F7E2',
   },
 ];
 
