@@ -2029,3 +2029,70 @@ E, quando necessário, entrar em qualquer perfil e responder:
 > **O que vem depois?**
 
 Sem transformar cuidado em cobrança.
+
+---
+
+# 81. Estoque e reposição
+
+Adicionado na versão 1.1.0.
+
+Cada medicamento de rotina pode ter o estoque controlado, contado em **doses**.
+
+## Registrar o estoque
+
+No card do medicamento:
+
+```text
+[ Controlar estoque ]    (primeira vez)
+[ Atualizar estoque ]    (depois)
+```
+
+A tela pergunta:
+
+```text
+Quantas doses você tem agora?
+[ 30 ]
+```
+
+O valor informado é o total em mãos, incluindo o que acabou de ser comprado. Ele também serve para corrigir uma contagem.
+
+## Como o estoque muda
+
+* cada dose marcada como **Tomado** desconta 1 dose;
+* dose **Pulada** não desconta;
+* nunca fica negativo.
+
+Cada contagem é um registro imutável. O estoque atual é calculado: última contagem menos as doses tomadas depois dela. Assim ele nunca diverge do histórico.
+
+## Aviso de reposição
+
+A base é a quantidade da última contagem.
+
+| Estoque restante | Situação | Selo |
+|---|---|---|
+| acima de 10% | ok | nenhum |
+| até 10% | baixo | Estoque baixo |
+| até 5% | quase acabando | Quase acabando |
+| zero | esgotado | Estoque esgotado |
+
+Enquanto o estoque estiver em 10% ou menos:
+
+* uma notificação por dia, às 09:00, até a reposição ser registrada;
+* o medicamento aparece em **Para repor**, na Home;
+* o card do medicamento mostra o selo.
+
+Exemplo de notificação:
+
+> Restam 3 doses de Losartana 50 mg (Florita). Que tal providenciar mais?
+
+Como em todo o produto, o aviso é calmo: acabar o estoque é algo a planejar, não uma falha.
+
+## Estimativa
+
+O app mostra quantos dias o estoque cobre na rotina atual:
+
+```text
+12 doses em estoque · cerca de 6 dias
+```
+
+É uma estimativa organizacional, não uma recomendação.

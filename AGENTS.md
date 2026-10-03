@@ -73,6 +73,16 @@ theme/, constants/  tokens visuais e paleta
    - Nunca edite uma migration que já foi publicada. Crie `NNN_descricao.ts` e registre em `database/migrations/index.ts`.
    - Validações que o SQLite não expressa ficam em `domain/validation.ts`, que roda tanto na escrita quanto na leitura.
 6. **Medicamento SOS nunca fica pendente nem gera lembrete** (SPEC §43 e §46).
+7. **Estoque é derivado, nunca editado.**
+   - Cada contagem é uma linha imutável em `stock_counts`.
+   - O estoque atual é a última contagem menos as doses `taken` registradas depois dela (`domain/stock.ts`).
+   - Dose pulada não consome.
+   - O aviso começa em 10% da última contagem (SPEC §81).
+8. **Avatares são sempre ilustrações** (`svg:<chave>`, lista em `components/ui/avatar.tsx`). Não use emojis na interface.
+
+## Testes de banco
+
+`test/node-sqlite.ts` roda as migrations e o SQL dos repositórios num SQLite real em memória (o `node:sqlite` do Node 22), já que o expo-sqlite não roda no Jest. Use isso para testar migrations e consultas novas.
 
 ## Interface e acessibilidade
 
@@ -93,7 +103,8 @@ theme/, constants/  tokens visuais e paleta
 
 ## Lembretes (notificações)
 
-- **Lembretes são uma cópia descartável** das doses pendentes dos próximos 7 dias. `syncReminders` cancela tudo e reagenda.
+- **Lembretes são uma cópia descartável** das doses pendentes dos próximos 7 dias, mais um aviso diário às 09:00 para cada medicamento com estoque baixo. `syncReminders` cancela tudo e reagenda.
+- **Leituras de estoque ficam em `services/stock-queries.ts`,** separadas de `stock-service.ts`, porque o serviço de lembretes depende delas e a escrita de estoque depende do serviço de lembretes.
 - **Qualquer escrita que muda doses deve chamar `syncRemindersInBackground()`**, e a falha do lembrete nunca derruba a escrita.
 - **Android:**
   - `USE_EXACT_ALARM` garante horário exato;
