@@ -6,6 +6,12 @@ A proposta do produto é oferecer uma experiência simples, acolhedora e confiá
 
 > Tudo que você cuida, em um só lugar, no tempo certo.
 
+## Instalação
+
+Baixe o APK da versão mais recente na página de [releases](https://github.com/osamucadev/dose-care/releases) e abra o arquivo no celular Android. Talvez seja preciso permitir a instalação de apps de fontes externas.
+
+O histórico de versões está no [CHANGELOG](./CHANGELOG.md).
+
 ## Funcionalidades atuais
 
 O MVP inclui:
@@ -24,6 +30,7 @@ O MVP inclui:
 - registro de doses tomadas ou puladas;
 - histórico individual por perfil;
 - atualização automática da interface conforme o horário avança;
+- lembretes no horário de cada dose, mesmo com o app fechado;
 - persistência local e funcionamento offline.
 
 ## Princípios do produto
@@ -38,7 +45,7 @@ O desenvolvimento do DoseCare segue alguns princípios centrais:
 6. Medicamento e ocorrência de dose são conceitos diferentes.
 7. O aplicativo deve continuar simples mesmo com vários perfis e medicamentos.
 
-A especificação completa do produto está em [SPEC.md](./SPEC.md).
+A especificação completa do produto está em [SPEC.md](./SPEC.md). As convenções de desenvolvimento, commits e release estão em [AGENTS.md](./AGENTS.md).
 
 ## Tecnologias
 
@@ -50,14 +57,14 @@ A especificação completa do produto está em [SPEC.md](./SPEC.md).
 - React Hook Form
 - Zod
 - Jest e Jest Expo
-- Yarn
+- Yarn 1
 
 ## Requisitos
 
 Para executar o projeto, você precisa de:
 
 - Node.js em uma versão LTS;
-- Yarn;
+- Yarn 1 (o `yarn.lock` é v1; com um Yarn mais novo instalado, use `npx yarn@1.22.22`);
 - Expo Go instalado em um dispositivo Android ou iOS;
 - computador e celular conectados à mesma rede local.
 
@@ -174,7 +181,6 @@ Algumas evoluções previstas são:
 
 - medicamentos de uso SOS;
 - adiamento de doses;
-- notificações locais;
 - recorrências por intervalo de horas ou dias;
 - seleção de dias da semana;
 - ciclos de tratamento;
