@@ -6,6 +6,27 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Não lançado]
 
+## [1.1.0] - 2026-10-03
+
+Controle de estoque com aviso de reposição e app inteiramente ilustrado, sem emojis.
+
+### Adicionado
+
+- Controle de estoque por medicamento, contado em doses:
+  - "Controlar estoque" e "Atualizar estoque" no card do medicamento;
+  - cada dose tomada desconta 1 dose, e dose pulada não desconta;
+  - estimativa de quantos dias o estoque cobre.
+- Aviso de reposição quando restam 10% ou menos da última contagem:
+  - notificação diária às 09:00 até a reposição ser registrada;
+  - seção "Para repor" na Home;
+  - selos "Estoque baixo", "Quase acabando" e "Estoque esgotado".
+- Avatares ilustrados novos: menina, bebê, homem, senhor, gato, coelho, pássaro, planta no vaso, cacto e girassol.
+
+### Alterado
+
+- Todos os emojis viraram ilustrações e ícones em SVG, inclusive os símbolos de status.
+- Perfis que usavam um emoji como avatar são convertidos automaticamente para a ilustração equivalente.
+
 ## [1.0.0] - 2026-10-03
 
 Primeira versão oficial. App Android instalável por APK, com todos os dados guardados no próprio aparelho e funcionamento sem internet.
@@ -75,5 +96,6 @@ Primeira versão oficial. App Android instalável por APK, com todos os dados gu
 - **Ainda não existem:** medicamentos SOS, adiamento de dose ("Depois") e recorrências além de horários fixos.
 - **A versão web ainda não abre o banco de dados.**
 
-[Não lançado]: https://github.com/osamucadev/dose-care/compare/v1.0.0...HEAD
+[Não lançado]: https://github.com/osamucadev/dose-care/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/osamucadev/dose-care/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/osamucadev/dose-care/releases/tag/v1.0.0
