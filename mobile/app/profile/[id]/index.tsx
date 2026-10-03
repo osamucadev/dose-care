@@ -1,6 +1,4 @@
-import { useFocusEffect } from '@react-navigation/native';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback } from 'react';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar } from '@/components/ui/avatar';
@@ -11,58 +9,22 @@ import { Icon } from '@/components/ui/icon';
 import { LoadingState } from '@/components/ui/loading-state';
 import { ScreenContainer } from '@/components/ui/screen-container';
 import { ThemedText } from '@/components/ui/themed-text';
-import { computeNowAndNext } from '@/domain/occurrences';
 import { AllClearCard } from '@/features/doses/all-clear-card';
 import { NextPreview } from '@/features/doses/next-preview';
 import { NowCard } from '@/features/doses/now-card';
 import { UpcomingList } from '@/features/doses/upcoming-list';
 import { MedicationCard } from '@/features/medications/medication-card';
 import { ProfileNavTabs } from '@/features/profiles/profile-nav-tabs';
-import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
-import { useDoses } from '@/hooks/use-doses';
-import { useMedicationToggleHandler } from '@/hooks/use-medication-toggle-handler';
-import { useMedications } from '@/hooks/use-medications';
-import { useProfile } from '@/hooks/use-profile';
-import { useReactiveNow } from '@/hooks/use-reactive-now';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { getProfileTypeMeta } from '@/theme/profile-types';
 import { minTouchTarget, spacing } from '@/theme/tokens';
+import { useProfileViewModel } from '@/view-models/use-profile-view-model';
 
 export default function ProfileScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const router = useRouter();
-  const { profile, loading: profileLoading, error: profileError, refresh: refreshProfile } = useProfile(id);
-  const {
-    medications,
-    loading: medicationsLoading,
-    error: medicationsError,
-    refresh: refreshMedications,
-    setActive,
-  } = useMedications(id, { includeInactive: true });
-  const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses, recordDose } = useDoses(id);
-  const { actingOccurrenceId, actionError, performDoseAction, clearActionError } = useDoseActionHandler(recordDose);
-  const {
-    togglingMedicationId,
-    toggleError,
-    performToggle,
-    clearToggleError,
-  } = useMedicationToggleHandler(setActive, refreshDoses);
-  // Called on foreground return and on local day rollover; regular
-  // minute ticks just reclassify Agora/Próximo from occurrences already
-  // in memory, no SQLite access.
-  const now = useReactiveNow({ onStale: refreshDoses });
+  const vm = useProfileViewModel(id);
   const tint = useThemeColor({}, 'tint');
 
-  useFocusEffect(
-    useCallback(() => {
-      refreshProfile();
-      refreshMedications();
-      refreshDoses();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-  );
-
-  if (profileLoading) {
+  if (vm.status === 'loading') {
     return (
       <ScreenContainer>
         <LoadingState label="Carregando perfil…" />
@@ -70,29 +32,28 @@ export default function ProfileScreen() {
     );
   }
 
-  if (profileError || !profile) {
+  if (vm.status === 'error') {
     return (
       <ScreenContainer>
-        <ErrorState onRetry={refreshProfile} />
+        <ErrorState onRetry={vm.retry} />
       </ScreenContainer>
     );
   }
 
-  const meta = getProfileTypeMeta(profile.type);
-  const nowNext = computeNowAndNext(occurrences, now);
+  const { doses, medications } = vm;
 
   return (
     <ScreenContainer>
       <Stack.Screen
         options={{
-          title: profile.name,
+          title: vm.name,
           headerRight: () => (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Editar perfil"
               hitSlop={8}
               style={styles.editButton}
-              onPress={() => router.push(`/profile/${profile.id}/edit`)}>
+              onPress={vm.editProfile}>
               <Icon name="edit" size={18} color={tint} />
               <ThemedText variant="label" style={{ color: tint }}>
                 Editar
@@ -103,88 +64,76 @@ export default function ProfileScreen() {
       />
 
       <View style={styles.header}>
-        <Avatar emoji={profile.avatar} tint={meta.tint} size={64} />
+        <Avatar emoji={vm.avatar} tint={vm.avatarTint} size={64} />
         <View style={styles.headerText}>
-          <ThemedText variant="title">{profile.name}</ThemedText>
-          <ThemedText variant="muted">{meta.label}</ThemedText>
+          <ThemedText variant="title">{vm.name}</ThemedText>
+          <ThemedText variant="muted">{vm.typeLabel}</ThemedText>
         </View>
       </View>
 
-      <ProfileNavTabs
-        active="overview"
-        onSelectOverview={() => {}}
-        // replace, not push: History's "Visão geral" tab replaces back
-        // to this route too, so neither tab stacks a duplicate copy of
-        // the other — switching between them stays a single screen in
-        // the navigation stack.
-        onSelectHistory={() => router.replace(`/profile/${profile.id}/history`)}
-      />
+      <ProfileNavTabs active="overview" onSelectOverview={() => {}} onSelectHistory={vm.openHistory} />
 
-      {actionError ? (
-        <ErrorState message="Não foi possível registrar essa dose agora." onRetry={clearActionError} />
+      {vm.hasActionError ? (
+        <ErrorState message="Não foi possível registrar essa dose agora." onRetry={vm.dismissActionError} />
       ) : null}
 
-      {dosesError ? (
-        <ErrorState onRetry={refreshDoses} />
-      ) : dosesLoading && occurrences.length === 0 ? (
+      {doses.status === 'error' ? (
+        <ErrorState onRetry={doses.retry} />
+      ) : doses.status === 'loading' ? (
         <LoadingState label="Carregando as doses de hoje…" />
-      ) : nowNext.now ? (
-        <NowCard
-          occurrence={nowNext.now}
-          busy={actingOccurrenceId === nowNext.now.id}
-          onTaken={() => nowNext.now && performDoseAction(nowNext.now, 'taken')}
-          onSkip={() => nowNext.now && performDoseAction(nowNext.now, 'skipped')}
-        />
       ) : (
-        <AllClearCard />
+        <>
+          {doses.now ? (
+            <NowCard
+              occurrence={doses.now}
+              busy={vm.actingOccurrenceId === doses.now.id}
+              onTaken={() => doses.now && vm.markTaken(doses.now)}
+              onSkip={() => doses.now && vm.skip(doses.now)}
+            />
+          ) : (
+            <AllClearCard />
+          )}
+
+          {doses.next ? <NextPreview occurrence={doses.next} /> : null}
+
+          <UpcomingList
+            title="Próximas doses de hoje"
+            occurrences={doses.upcoming}
+            emptyLabel="Nenhuma dose pendente hoje."
+          />
+        </>
       )}
-
-      {nowNext.next ? <NextPreview occurrence={nowNext.next} /> : null}
-
-      <UpcomingList
-        title="Próximas doses de hoje"
-        occurrences={nowNext.upcomingToday}
-        emptyLabel="Nenhuma dose pendente hoje."
-      />
 
       <View style={styles.section}>
         <ThemedText variant="subtitle">Rotina</ThemedText>
 
-        {toggleError ? (
-          <ErrorState
-            message="Não foi possível atualizar esse medicamento agora."
-            onRetry={clearToggleError}
-          />
+        {vm.hasToggleError ? (
+          <ErrorState message="Não foi possível atualizar esse medicamento agora." onRetry={vm.dismissToggleError} />
         ) : null}
 
-        {medicationsError ? (
-          <ErrorState onRetry={refreshMedications} />
-        ) : medicationsLoading ? (
+        {medications.status === 'error' ? (
+          <ErrorState onRetry={medications.retry} />
+        ) : medications.status === 'loading' ? (
           <LoadingState label="Carregando medicamentos…" />
-        ) : medications.length === 0 ? (
+        ) : medications.items.length === 0 ? (
           <EmptyState
             title="Nenhum medicamento de rotina"
             description="Medicamentos recorrentes aparecerão aqui e poderão gerar lembretes."
             actionLabel="Adicionar medicamento (Rotina)"
-            onAction={() => router.push({ pathname: '/medication/new', params: { profileId: profile.id } })}
+            onAction={vm.addMedication}
           />
         ) : (
           <View style={styles.medicationList}>
-            {medications.map((medication) => (
+            {medications.items.map((medication) => (
               <MedicationCard
                 key={medication.id}
                 medication={medication}
-                busy={togglingMedicationId === medication.id}
-                onEdit={() => router.push(`/medication/${medication.id}/edit`)}
-                onToggleActive={() => performToggle(medication.id, !medication.active)}
+                busy={vm.togglingMedicationId === medication.id}
+                onEdit={() => vm.editMedication(medication.id)}
+                onToggleActive={() => vm.toggleMedication(medication)}
               />
             ))}
-            <Button
-              label="Adicionar medicamento (Rotina)"
-              icon="plus"
-              variant="soft"
-              onPress={() => router.push({ pathname: '/medication/new', params: { profileId: profile.id } })}
-            />
+            <Button label="Adicionar medicamento (Rotina)" icon="plus" variant="soft" onPress={vm.addMedication} />
           </View>
         )}
       </View>
