@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DoseCare: tudo que você cuida, em um só lugar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1E3A52;
+    --muted: #526274;
+    --cream: #FEFAF2;
+    --surface: #FFFFFF;
+    --border: #E8E2D6;
+    --teal: #1F6F72;
+    --teal-soft: #E3F3EF;
+    --warm-soft: #FDF3DC;
+    --lilac: #EADCF5;
+    --child: #FEF4D5;
+    --adult: #E6F1FE;
+    --elderly: #F4E7F9;
+    --pet: #E1F3E4;
+    --plant: #E6F7E2;
+    --radius: 24px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--cream); }
+  body { width: 1440px; font-family: 'Nunito', system-ui, sans-serif; color: var(--navy); -webkit-font-smoothing: antialiased; }
+  .wrap { width: 1200px; margin: 0 auto; }
+  h1, h2, h3 { font-weight: 900; letter-spacing: -0.02em; }
+  p { color: var(--muted); line-height: 1.6; }
+  .eyebrow { font-size: 15px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: 0.12em; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; height: 56px; padding: 0 28px; border-radius: 16px; font-weight: 800; font-size: 17px; text-decoration: none; }
+  .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 10px 24px rgba(31,111,114,0.25); }
+  .btn-soft { background: var(--teal-soft); color: var(--teal); }
+  .btn svg { width: 20px; height: 20px; }
+  .section { padding: 112px 0; }
+  .section-head { text-align: center; max-width: 760px; margin: 0 auto 56px; }
+  .section-head h2 { font-size: 44px; line-height: 1.15; margin: 12px 0 16px; }
+  .section-head p { font-size: 19px; }
+
+  /* Header */
+  header { padding: 28px 0; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 900; }
+  .brand img { width: 40px; height: 40px; }
+  nav { display: flex; gap: 36px; font-weight: 700; font-size: 16px; color: var(--muted); }
+
+  /* Hero */
+  .hero { position: relative; padding: 40px 0 120px; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 900px; height: 900px; right: -260px; top: -200px; border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #EDE3F7 0%, #F6EFF8 40%, rgba(254,250,242,0) 70%); }
+  .hero .wrap { position: relative; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
+  .hero h1 { font-size: 64px; line-height: 1.05; margin: 18px 0 24px; }
+  .hero h1 em { font-style: normal; color: var(--teal); }
+  .hero .lead { font-size: 21px; max-width: 540px; }
+  .hero .ctas { display: flex; gap: 16px; margin: 36px 0 28px; }
+  .trust { display: flex; gap: 24px; font-size: 15px; font-weight: 700; color: var(--muted); }
+  .trust span { display: flex; align-items: center; gap: 8px; }
+  .trust i { width: 22px; height: 22px; border-radius: 50%; background: var(--teal-soft); display: inline-grid; place-items: center; }
+  .trust i::after { content: ''; width: 9px; height: 5px; border-left: 2.5px solid var(--teal); border-bottom: 2.5px solid var(--teal); transform: rotate(-45deg) translate(1px,-1px); }
+  .hero-visual { position: relative; height: 640px; }
+  .device { clip-path: inset(0.7% 1.4% 0.25% 1.4% round 12% / 5.6%); }
+  .hero-visual .phone-wrap { position: absolute; left: 110px; top: 0; width: 300px; filter: drop-shadow(0 30px 50px rgba(30,58,82,0.22)); }
+  .hero-visual .phone-wrap img { width: 100%; display: block; }
+  .float { position: absolute; background: var(--surface); border-radius: 20px; padding: 16px 18px; display: flex; gap: 12px; align-items: center;
+    box-shadow: 0 16px 36px rgba(30,58,82,0.12); border: 1px solid var(--border); }
+  .float img { width: 44px; height: 44px; }
+  .float b { display: block; font-size: 15px; }
+  .float small { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .float .badge { background: var(--warm-soft); border-radius: 8px; padding: 2px 8px; font-size: 12px; font-weight: 800; margin-top: 4px; display: inline-block; }
+  .f1 { left: -10px; top: 120px; }
+  .f2 { right: 0; top: 300px; }
+  .f3 { left: 20px; bottom: 40px; }
+
+  /* Principle band */
+  .band { background: var(--teal); color: #fff; border-radius: 40px; padding: 64px 72px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .band h2 { font-size: 44px; line-height: 1.15; }
+  .band p { color: #D7EEEA; font-size: 19px; }
+  .band ul { list-style: none; display: grid; gap: 14px; margin-top: 24px; }
+  .band li { display: flex; gap: 12px; font-weight: 700; font-size: 17px; color: #fff; }
+  .band li::before { content: ''; flex: 0 0 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4 8-9'/%3E%3C/svg%3E") center / 14px no-repeat; }
+
+  /* Who */
+  .who { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+  .who .card { border-radius: var(--radius); padding: 28px 20px 26px; text-align: center; }
+  .who img { width: 104px; height: 104px; }
+  .who h3 { font-size: 22px; margin: 14px 0 6px; }
+  .who p { font-size: 15px; }
+
+  /* Steps */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: 0 6px 18px rgba(30,58,82,0.05); }
+  .step .num { width: 48px; height: 48px; border-radius: 14px; background: var(--teal-soft); color: var(--teal); font-weight: 900; font-size: 22px; display: grid; place-items: center; }
+  .step h3 { font-size: 24px; margin: 22px 0 10px; }
+  .step p { font-size: 17px; }
+
+  /* Features */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .feature { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+  .feature .ico { width: 56px; height: 56px; border-radius: 18px; background: var(--teal-soft); display: grid; place-items: center; color: var(--teal); }
+  .feature .ico i { width: 28px; height: 28px; background: var(--teal); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+  .feature h3 { font-size: 21px; margin: 20px 0 8px; }
+  .feature p { font-size: 16px; }
+
+  /* Screens */
+  .screens { display: flex; justify-content: center; gap: 28px; align-items: flex-end; }
+  .screens figure { text-align: center; }
+  .screens .shot { filter: drop-shadow(0 18px 30px rgba(30,58,82,0.16)); }
+  .screens img { width: 228px; display: block; }
+  .screens figure:nth-child(2) img, .screens figure:nth-child(4) img { width: 210px; }
+  .screens figcaption { margin-top: 14px; font-weight: 800; font-size: 16px; }
+  .screens figcaption span { display: block; font-weight: 600; font-size: 14px; color: var(--muted); }
+
+  /* Privacy */
+  .privacy { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: center; }
+  .privacy h2 { font-size: 44px; line-height: 1.15; margin: 12px 0 18px; }
+  .privacy .lead { font-size: 19px; }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .check { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 22px; }
+  .check b { display: block; font-size: 18px; margin-bottom: 6px; }
+  .check p { font-size: 15px; }
+  .note { margin-top: 28px; background: var(--warm-soft); border-radius: 18px; padding: 18px 22px; font-size: 15px; color: var(--navy); font-weight: 600; }
+
+  /* FAQ */
+  .faq { max-width: 860px; margin: 0 auto; display: grid; gap: 14px; }
+  .q { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px 26px; }
+  .q b { font-size: 18px; display: flex; justify-content: space-between; }
+  .q b::after { content: '+'; color: var(--teal); font-size: 24px; line-height: 1; }
+  .q p { margin-top: 8px; font-size: 16px; }
+
+  /* Final CTA */
+  .final { background: linear-gradient(135deg, #EDE3F7 0%, #F7EFE7 55%, #FDF3DC 100%); border-radius: 40px; padding: 72px; display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 40px; overflow: hidden; }
+  .final h2 { font-size: 46px; line-height: 1.1; margin-bottom: 16px; }
+  .final p { font-size: 19px; color: var(--navy); }
+  .final .ctas { display: flex; gap: 16px; margin-top: 32px; }
+  .final small { display: block; margin-top: 16px; color: var(--muted); font-weight: 600; }
+  .final img { width: 100%; max-width: 440px; justify-self: center; }
+
+  /* Footer */
+  footer { background: var(--navy); color: #C9D6E0; margin-top: 112px; padding: 64px 0 40px; }
+  footer .top { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 40px; }
+  footer .brand { color: #fff; }
+  footer p { color: #A9B9C6; font-size: 15px; }
+  footer h4 { color: #fff; font-size: 15px; font-weight: 800; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em; }
+  footer ul { list-style: none; display: grid; gap: 10px; font-weight: 600; font-size: 15px; }
+  footer .disclaimer { border-top: 1px solid rgba(255,255,255,0.12); margin-top: 48px; padding-top: 24px; display: flex; justify-content: space-between; gap: 40px; font-size: 13px; color: #8FA2B2; }
+  footer .disclaimer p { color: #8FA2B2; font-size: 13px; max-width: 760px; }
+
+  .tag-annot { position: absolute; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><img src="../../mobile/assets/svg/brand/logo-mark.svg" alt="">DoseCare</div>
+    <nav><span>Como funciona</span><span>Recursos</span><span>Para quem</span><span>Privacidade</span><span>Dúvidas</span></nav>
+    <a class="btn btn-primary" style="height:48px;padding:0 22px;font-size:16px">Baixar para Android</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Uma central pessoal de cuidados</div>
+      <h1>Tudo que você cuida, em um só lugar, <em>no tempo certo.</em></h1>
+      <p class="lead">Organize remédios e cuidados de quem você ama: filhos, pais, avós, pets e até as plantas. O DoseCare mostra o que precisa de atenção agora e lembra você no horário, sem cobrança.</p>
+      <div class="ctas">
+        <a class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Baixar o app grátis</a>
+        <a class="btn btn-soft">Ver como funciona</a>
+      </div>
+      <div class="trust"><span><i></i>Gratuito</span><span><i></i>Sem cadastro</span><span><i></i>Funciona offline</span></div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-wrap"><img class="device" src="../screenshots/home.png" alt="Tela inicial do DoseCare"></div>
+      <div class="float f1"><img src="../../mobile/assets/svg/avatars/elderly.svg" alt=""><div><b>Florita</b><small>Losartana 50 mg · 08:00</small></div></div>
+      <div class="float f2"><img src="../../mobile/assets/svg/avatars/pet.svg" alt=""><div><b>Nino</b><small>Próximo: 18:00</small></div></div>
+      <div class="float f3"><img src="../../mobile/assets/svg/avatars/adult.svg" alt=""><div><b>Sinvastatina</b><small>3 doses em estoque</small><br><span class="badge">Estoque baixo</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 0 112px">
+  <div class="wrap band">
+    <div>
+      <div class="eyebrow" style="color:#BFE6DF">Nossa filosofia</div>
+      <h2 style="margin-top:12px">Um lembrete gentil, não um fiscal.</h2>
+    </div>
+    <div>
+      <p>Esquecer uma dose não é um fracasso. O DoseCare foi feito para trazer tranquilidade a quem cuida, com linguagem acolhedora e sem alarmes exagerados.</p>
+      <ul>
+        <li>Sem rankings, sequências ou pontuações</li>
+        <li>Sem mensagens que culpam</li>
+        <li>Avisos calmos, no horário certo</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Para quem</div>
+      <h2>Uma pessoa cuida de várias vidas</h2>
+      <p>Cada perfil tem sua própria rotina, seus medicamentos e seu histórico.</p>
+    </div>
+    <div class="who">
+      <div class="card" style="background:var(--child)"><img src="../../mobile/assets/svg/avatars/child.svg" alt=""><h3>Crianças</h3><p>Antibióticos, vitaminas e tratamentos com data para acabar.</p></div>
+      <div class="card" style="background:var(--adult)"><img src="../../mobile/assets/svg/avatars/adult.svg" alt=""><h3>Adultos</h3><p>Remédios de uso contínuo, com controle de estoque.</p></div>
+      <div class="card" style="background:var(--elderly)"><img src="../../mobile/assets/svg/avatars/elderly.svg" alt=""><h3>Idosos</h3><p>Vários horários por dia, sempre com o que tomar agora.</p></div>
+      <div class="card" style="background:var(--pet)"><img src="../../mobile/assets/svg/avatars/pet.svg" alt=""><h3>Pets</h3><p>Vermífugos, antipulgas e alimentação especial.</p></div>
+      <div class="card" style="background:var(--plant)"><img src="../../mobile/assets/svg/avatars/plant.svg" alt=""><h3>Plantas</h3><p>Rega, adubação e cuidados periódicos.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:#FFFFFF; border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Como funciona</div>
+      <h2>Comece em menos de um minuto</h2>
+      <p>Sem criar conta, sem configurar nada complicado.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Adicione quem você cuida</h3><p>Escolha o tipo de perfil, um nome e um avatar. Pode ser você, seu filho, sua mãe, seu cachorro ou a sua horta.</p></div>
+      <div class="step"><div class="num">2</div><h3>Cadastre a rotina</h3><p>Nome, dose, horários e duração do tratamento: contínuo, até uma data ou por quantidade de doses.</p></div>
+      <div class="step"><div class="num">3</div><h3>Registre com um toque</h3><p>No horário, o DoseCare avisa. Marque como tomado ou pulado e o histórico se organiza sozinho.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Recursos</div>
+      <h2>Tudo o que importa, nada que atrapalhe</h2>
+      <p>Em poucos segundos você sabe quem precisa de cuidado, o que fazer e o que vem depois.</p>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/clock.svg)"></i></div><h3>Agora e Próximo</h3><p>A dose que precisa de atenção fica em destaque, e a seguinte logo abaixo, mesmo que seja amanhã.</p></div>
+      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/bell.svg)"></i></div><h3>Lembretes no horário</h3><p>Notificações chegam mesmo com o app fechado e sem internet. Um toque abre o perfil certo.</p></div>
+      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/package.svg)"></i></div><h3>Controle de estoque</h3><p>Cada dose tomada desconta do estoque. Quando restarem 10%, o app lembra você de comprar mais.</p></div>
+      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/calendar.svg)"></i></div><h3>Histórico confiável</h3><p>Horário previsto e realizado de cada dose. Editar uma rotina nunca apaga o passado.</p></div>
+      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/profiles.svg)"></i></div><h3>Vários perfis, uma tela</h3><p>Veja todos de uma vez ou filtre por pessoa, pet ou planta com um toque.</p></div>
+      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/check.svg)"></i></div><h3>Acessível de verdade</h3><p>Contraste alto, textos claros, botões grandes e suporte a leitores de tela. Status nunca só por cor.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Por dentro do app</div>
+      <h2>Simples para quem cuida</h2>
+    </div>
+    <div class="screens">
+      <figure><div class="shot"><img class="device" src="../screenshots/home-perfil-joaozinho.png" alt=""></div><figcaption>Filtro por perfil<span>Só os cuidados do Joãozinho</span></figcaption></figure>
+      <figure><div class="shot"><img class="device" src="../screenshots/home-perfil-nino.png" alt=""></div><figcaption>Pets também<span>Rotina do Nino</span></figcaption></figure>
+      <figure><div class="shot"><img class="device" src="../screenshots/historico.png" alt=""></div><figcaption>Histórico<span>Tomado ou pulado, sem culpa</span></figcaption></figure>
+      <figure><div class="shot"><img class="device" src="../screenshots/estoque.png" alt=""></div><figcaption>Estoque<span>Aviso antes de acabar</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:#FFFFFF; border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+  <div class="wrap privacy">
+    <div>
+      <div class="eyebrow">Privacidade</div>
+      <h2>Seus dados ficam com você</h2>
+      <p class="lead">O DoseCare guarda tudo no próprio celular. Não há conta, servidor ou anúncios, e nada é enviado para a internet.</p>
+      <div class="note">O DoseCare organiza e lembra. Ele não diagnostica, não prescreve e não recomenda doses: siga sempre a orientação do médico, veterinário ou profissional responsável.</div>
+    </div>
+    <div class="checks">
+      <div class="check"><b>Sem cadastro</b><p>Abra e comece a usar. Nenhum e-mail ou senha.</p></div>
+      <div class="check"><b>Funciona offline</b><p>Lembretes e registros funcionam sem internet.</p></div>
+      <div class="check"><b>Nada é apagado</b><p>Excluir um perfil preserva o histórico de cuidados.</p></div>
+      <div class="check"><b>Código público</b><p>Todo o código pode ser consultado no GitHub.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Dúvidas</div>
+      <h2>Perguntas frequentes</h2>
+    </div>
+    <div class="faq">
+      <div class="q"><b>O DoseCare é gratuito?</b><p>Sim. É gratuito, sem anúncios e sem assinatura.</p></div>
+      <div class="q"><b>Preciso de internet para receber os lembretes?</b><p>Não. Os lembretes são programados no próprio celular e chegam mesmo com o app fechado.</p></div>
+      <div class="q"><b>Funciona no iPhone?</b><p>Por enquanto, o DoseCare está disponível para Android 7.0 ou mais recente.</p></div>
+      <div class="q"><b>E se eu esquecer de registrar uma dose?</b><p>Sem problema. Ela continua em "Agora" até você marcar como tomada ou pulada, sem mensagens de culpa.</p></div>
+      <div class="q"><b>Posso cuidar de várias pessoas ao mesmo tempo?</b><p>Pode. Cadastre quantos perfis quiser e veja todos os cuidados juntos na tela inicial.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-bottom: 0">
+  <div class="wrap final">
+    <div>
+      <h2>Cuide de quem você ama com mais tranquilidade.</h2>
+      <p>Baixe o DoseCare e organize a rotina de cuidados da sua casa hoje mesmo.</p>
+      <div class="ctas">
+        <a class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Baixar para Android</a>
+        <a class="btn btn-soft" style="background:#fff">Ver no GitHub</a>
+      </div>
+      <small>Versão 1.2.0 · Android 7.0 ou mais recente · Gratuito</small>
+    </div>
+    <img src="../../mobile/assets/svg/illustrations/onboarding-calm.svg" alt="">
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brand"><img src="../../mobile/assets/svg/brand/logo-mark.svg" alt="">DoseCare</div>
+        <p style="margin-top:16px; max-width:320px">Tudo que você cuida, em um só lugar, no tempo certo.</p>
+      </div>
+      <div><h4>Produto</h4><ul><li>Como funciona</li><li>Recursos</li><li>Para quem</li><li>Novidades</li></ul></div>
+      <div><h4>Suporte</h4><ul><li>Perguntas frequentes</li><li>Como instalar o APK</li><li>Fale conosco</li></ul></div>
+      <div><h4>Projeto</h4><ul><li>GitHub</li><li>Privacidade</li><li>Termos de uso</li></ul></div>
+    </div>
+    <div class="disclaimer">
+      <p>O DoseCare é uma ferramenta de organização, lembrete e registro. Ele não substitui orientação médica, veterinária ou de outro profissional responsável. As informações são fornecidas pelo próprio usuário com base nas orientações que recebeu.</p>
+      <span>© 2026 DoseCare</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
