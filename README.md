@@ -35,6 +35,28 @@ O app inclui:
 - controle de estoque em doses, com aviso diário de reposição quando restam 10% ou menos;
 - persistência local e funcionamento offline.
 
+## Telas
+
+Capturas feitas com dados fictícios.
+
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="docs/screenshots/home.png" width="220" alt="Home com o card Agora, o Próximo e a seção Para repor"><br><sub><b>Home:</b> o que precisa de atenção agora, o próximo cuidado e o que repor</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/home-perfil-florita.png" width="220" alt="Home filtrada pela Florita"><br><sub><b>Filtro por perfil:</b> só os cuidados da Florita</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/home-perfil-joaozinho.png" width="220" alt="Home filtrada pelo Joãozinho, com as próximas doses de hoje"><br><sub><b>Próximas doses de hoje</b> do Joãozinho</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/home-perfil-nino.png" width="220" alt="Home filtrada pelo Nino"><br><sub><b>Pets</b> também têm rotina</sub></td>
+    <td align="center"><img src="docs/screenshots/home-perfil-horta.png" width="220" alt="Home filtrada pela Horta"><br><sub><b>Plantas:</b> rega como cuidado recorrente</sub></td>
+    <td align="center"><img src="docs/screenshots/historico.png" width="220" alt="Histórico de doses da Florita"><br><sub><b>Histórico:</b> horário previsto e realizado, tomado ou pulado</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/estoque.png" width="220" alt="Tela de estoque da Sinvastatina com estoque baixo"><br><sub><b>Estoque:</b> doses restantes e aviso de reposição</sub></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
 ## Princípios do produto
 
 O desenvolvimento do DoseCare segue alguns princípios centrais:
