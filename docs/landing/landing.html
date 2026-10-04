@@ -89,20 +89,74 @@
   .who h3 { font-size: 22px; margin: 14px 0 6px; }
   .who p { font-size: 15px; }
 
-  /* Steps */
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-  .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: 0 6px 18px rgba(30,58,82,0.05); }
-  .step .num { width: 48px; height: 48px; border-radius: 14px; background: var(--teal-soft); color: var(--teal); font-weight: 900; font-size: 22px; display: grid; place-items: center; }
-  .step h3 { font-size: 24px; margin: 22px 0 10px; }
-  .step p { font-size: 17px; }
+  /* How it works: a numbered path with real UI fragments, no cards */
+  .how { background: #FFFFFF; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 112px 0; }
+  .how-head { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: end; margin-bottom: 64px; }
+  .how-head h2 { font-size: 44px; line-height: 1.12; margin-top: 12px; }
+  .how-head p { font-size: 19px; padding-bottom: 6px; }
+  .flow { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; position: relative; }
+  .flow::before { content: ''; position: absolute; left: 30px; right: 30px; top: 30px; border-top: 2px dashed #BFDCD6; }
+  .flow .n { position: relative; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: var(--teal); color: #fff; font-size: 26px; font-weight: 900; box-shadow: 0 0 0 10px #fff; }
+  .flow h3 { font-size: 24px; margin: 28px 0 8px; }
+  .flow p { font-size: 17px; max-width: 320px; }
+  .vignette { margin-top: 28px; background: var(--cream); border-radius: 22px; padding: 26px; height: 190px; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+  .stack { display: flex; }
+  .stack img { width: 58px; height: 58px; border-radius: 50%; border: 3px solid var(--cream); margin-right: -14px; }
+  .chip-add { align-self: flex-start; background: var(--teal-soft); color: var(--teal); font-weight: 800; font-size: 15px; padding: 10px 16px; border-radius: 12px; }
+  .med { display: flex; gap: 14px; align-items: center; }
+  .pill { width: 46px; height: 46px; border-radius: 50%; background: var(--teal-soft); display: grid; place-items: center; }
+  .pill i, .feature-ico i { width: 24px; height: 24px; background: var(--teal); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+  .med b { display: block; font-size: 18px; }
+  .med small { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .times { display: flex; gap: 8px; align-items: center; }
+  .times span { background: var(--warm-soft); font-weight: 800; font-size: 15px; padding: 6px 12px; border-radius: 10px; }
+  .times em { font-style: normal; color: var(--muted); font-weight: 600; font-size: 14px; margin-left: 6px; }
+  .notif { background: #fff; border-radius: 18px; padding: 14px 16px; box-shadow: 0 8px 20px rgba(30,58,82,0.08); }
+  .notif-top { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+  .notif-top img { width: 18px; height: 18px; }
+  .notif b { display: block; font-size: 16px; }
+  .notif small { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .actions { display: flex; gap: 8px; }
+  .actions span { flex: 1; text-align: center; font-weight: 800; font-size: 15px; padding: 10px 0; border-radius: 12px; }
+  .a-taken { background: var(--teal); color: #fff; }
+  .a-skip { background: #fff; color: var(--navy); border: 1px solid var(--border); }
 
-  /* Features */
-  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .feature { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
-  .feature .ico { width: 56px; height: 56px; border-radius: 18px; background: var(--teal-soft); display: grid; place-items: center; color: var(--teal); }
-  .feature .ico i { width: 28px; height: 28px; background: var(--teal); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
-  .feature h3 { font-size: 21px; margin: 20px 0 8px; }
-  .feature p { font-size: 16px; }
+  /* Features: bento of real UI, different sizes and fills */
+  .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+  .tile { border-radius: 28px; padding: 36px; position: relative; overflow: hidden; }
+  .tile h3 { font-size: 26px; line-height: 1.15; margin-bottom: 10px; }
+  .tile p { font-size: 17px; }
+  .t-now { grid-column: span 7; background: var(--teal-soft); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+  .mini-now { background: #fff; border-radius: 22px; padding: 22px; box-shadow: 0 14px 32px rgba(31,111,114,0.14); }
+  .mini-label { font-size: 13px; font-weight: 900; color: var(--teal); letter-spacing: 0.04em; }
+  .mini-who { display: flex; gap: 12px; align-items: center; margin: 14px 0 18px; }
+  .mini-who img { width: 52px; height: 52px; }
+  .mini-who b { display: block; font-size: 19px; }
+  .mini-who small { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .t-notify { grid-column: span 5; background: var(--navy); }
+  .t-notify h3 { color: #fff; }
+  .t-notify p { color: #A9B9C6; margin-bottom: 22px; }
+  .notif.dark { background: rgba(255,255,255,0.08); box-shadow: none; margin-top: 12px; }
+  .notif.dark b { color: #fff; }
+  .notif.dark small, .notif.dark .notif-top { color: #B7C6D2; }
+  .t-stock { grid-column: span 4; background: var(--warm-soft); }
+  .big { font-size: 88px; font-weight: 900; line-height: 1; margin: 18px 0 18px; letter-spacing: -0.04em; }
+  .big span { font-size: 26px; letter-spacing: 0; color: var(--muted); }
+  .bar { height: 12px; border-radius: 6px; background: rgba(30,58,82,0.1); overflow: hidden; }
+  .bar span { display: block; height: 100%; background: #C8862E; border-radius: 6px; }
+  .t-stock small { display: block; margin-top: 12px; font-weight: 700; color: var(--muted); font-size: 14px; }
+  .t-history { grid-column: span 5; background: #fff; border: 1px solid var(--border); }
+  .log { list-style: none; margin-top: 12px; }
+  .log li { display: flex; gap: 14px; align-items: center; padding: 14px 0; border-top: 1px solid var(--border); }
+  .log li:first-child { border-top: 0; }
+  .log i { flex: 0 0 26px; height: 26px; border-radius: 50%; }
+  .log i.ok { background: #23704F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4 8-9'/%3E%3C/svg%3E") center / 15px no-repeat; }
+  .log i.skip { background: #F6E3E6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239E4552' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7 7 17'/%3E%3C/svg%3E") center / 13px no-repeat; }
+  .log b { display: block; font-size: 16px; }
+  .log small { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .t-a11y { grid-column: span 3; background: var(--elderly); }
+  .aa { font-size: 72px; font-weight: 900; color: #6E4F9C; line-height: 1; margin-bottom: 18px; letter-spacing: -0.03em; }
+  .t-a11y p { font-size: 15px; }
 
   /* Screens */
   .screens { display: flex; justify-content: center; gap: 28px; align-items: flex-end; }
@@ -114,21 +168,22 @@
   .screens figcaption span { display: block; font-weight: 600; font-size: 14px; color: var(--muted); }
 
   /* Privacy */
-  .privacy { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: center; }
-  .privacy h2 { font-size: 44px; line-height: 1.15; margin: 12px 0 18px; }
+  .privacy { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 80px; align-items: start; }
+  .privacy h2 { font-size: 44px; line-height: 1.12; margin: 12px 0 18px; }
   .privacy .lead { font-size: 19px; }
-  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  .check { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 22px; }
-  .check b { display: block; font-size: 18px; margin-bottom: 6px; }
-  .check p { font-size: 15px; }
-  .note { margin-top: 28px; background: var(--warm-soft); border-radius: 18px; padding: 18px 22px; font-size: 15px; color: var(--navy); font-weight: 600; }
+  .facts { list-style: none; }
+  .facts li { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 20px 0; border-top: 1px solid var(--border); font-size: 17px; }
+  .facts li:last-child { border-bottom: 1px solid var(--border); }
+  .facts b { font-size: 18px; }
+  .facts span { color: var(--muted); }
+  .fine { margin-top: 24px; font-size: 15px; padding-left: 16px; border-left: 3px solid #E8C98A; }
 
   /* FAQ */
-  .faq { max-width: 860px; margin: 0 auto; display: grid; gap: 14px; }
-  .q { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px 26px; }
-  .q b { font-size: 18px; display: flex; justify-content: space-between; }
-  .q b::after { content: '+'; color: var(--teal); font-size: 24px; line-height: 1; }
-  .q p { margin-top: 8px; font-size: 16px; }
+  .faq-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 80px; }
+  .faq-grid h2 { font-size: 44px; line-height: 1.12; margin-top: 12px; }
+  .faq dt { font-size: 19px; font-weight: 800; padding-top: 22px; border-top: 1px solid var(--border); }
+  .faq dt:first-child { border-top: 0; padding-top: 0; }
+  .faq dd { color: var(--muted); font-size: 17px; line-height: 1.6; margin: 6px 0 22px; }
 
   /* Final CTA */
   .final { background: linear-gradient(135deg, #EDE3F7 0%, #F7EFE7 55%, #FDF3DC 100%); border-radius: 40px; padding: 72px; display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 40px; overflow: hidden; }
@@ -216,35 +271,102 @@
   </div>
 </section>
 
-<section class="section" style="background:#FFFFFF; border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+<section class="how">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">Como funciona</div>
-      <h2>Comece em menos de um minuto</h2>
-      <p>Sem criar conta, sem configurar nada complicado.</p>
+    <div class="how-head">
+      <div>
+        <div class="eyebrow">Como funciona</div>
+        <h2>Do cadastro ao primeiro lembrete em menos de um minuto.</h2>
+      </div>
+      <p>Sem criar conta e sem configuração complicada. Você diz quem cuida e quando, e o DoseCare cuida do resto.</p>
     </div>
-    <div class="steps">
-      <div class="step"><div class="num">1</div><h3>Adicione quem você cuida</h3><p>Escolha o tipo de perfil, um nome e um avatar. Pode ser você, seu filho, sua mãe, seu cachorro ou a sua horta.</p></div>
-      <div class="step"><div class="num">2</div><h3>Cadastre a rotina</h3><p>Nome, dose, horários e duração do tratamento: contínuo, até uma data ou por quantidade de doses.</p></div>
-      <div class="step"><div class="num">3</div><h3>Registre com um toque</h3><p>No horário, o DoseCare avisa. Marque como tomado ou pulado e o histórico se organiza sozinho.</p></div>
-    </div>
+    <ol class="flow">
+      <li>
+        <span class="n">1</span>
+        <h3>Diga quem você cuida</h3>
+        <p>Um perfil para cada vida da casa, com nome e avatar.</p>
+        <div class="vignette">
+          <div class="stack">
+            <img src="../../mobile/assets/svg/avatars/child.svg" alt=""><img src="../../mobile/assets/svg/avatars/adult.svg" alt=""><img src="../../mobile/assets/svg/avatars/elderly.svg" alt=""><img src="../../mobile/assets/svg/avatars/pet.svg" alt=""><img src="../../mobile/assets/svg/avatars/plant.svg" alt="">
+          </div>
+          <span class="chip-add">+ Adicionar perfil</span>
+        </div>
+      </li>
+      <li>
+        <span class="n">2</span>
+        <h3>Cadastre a rotina</h3>
+        <p>Dose, horários e por quanto tempo vai o tratamento.</p>
+        <div class="vignette">
+          <div class="med">
+            <span class="pill"><i style="--icon:url(../../mobile/assets/svg/icons/pill.svg)"></i></span>
+            <div><b>Losartana 50 mg</b><small>1 comprimido por dose</small></div>
+          </div>
+          <div class="times"><span>08:00</span><span>20:00</span><em>Contínuo</em></div>
+        </div>
+      </li>
+      <li>
+        <span class="n">3</span>
+        <h3>Toque quando der a hora</h3>
+        <p>O aviso chega no horário. Um toque registra, sem culpa se pular.</p>
+        <div class="vignette">
+          <div class="notif">
+            <div class="notif-top"><img src="../../mobile/assets/svg/brand/logo-mark.svg" alt="">DoseCare · agora</div>
+            <b>Florita</b>
+            <small>Está na hora: Losartana 50 mg.</small>
+          </div>
+          <div class="actions"><span class="a-taken">Tomado</span><span class="a-skip">Pular</span></div>
+        </div>
+      </li>
+    </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">Recursos</div>
-      <h2>Tudo o que importa, nada que atrapalhe</h2>
-      <p>Em poucos segundos você sabe quem precisa de cuidado, o que fazer e o que vem depois.</p>
+    <div class="how-head">
+      <div>
+        <div class="eyebrow">Recursos</div>
+        <h2>Feito para responder rápido: quem precisa de mim agora?</h2>
+      </div>
+      <p>Nada de painel cheio de números. O app mostra o que fazer, o que vem depois e quando foi feito.</p>
     </div>
-    <div class="features">
-      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/clock.svg)"></i></div><h3>Agora e Próximo</h3><p>A dose que precisa de atenção fica em destaque, e a seguinte logo abaixo, mesmo que seja amanhã.</p></div>
-      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/bell.svg)"></i></div><h3>Lembretes no horário</h3><p>Notificações chegam mesmo com o app fechado e sem internet. Um toque abre o perfil certo.</p></div>
-      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/package.svg)"></i></div><h3>Controle de estoque</h3><p>Cada dose tomada desconta do estoque. Quando restarem 10%, o app lembra você de comprar mais.</p></div>
-      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/calendar.svg)"></i></div><h3>Histórico confiável</h3><p>Horário previsto e realizado de cada dose. Editar uma rotina nunca apaga o passado.</p></div>
-      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/profiles.svg)"></i></div><h3>Vários perfis, uma tela</h3><p>Veja todos de uma vez ou filtre por pessoa, pet ou planta com um toque.</p></div>
-      <div class="feature"><div class="ico"><i style="--icon:url(../../mobile/assets/svg/icons/check.svg)"></i></div><h3>Acessível de verdade</h3><p>Contraste alto, textos claros, botões grandes e suporte a leitores de tela. Status nunca só por cor.</p></div>
+    <div class="bento">
+      <div class="tile t-now">
+        <div class="tile-copy">
+          <h3>O que importa, primeiro</h3>
+          <p>A dose que está esperando aparece em destaque. A próxima vem logo abaixo, mesmo que seja amanhã.</p>
+        </div>
+        <div class="mini-now">
+          <span class="mini-label">AGORA · 08:00</span>
+          <div class="mini-who"><img src="../../mobile/assets/svg/avatars/elderly.svg" alt=""><div><b>Florita</b><small>Losartana 50 mg · 1 comprimido</small></div></div>
+          <div class="actions wide"><span class="a-taken">Tomado</span><span class="a-skip">Pular</span></div>
+        </div>
+      </div>
+      <div class="tile t-notify">
+        <h3>Lembra mesmo com o app fechado</h3>
+        <p>Sem internet, sem servidor. O próprio celular avisa.</p>
+        <div class="notif dark"><div class="notif-top"><img src="../../mobile/assets/svg/brand/logo-mark.svg" alt="">DoseCare · 12:00</div><b>Joãozinho</b><small>Está na hora: Vitamina D · 2 gotas.</small></div>
+        <div class="notif dark"><div class="notif-top"><img src="../../mobile/assets/svg/brand/logo-mark.svg" alt="">DoseCare · 09:00</div><b>Estoque de Sinvastatina</b><small>Restam 3 doses (Tia). Que tal providenciar mais?</small></div>
+      </div>
+      <div class="tile t-stock">
+        <h3>Avisa antes de acabar</h3>
+        <div class="big">3 <span>doses</span></div>
+        <div class="bar"><span style="width:10%"></span></div>
+        <small>10% da última compra · cerca de 3 dias</small>
+      </div>
+      <div class="tile t-history">
+        <h3>Histórico que não muda</h3>
+        <ul class="log">
+          <li><i class="ok"></i><div><b>Losartana 50 mg</b><small>Hoje · previsto 08:00 · feito 08:04</small></div></li>
+          <li><i class="ok"></i><div><b>Omeprazol 20 mg</b><small>Hoje · previsto 07:00 · feito 07:01</small></div></li>
+          <li><i class="skip"></i><div><b>Omeprazol 20 mg</b><small>Ontem · previsto 07:00 · pulado</small></div></li>
+        </ul>
+      </div>
+      <div class="tile t-a11y">
+        <div class="aa">AA</div>
+        <h3>Para todas as idades</h3>
+        <p>Contraste WCAG AA em todo texto, botões de 48 px e leitor de tela. Status nunca só por cor.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -268,32 +390,34 @@
   <div class="wrap privacy">
     <div>
       <div class="eyebrow">Privacidade</div>
-      <h2>Seus dados ficam com você</h2>
-      <p class="lead">O DoseCare guarda tudo no próprio celular. Não há conta, servidor ou anúncios, e nada é enviado para a internet.</p>
-      <div class="note">O DoseCare organiza e lembra. Ele não diagnostica, não prescreve e não recomenda doses: siga sempre a orientação do médico, veterinário ou profissional responsável.</div>
+      <h2>Seus dados ficam no seu celular.</h2>
+      <p class="lead">Não há conta, servidor nem anúncios. Nada do que você registra sai do aparelho.</p>
     </div>
-    <div class="checks">
-      <div class="check"><b>Sem cadastro</b><p>Abra e comece a usar. Nenhum e-mail ou senha.</p></div>
-      <div class="check"><b>Funciona offline</b><p>Lembretes e registros funcionam sem internet.</p></div>
-      <div class="check"><b>Nada é apagado</b><p>Excluir um perfil preserva o histórico de cuidados.</p></div>
-      <div class="check"><b>Código público</b><p>Todo o código pode ser consultado no GitHub.</p></div>
+    <div>
+      <ul class="facts">
+        <li><b>Sem cadastro</b><span>Abra e comece. Nenhum e-mail, nenhuma senha.</span></li>
+        <li><b>Funciona offline</b><span>Lembretes e registros não dependem de internet.</span></li>
+        <li><b>Nada se perde</b><span>Excluir um perfil tira da tela inicial, mas guarda o histórico.</span></li>
+        <li><b>Código público</b><span>Qualquer pessoa pode conferir o código no GitHub.</span></li>
+      </ul>
+      <p class="fine">O DoseCare organiza e lembra. Ele não diagnostica, não prescreve e não recomenda doses: siga sempre a orientação do médico, veterinário ou profissional responsável.</p>
     </div>
   </div>
 </section>
 
 <section class="section">
-  <div class="wrap">
-    <div class="section-head">
+  <div class="wrap faq-grid">
+    <div>
       <div class="eyebrow">Dúvidas</div>
       <h2>Perguntas frequentes</h2>
     </div>
-    <div class="faq">
-      <div class="q"><b>O DoseCare é gratuito?</b><p>Sim. É gratuito, sem anúncios e sem assinatura.</p></div>
-      <div class="q"><b>Preciso de internet para receber os lembretes?</b><p>Não. Os lembretes são programados no próprio celular e chegam mesmo com o app fechado.</p></div>
-      <div class="q"><b>Funciona no iPhone?</b><p>Por enquanto, o DoseCare está disponível para Android 7.0 ou mais recente.</p></div>
-      <div class="q"><b>E se eu esquecer de registrar uma dose?</b><p>Sem problema. Ela continua em "Agora" até você marcar como tomada ou pulada, sem mensagens de culpa.</p></div>
-      <div class="q"><b>Posso cuidar de várias pessoas ao mesmo tempo?</b><p>Pode. Cadastre quantos perfis quiser e veja todos os cuidados juntos na tela inicial.</p></div>
-    </div>
+    <dl class="faq">
+      <dt>O DoseCare é gratuito?</dt><dd>Sim. Sem anúncios e sem assinatura.</dd>
+      <dt>Preciso de internet para receber os lembretes?</dt><dd>Não. Os lembretes ficam programados no próprio celular e chegam mesmo com o app fechado.</dd>
+      <dt>Funciona no iPhone?</dt><dd>Por enquanto, só no Android 7.0 ou mais recente.</dd>
+      <dt>E se eu esquecer de registrar uma dose?</dt><dd>Ela continua em "Agora" até você marcar como tomada ou pulada. Sem mensagens de culpa.</dd>
+      <dt>Posso cuidar de várias pessoas ao mesmo tempo?</dt><dd>Pode. Cadastre quantos perfis quiser e veja tudo junto na tela inicial.</dd>
+    </dl>
   </div>
 </section>
 
