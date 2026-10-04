@@ -14,11 +14,11 @@ O histórico de versões está no [CHANGELOG](./CHANGELOG.md).
 
 ## Funcionalidades atuais
 
-O MVP inclui:
+O app inclui:
 
 - criação e edição de múltiplos perfis;
 - perfis para crianças, adultos, idosos, pets e plantas;
-- personalização de avatar e cor por perfil;
+- avatar ilustrado por perfil;
 - exclusão lógica de perfis, preservando seus dados e histórico;
 - cadastro e edição de medicamentos de rotina;
 - um ou mais horários fixos por medicamento;
@@ -31,6 +31,8 @@ O MVP inclui:
 - histórico individual por perfil;
 - atualização automática da interface conforme o horário avança;
 - lembretes no horário de cada dose, mesmo com o app fechado;
+- aviso para abrir o app antes que os lembretes programados acabem;
+- controle de estoque em doses, com aviso diário de reposição quando restam 10% ou menos;
 - persistência local e funcionamento offline.
 
 ## Princípios do produto
