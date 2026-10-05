@@ -1025,6 +1025,23 @@ Exemplo:
 
 O medicamento continua sendo diário mesmo que a dose de hoje seja pulada.
 
+## Desfazer
+
+Adicionado após a versão 1.2.0.
+
+Ao tocar em **Tomado** ou **Pular**, a dose sai do card Agora na hora e aparece uma barra:
+
+```text
+Losartana 50 mg: dose pulada.        [ Desfazer ]
+```
+
+* a barra fica 5 segundos, ou 10 com leitor de tela ligado;
+* "Desfazer" devolve a dose ao Agora, e nada entra no histórico;
+* sem desfazer, a ação vira registro definitivo ao fim do tempo, ao registrar outra dose ou quando o app sai da tela;
+* se o app for fechado ou encerrado nesse intervalo, a ação vale: ela é registrada na próxima abertura, com o horário do toque.
+
+Não há confirmação antes de pular: registrar uma dose continua exigindo um único toque.
+
 ---
 
 # 42. Medicamento SOS

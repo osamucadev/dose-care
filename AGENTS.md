@@ -78,7 +78,12 @@ theme/, constants/  tokens visuais e paleta
    - O estoque atual é a última contagem menos as doses `taken` registradas depois dela (`domain/stock.ts`).
    - Dose pulada não consome.
    - O aviso começa em 10% da última contagem (SPEC §81).
-8. **Avatares são sempre ilustrações** (`svg:<chave>`, lista em `components/ui/avatar.tsx`). Não use emojis na interface.
+8. **Tomado e Pular passam por uma janela de desfazer** (`hooks/pending-dose-action.ts`).
+   - A ação é salva em `pending_dose_actions` no instante do toque. Essa tabela não é histórico: desfazer apaga a linha.
+   - Ela vira `DoseEvent` ao fim da janela, ao registrar outra dose, quando o app sai do primeiro plano ou perde o foco, e, se o app morreu antes, na próxima abertura (`commitLeftoverDoseActions`).
+   - O `occurredAt` é sempre o horário do toque.
+   - No Android, o app continua "ativo" na tela de recentes: deslizá-lo para fechar mata o processo sem evento de segundo plano. Por isso a gravação no toque é obrigatória, não um detalhe.
+9. **Avatares são sempre ilustrações** (`svg:<chave>`, lista em `components/ui/avatar.tsx`). Não use emojis na interface.
 
 ## Testes de banco
 

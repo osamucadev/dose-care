@@ -6,6 +6,10 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Não lançado]
 
+### Adicionado
+
+- "Desfazer" depois de tocar em Tomado ou Pular: a barra fica alguns segundos na tela e, se usada, nada entra no histórico. Fechar o app nesse intervalo não perde a ação; ela é registrada com o horário do toque.
+
 ## [1.2.0] - 2026-10-03
 
 Lembretes que não param sem aviso e uma lista "Próximos" mais clara.
