@@ -309,3 +309,73 @@ export function assertValidStockCount(count: StockCountCandidate): void {
     throw new InvalidPersistedDataError(`StockCount.createdAt is invalid: ${count.createdAt}.`);
   }
 }
+
+/**
+ * A Tomado/Pular waiting for its undo window to end, as stored in
+ * pending_dose_actions. Only what is needed to build the DoseEvent later.
+ */
+export interface StoredPendingDoseAction {
+  occurrence: {
+    id: string;
+    profileId: string;
+    medicationId: string;
+    medicationName: string;
+    dosage: string | null;
+    quantityPerDose: string | null;
+    scheduledAt: string;
+  };
+  status: DoseEventStatus;
+  /** UTC ISO timestamp of the tap: the DoseEvent's occurredAt, even if it is committed much later. */
+  occurredAt: string;
+}
+
+function isNullableString(value: unknown): value is string | null {
+  return value === null || typeof value === 'string';
+}
+
+/**
+ * Parses a pending_dose_actions payload, rejecting anything that could
+ * not become a valid DoseEvent. Like every read path here, it does not
+ * trust what is in the database.
+ */
+export function parseStoredPendingDoseAction(raw: string): StoredPendingDoseAction {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new InvalidPersistedDataError('Pending dose action payload is not valid JSON.');
+  }
+  const candidate = parsed as { occurrence?: Record<string, unknown>; status?: unknown; occurredAt?: unknown };
+  const o = candidate?.occurrence;
+  const valid =
+    typeof candidate?.status === 'string' &&
+    isValidDoseEventStatus(candidate.status) &&
+    o !== undefined &&
+    typeof o.id === 'string' &&
+    typeof o.profileId === 'string' &&
+    typeof o.medicationId === 'string' &&
+    typeof o.medicationName === 'string' &&
+    o.medicationName.trim().length > 0 &&
+    isNullableString(o.dosage) &&
+    isNullableString(o.quantityPerDose) &&
+    typeof o.scheduledAt === 'string' &&
+    isValidScheduledLocalDateTime(o.scheduledAt) &&
+    typeof candidate.occurredAt === 'string' &&
+    isValidUtcIsoTimestamp(candidate.occurredAt);
+  if (!valid) {
+    throw new InvalidPersistedDataError('Pending dose action payload has an invalid shape.');
+  }
+  return {
+    occurrence: {
+      id: o.id as string,
+      profileId: o.profileId as string,
+      medicationId: o.medicationId as string,
+      medicationName: o.medicationName as string,
+      dosage: o.dosage as string | null,
+      quantityPerDose: o.quantityPerDose as string | null,
+      scheduledAt: o.scheduledAt as string,
+    },
+    status: candidate.status as DoseEventStatus,
+    occurredAt: candidate.occurredAt as string,
+  };
+}

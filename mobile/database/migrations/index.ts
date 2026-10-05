@@ -3,6 +3,7 @@ import { profileActiveColumn } from './002_profile_active';
 import { medicationTreatmentEndFields } from './003_medication_treatment_end';
 import { svgAvatars } from './004_svg_avatars';
 import { stockCounts } from './005_stock_counts';
+import { pendingDoseActions } from './006_pending_dose_actions';
 import type { Migration } from './types';
 
 /**
@@ -26,6 +27,7 @@ export const migrations: Migration[] = [
   medicationTreatmentEndFields,
   svgAvatars,
   stockCounts,
+  pendingDoseActions,
 ];
 
 export type { Migration };
