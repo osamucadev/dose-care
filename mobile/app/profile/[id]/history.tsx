@@ -28,7 +28,7 @@ export default function ProfileHistoryScreen() {
       ) : vm.status === 'error' ? (
         <ErrorState onRetry={vm.retry} />
       ) : (
-        <HistoryList events={vm.events} />
+        <HistoryList entries={vm.entries} />
       )}
     </ScreenContainer>
   );

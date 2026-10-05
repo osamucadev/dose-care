@@ -3,14 +3,14 @@ import { useRouter } from 'expo-router';
 import { useCallback } from 'react';
 
 import { normalizeProfileId } from '@/domain/route-params';
-import type { DoseEvent } from '@/domain/types';
+import type { HistoryEntry } from '@/domain/history';
 import { useHistory } from '@/hooks/use-history';
 
 export type ProfileHistoryViewModel =
   | { status: 'invalid' }
   | { status: 'loading'; openOverview: () => void }
   | { status: 'error'; retry: () => void; openOverview: () => void }
-  | { status: 'ready'; events: DoseEvent[]; openOverview: () => void };
+  | { status: 'ready'; entries: HistoryEntry[]; openOverview: () => void };
 
 export function useProfileHistoryViewModel(rawId: string | string[] | undefined): ProfileHistoryViewModel {
   const router = useRouter();
@@ -34,5 +34,5 @@ export function useProfileHistoryViewModel(rawId: string | string[] | undefined)
 
   if (loading) return { status: 'loading', openOverview };
   if (error) return { status: 'error', retry: refresh, openOverview };
-  return { status: 'ready', events, openOverview };
+  return { status: 'ready', entries: events, openOverview };
 }

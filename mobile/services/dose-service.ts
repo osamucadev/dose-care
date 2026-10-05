@@ -2,8 +2,9 @@ import * as Crypto from 'expo-crypto';
 
 import { getRepositories } from '@/database/repositories';
 import { addDaysToLocalDateString, nowUtcIso, toLocalDateString } from '@/domain/datetime';
+import { buildHistoryEntries, type HistoryEntry } from '@/domain/history';
 import { generateOccurrencesForDateRange } from '@/domain/occurrences';
-import type { DoseEvent, DoseEventStatus, DoseOccurrence } from '@/domain/types';
+import type { DoseEventStatus, DoseOccurrence } from '@/domain/types';
 import type { StoredPendingDoseAction } from '@/domain/validation';
 
 import { commitLeftovers, commitStoredAction, type CommitResult } from './pending-dose-actions';
@@ -95,7 +96,16 @@ export async function commitLeftoverDoseActions(): Promise<number> {
   return written;
 }
 
-export async function getHistoryForProfile(profileId: string): Promise<DoseEvent[]> {
-  const { doseEvents } = await getRepositories();
-  return doseEvents.listByProfile(profileId);
+/**
+ * A profile's history, most recent first, with each medication's current
+ * name (see `buildHistoryEntries`). Inactive medications are included so
+ * their past doses still resolve to a name.
+ */
+export async function getHistoryForProfile(profileId: string): Promise<HistoryEntry[]> {
+  const { doseEvents, medications } = await getRepositories();
+  const [events, meds] = await Promise.all([
+    doseEvents.listByProfile(profileId),
+    medications.listByProfile(profileId, { includeInactive: true }),
+  ]);
+  return buildHistoryEntries(events, meds);
 }

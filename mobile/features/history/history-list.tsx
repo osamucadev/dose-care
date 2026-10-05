@@ -3,16 +3,16 @@ import { StyleSheet, View } from 'react-native';
 import RemindersIllustration from '@/assets/svg/illustrations/onboarding-reminders.svg';
 import { Card } from '@/components/ui/card';
 import { EmptyState } from '@/components/ui/empty-state';
-import type { DoseEvent } from '@/domain/types';
+import type { HistoryEntry } from '@/domain/history';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { spacing } from '@/theme/tokens';
 
 import { HistoryItem } from './history-item';
 
-export function HistoryList({ events }: { events: DoseEvent[] }) {
+export function HistoryList({ entries }: { entries: HistoryEntry[] }) {
   const border = useThemeColor({}, 'border');
 
-  if (events.length === 0) {
+  if (entries.length === 0) {
     return (
       <EmptyState
         illustration={RemindersIllustration}
@@ -24,9 +24,9 @@ export function HistoryList({ events }: { events: DoseEvent[] }) {
 
   return (
     <Card style={styles.card}>
-      {events.map((event, index) => (
-        <View key={event.id} style={index > 0 ? [styles.divider, { borderTopColor: border }] : undefined}>
-          <HistoryItem event={event} />
+      {entries.map((entry, index) => (
+        <View key={entry.event.id} style={index > 0 ? [styles.divider, { borderTopColor: border }] : undefined}>
+          <HistoryItem entry={entry} />
         </View>
       ))}
     </Card>
