@@ -34,6 +34,11 @@ describe.each(['light', 'dark'] as const)('%s palette contrast', (scheme) => {
     expect(contrastRatio(palette.onTint, palette.tint)).toBeGreaterThanOrEqual(TEXT_MIN);
   });
 
+  it('undo snackbar (inverted: page background and soft tint on the text color) reaches AA', () => {
+    expect(contrastRatio(palette.background, palette.text)).toBeGreaterThanOrEqual(TEXT_MIN);
+    expect(contrastRatio(palette.tintSoft, palette.text)).toBeGreaterThanOrEqual(TEXT_MIN);
+  });
+
   it('input boundary is distinguishable from its fill', () => {
     expect(contrastRatio(palette.inputBorder, palette.surface)).toBeGreaterThanOrEqual(UI_BOUNDARY_MIN);
   });

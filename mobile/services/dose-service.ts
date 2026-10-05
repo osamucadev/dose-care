@@ -2,10 +2,11 @@ import * as Crypto from 'expo-crypto';
 
 import { getRepositories } from '@/database/repositories';
 import { addDaysToLocalDateString, nowUtcIso, toLocalDateString } from '@/domain/datetime';
-import { createDoseEventFromOccurrence } from '@/domain/dose-events';
 import { generateOccurrencesForDateRange } from '@/domain/occurrences';
 import type { DoseEvent, DoseEventStatus, DoseOccurrence } from '@/domain/types';
+import type { StoredPendingDoseAction } from '@/domain/validation';
 
+import { commitLeftovers, commitStoredAction, type CommitResult } from './pending-dose-actions';
 import { syncRemindersInBackground } from './reminder-service';
 
 /**
@@ -48,18 +49,50 @@ export async function getUpcomingOccurrences(profileId?: string): Promise<DoseOc
   return generateOccurrencesForDateRange(meds, todayStr, lastDayStr, eventsByDay.flat());
 }
 
-export async function recordDoseAction(
-  occurrence: DoseOccurrence,
-  status: DoseEventStatus
-): Promise<void> {
-  const { doseEvents } = await getRepositories();
-  const event = createDoseEventFromOccurrence(occurrence, status, {
-    id: Crypto.randomUUID(),
+/**
+ * Stores a Tomado/Pular the moment it is tapped, before its undo window
+ * ends, so it survives the app being closed (see migration 006).
+ */
+export async function holdDoseAction(occurrence: DoseOccurrence, status: DoseEventStatus): Promise<StoredPendingDoseAction> {
+  const { pendingDoseActions } = await getRepositories();
+  const action: StoredPendingDoseAction = {
+    occurrence: {
+      id: occurrence.id,
+      profileId: occurrence.profileId,
+      medicationId: occurrence.medicationId,
+      medicationName: occurrence.medicationName,
+      dosage: occurrence.dosage,
+      quantityPerDose: occurrence.quantityPerDose,
+      scheduledAt: occurrence.scheduledAt,
+    },
+    status,
     occurredAt: nowUtcIso(),
-  });
-  await doseEvents.create(event);
+  };
+  await pendingDoseActions.save(action);
+  return action;
+}
+
+/** "Desfazer": the waiting action is dropped and never becomes history. */
+export async function releaseDoseAction(occurrenceId: string): Promise<void> {
+  const { pendingDoseActions } = await getRepositories();
+  await pendingDoseActions.remove(occurrenceId);
+}
+
+/** The undo window is over: write the DoseEvent and re-plan reminders. */
+export async function commitDoseAction(action: StoredPendingDoseAction): Promise<CommitResult> {
+  const repositories = await getRepositories();
+  const result = await commitStoredAction(repositories, action, () => Crypto.randomUUID());
   // The recorded dose no longer needs its reminder.
   syncRemindersInBackground();
+  return result;
+}
+
+/** On launch: commit what was still waiting when the app was last closed. */
+export async function commitLeftoverDoseActions(): Promise<number> {
+  const repositories = await getRepositories();
+  const written = await commitLeftovers(repositories, () => Crypto.randomUUID());
+  if (written > 0) syncRemindersInBackground();
+  return written;
 }
 
 export async function getHistoryForProfile(profileId: string): Promise<DoseEvent[]> {

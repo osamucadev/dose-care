@@ -86,7 +86,6 @@ export default function ProfileScreen() {
           {doses.now ? (
             <NowCard
               occurrence={doses.now}
-              busy={vm.actingOccurrenceId === doses.now.id}
               onTaken={() => doses.now && vm.markTaken(doses.now)}
               onSkip={() => doses.now && vm.skip(doses.now)}
             />

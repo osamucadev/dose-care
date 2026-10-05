@@ -31,6 +31,7 @@ module.exports = defineConfig([
                 '!@/hooks/use-theme-color',
                 '!@/hooks/use-color-scheme',
                 '!@/hooks/use-dose-reminders',
+                '!@/hooks/pending-dose-action-provider',
               ],
               message: `Data hooks belong to the ViewModel. ${VIEW_MODEL_HINT}`,
             },

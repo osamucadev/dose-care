@@ -44,7 +44,6 @@ export type ProfileViewModel =
       avatarTint: string;
       doses: ProfileDosesSection;
       medications: ProfileMedicationsSection;
-      actingOccurrenceId: string | null;
       hasActionError: boolean;
       dismissActionError: () => void;
       markTaken: (occurrence: DoseOccurrence) => void;
@@ -70,8 +69,8 @@ export function useProfileViewModel(id: string): ProfileViewModel {
     refresh: refreshMedications,
     setActive,
   } = useMedications(id, { includeInactive: true });
-  const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses, recordDose } = useDoses(id);
-  const { actingOccurrenceId, actionError, performDoseAction, clearActionError } = useDoseActionHandler(recordDose);
+  const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses } = useDoses(id);
+  const { performDoseAction, hasActionError, clearActionError } = useDoseActionHandler();
   const { togglingMedicationId, toggleError, performToggle, clearToggleError } = useMedicationToggleHandler(
     setActive,
     refreshDoses
@@ -122,11 +121,10 @@ export function useProfileViewModel(id: string): ProfileViewModel {
       : medicationsLoading
         ? { status: 'loading' }
         : { status: 'ready', items: medications, stockByMedication },
-    actingOccurrenceId,
-    hasActionError: actionError !== null,
+    hasActionError,
     dismissActionError: clearActionError,
-    markTaken: (occurrence) => void performDoseAction(occurrence, 'taken'),
-    skip: (occurrence) => void performDoseAction(occurrence, 'skipped'),
+    markTaken: (occurrence) => performDoseAction(occurrence, 'taken'),
+    skip: (occurrence) => performDoseAction(occurrence, 'skipped'),
     togglingMedicationId,
     hasToggleError: toggleError !== null,
     dismissToggleError: clearToggleError,

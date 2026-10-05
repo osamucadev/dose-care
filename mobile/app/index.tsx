@@ -76,7 +76,6 @@ export default function HomeScreen() {
               profileName={doses.nowProfile?.name}
               profileAvatar={doses.nowProfile?.avatar}
               profileTint={doses.nowProfile?.tint}
-              busy={vm.actingOccurrenceId === doses.now.id}
               onTaken={() => doses.now && vm.markTaken(doses.now)}
               onSkip={() => doses.now && vm.skip(doses.now)}
             />

@@ -34,8 +34,6 @@ export type HomeViewModel =
       /** Low-stock medications; empty when nothing needs restocking. */
       restock: RestockRow[];
       updateStock: (medicationId: string) => void;
-      /** Occurrence whose Tomado/Pular is being saved, to show a busy state. */
-      actingOccurrenceId: string | null;
       hasActionError: boolean;
       dismissActionError: () => void;
       markTaken: (occurrence: DoseOccurrence) => void;
@@ -47,8 +45,8 @@ export type HomeViewModel =
 export function useHomeViewModel(): HomeViewModel {
   const router = useRouter();
   const { profiles, loading: profilesLoading, error: profilesError, refresh: refreshProfiles } = useProfiles();
-  const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses, recordDose } = useDoses();
-  const { actingOccurrenceId, actionError, performDoseAction, clearActionError } = useDoseActionHandler(recordDose);
+  const { occurrences, loading: dosesLoading, error: dosesError, refresh: refreshDoses } = useDoses();
+  const { performDoseAction, hasActionError, clearActionError } = useDoseActionHandler();
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   // Called on foreground return and on local day rollover (see
   // useReactiveNow). Regular minute ticks reclassify Agora/Próximo from
@@ -106,11 +104,10 @@ export function useHomeViewModel(): HomeViewModel {
     doses,
     restock,
     updateStock: (medicationId) => router.push(`/medication/${medicationId}/stock`),
-    actingOccurrenceId,
-    hasActionError: actionError !== null,
+    hasActionError,
     dismissActionError: clearActionError,
-    markTaken: (occurrence) => void performDoseAction(occurrence, 'taken'),
-    skip: (occurrence) => void performDoseAction(occurrence, 'skipped'),
+    markTaken: (occurrence) => performDoseAction(occurrence, 'taken'),
+    skip: (occurrence) => performDoseAction(occurrence, 'skipped'),
     openProfile: (id) => router.push(`/profile/${id}`),
     addProfile,
   };
