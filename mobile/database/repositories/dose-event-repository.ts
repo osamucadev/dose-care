@@ -117,7 +117,10 @@ export class DoseEventRepository {
         event.createdAt
       );
     } catch (error) {
-      if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
+      // Checked by message, not `instanceof Error`: driver errors can come
+      // from another JS realm (node:sqlite under Jest), where instanceof fails.
+      const message = (error as { message?: unknown } | null)?.message;
+      if (typeof message === 'string' && message.includes('UNIQUE constraint failed')) {
         throw new DoseAlreadyResolvedError();
       }
       throw error;
