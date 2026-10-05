@@ -6,6 +6,10 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Não lançado]
 
+## [1.3.0] - 2026-10-04
+
+Um toque errado em Tomado ou Pular agora tem volta.
+
 ### Adicionado
 
 - "Desfazer" depois de tocar em Tomado ou Pular: a barra fica alguns segundos na tela e, se usada, nada entra no histórico. Fechar o app nesse intervalo não perde a ação; ela é registrada com o horário do toque.
@@ -112,7 +116,8 @@ Primeira versão oficial. App Android instalável por APK, com todos os dados gu
 - **Ainda não existem:** medicamentos SOS, adiamento de dose ("Depois") e recorrências além de horários fixos.
 - **A versão web ainda não abre o banco de dados.**
 
-[Não lançado]: https://github.com/osamucadev/dose-care/compare/v1.2.0...HEAD
+[Não lançado]: https://github.com/osamucadev/dose-care/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/osamucadev/dose-care/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/osamucadev/dose-care/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/osamucadev/dose-care/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/osamucadev/dose-care/releases/tag/v1.0.0

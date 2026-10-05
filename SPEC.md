@@ -1027,7 +1027,7 @@ O medicamento continua sendo diário mesmo que a dose de hoje seja pulada.
 
 ## Desfazer
 
-Adicionado após a versão 1.2.0.
+Adicionado na versão 1.3.0.
 
 Ao tocar em **Tomado** ou **Pular**, a dose sai do card Agora na hora e aparece uma barra:
 
