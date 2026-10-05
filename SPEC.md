@@ -1598,6 +1598,21 @@ O histórico anterior permanece:
 13/08 · 08:00 · Tomado
 ```
 
+## Renomear um medicamento
+
+Cada registro guarda o nome e a dose do momento em que foi feito, e isso nunca é reescrito.
+
+Para que um medicamento renomeado continue fácil de reconhecer, o histórico mostra o **nome atual** e, quando ele é diferente do registrado, informa o nome original:
+
+```text
+Losartana Potássica · 50 mg
+Registrado como Losartana
+Ontem · previsto 08:00 · realizado 08:04
+✓ Tomado
+```
+
+A **dose** exibida continua sendo a do registro: se a dosagem mudar de 50 mg para 100 mg, as doses antigas seguem aparecendo como 50 mg.
+
 ---
 
 # 65. Estados da Home

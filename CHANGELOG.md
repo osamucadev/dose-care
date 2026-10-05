@@ -6,6 +6,10 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Não lançado]
 
+### Alterado
+
+- O histórico mostra o nome atual de um medicamento renomeado, com "Registrado como ..." indicando o nome original. A dose exibida continua sendo a registrada, e nenhum registro é reescrito.
+
 ## [1.3.0] - 2026-10-04
 
 Um toque errado em Tomado ou Pular agora tem volta.

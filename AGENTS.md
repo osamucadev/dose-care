@@ -64,6 +64,7 @@ theme/, constants/  tokens visuais e paleta
    - `DoseOccurrence` é calculada em memória e nunca é salva.
    - `DoseEvent` só existe quando o usuário age (Tomado ou Pulado). É imutável e guarda uma cópia do nome e da dose do medicamento naquele momento.
 2. **Editar uma rotina nunca reescreve o histórico.**
+   - Na exibição, o histórico usa o nome atual do medicamento e mostra "Registrado como ..." quando o nome do registro é diferente (`domain/history.ts`). A dose exibida é sempre a do registro.
 3. **Nada é apagado de verdade.** Perfis e medicamentos só ficam inativos (`active = 0`), e o histórico continua.
 4. **Datas:**
    - Horário de dose é hora civil local, no formato `YYYY-MM-DDTHH:mm`.
