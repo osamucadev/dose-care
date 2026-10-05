@@ -1,5 +1,3 @@
-import type { DoseEventStatus, DoseOccurrence } from '@/domain/types';
-
 import { DoseActionLock } from './dose-action-lock';
 
 export interface LockedActionOutcome {
@@ -15,9 +13,9 @@ export interface LockedActionOutcome {
  * before the first finishes is ignored — `action` is never invoked a
  * second time for that key while the first is still in flight.
  * `lock.acquire` happens before the first `await`, `lock.release`
- * always runs in `finally`. The mechanism doesn't care what `action`
- * *is* — it backs both "Tomado"/"Pular" (`runDoseAction` below) and
- * medication activate/deactivate (`useMedicationToggleHandler`).
+ * always runs in `finally`. It backs medication activate/deactivate
+ * (`useMedicationToggleHandler`); Tomado/Pular go through the undo
+ * window in `pending-dose-action.ts` instead.
  *
  * Pulled out of any React hook so this exact sequencing can be unit
  * tested directly, without rendering a component.
@@ -38,37 +36,6 @@ export async function runLockedAction(
     return { started: true, error };
   } finally {
     lock.release(key);
-  }
-}
-
-export type RecordDose = (occurrence: DoseOccurrence, status: DoseEventStatus) => Promise<void>;
-export type DoseActionOutcome = LockedActionOutcome;
-
-/** Dose-action-flavored wrapper over `runLockedAction`, keyed by occurrence id. */
-export async function runDoseAction(
-  lock: DoseActionLock,
-  recordDose: RecordDose,
-  occurrence: DoseOccurrence,
-  status: DoseEventStatus
-): Promise<DoseActionOutcome> {
-  return runLockedAction(lock, occurrence.id, () => recordDose(occurrence, status));
-}
-
-/**
- * Runs `action`, then always runs `refresh` — whether `action` resolved
- * or rejected — and re-throws `action`'s error (if any) afterwards.
- * Used by `useDoses.recordDose` so a duplicate registration
- * (DoseAlreadyResolvedError) still brings the on-screen occurrences
- * back in line with what is actually persisted, instead of leaving
- * stale data on screen just because the write failed. `refresh` itself
- * is expected to never reject (see `useAsyncData`), so this never
- * swallows or replaces `action`'s error with a refresh error.
- */
-export async function withAlwaysRefresh<T>(action: () => Promise<T>, refresh: () => Promise<void>): Promise<T> {
-  try {
-    return await action();
-  } finally {
-    await refresh();
   }
 }
 

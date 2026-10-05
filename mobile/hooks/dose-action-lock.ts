@@ -1,9 +1,9 @@
 /**
  * Synchronous guard against starting two operations for the same key at
  * once. Deliberately framework-free (no React) so it can be unit
- * tested directly without rendering anything — `useDoseActionHandler`
- * just holds one instance per hook call via `useRef`, so state is
- * scoped to that component instance, never a module-level global.
+ * tested directly without rendering anything. `useMedicationToggleHandler`
+ * holds one instance per hook call via `useRef`, so state is scoped to
+ * that component instance, never a module-level global.
  */
 export class DoseActionLock {
   private readonly inFlight = new Set<string>();
