@@ -23,6 +23,7 @@ interface MedicationRow {
   end_mode: string;
   end_date: string | null;
   total_scheduled_doses: number | null;
+  allow_early: number;
   created_at: string;
   updated_at: string;
 }
@@ -30,6 +31,9 @@ interface MedicationRow {
 function toMedication(row: MedicationRow): Medication {
   if (row.active !== 0 && row.active !== 1) {
     throw new InvalidPersistedDataError(`Medication ${row.id} has an invalid active flag: ${row.active}.`);
+  }
+  if (row.allow_early !== 0 && row.allow_early !== 1) {
+    throw new InvalidPersistedDataError(`Medication ${row.id} has an invalid allow_early flag: ${row.allow_early}.`);
   }
 
   // Same validator used before INSERT/UPDATE (see create()/update()
@@ -58,6 +62,7 @@ function toMedication(row: MedicationRow): Medication {
     endMode: endModeCandidate.endMode,
     endDate: endModeCandidate.endDate,
     totalScheduledDoses: endModeCandidate.totalScheduledDoses,
+    allowEarly: row.allow_early === 1,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -77,6 +82,8 @@ export interface MedicationRoutineInput {
   endDate?: string | null;
   /** Required (and only meaningful) when endMode is `dose_count`. */
   totalScheduledDoses?: number | null;
+  /** May a dose be taken earlier on the same day? Defaults to false. */
+  allowEarly?: boolean;
 }
 
 export class MedicationRepository {
@@ -136,8 +143,8 @@ export class MedicationRepository {
 
     await this.db.runAsync(
       `INSERT INTO medications
-        (id, profile_id, name, dosage, quantity_per_dose, notes, times, start_date, active, end_mode, end_date, total_scheduled_doses, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?);`,
+        (id, profile_id, name, dosage, quantity_per_dose, notes, times, start_date, active, end_mode, end_date, total_scheduled_doses, allow_early, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?);`,
       id,
       input.profileId,
       input.name,
@@ -149,6 +156,7 @@ export class MedicationRepository {
       normalized.endMode,
       normalized.endDate,
       normalized.totalScheduledDoses,
+      input.allowEarly ? 1 : 0,
       timestamp,
       timestamp
     );
@@ -166,6 +174,7 @@ export class MedicationRepository {
       endMode: normalized.endMode,
       endDate: normalized.endDate,
       totalScheduledDoses: normalized.totalScheduledDoses,
+      allowEarly: input.allowEarly ?? false,
       createdAt: timestamp,
       updatedAt: timestamp,
     };
@@ -200,7 +209,7 @@ export class MedicationRepository {
     await this.db.runAsync(
       `UPDATE medications
        SET name = ?, dosage = ?, quantity_per_dose = ?, notes = ?, times = ?, start_date = ?,
-           end_mode = ?, end_date = ?, total_scheduled_doses = ?, updated_at = ?
+           end_mode = ?, end_date = ?, total_scheduled_doses = ?, allow_early = ?, updated_at = ?
        WHERE id = ?;`,
       input.name,
       input.dosage ?? null,
@@ -211,6 +220,7 @@ export class MedicationRepository {
       normalized.endMode,
       normalized.endDate,
       normalized.totalScheduledDoses,
+      input.allowEarly ? 1 : 0,
       nowUtcIso(),
       id
     );

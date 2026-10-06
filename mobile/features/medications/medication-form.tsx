@@ -7,6 +7,7 @@ import { TextField } from '@/components/ui/text-field';
 import { toLocalDateString } from '@/domain/datetime';
 import { spacing } from '@/theme/tokens';
 
+import { AllowEarlyField } from './allow-early-field';
 import { DateField } from './date-field';
 import { medicationFormSchema, type MedicationFormValues } from './medication-schema';
 import { TimesEditor } from './times-editor';
@@ -36,6 +37,7 @@ export function MedicationForm({ defaultValues, onSubmit, submitLabel }: Medicat
       endMode: 'ongoing',
       endDate: '',
       totalScheduledDoses: '',
+      allowEarly: false,
       ...defaultValues,
     },
   });
@@ -135,6 +137,12 @@ export function MedicationForm({ defaultValues, onSubmit, submitLabel }: Medicat
         totalScheduledDoses={totalScheduledDoses ?? ''}
         onChangeTotalScheduledDoses={(value) => setValue('totalScheduledDoses', value, { shouldValidate: true })}
         totalScheduledDosesError={errors.totalScheduledDoses?.message}
+      />
+
+      <Controller
+        control={control}
+        name="allowEarly"
+        render={({ field }) => <AllowEarlyField value={field.value} onChange={field.onChange} />}
       />
 
       <Controller

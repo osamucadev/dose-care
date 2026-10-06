@@ -16,6 +16,7 @@ function makeMedication(overrides: Partial<Medication> = {}): Medication {
     endMode: 'dose_count',
     endDate: null,
     totalScheduledDoses: 60,
+    allowEarly: false,
     createdAt: '2026-08-01T00:00:00.000Z',
     updatedAt: '2026-08-01T00:00:00.000Z',
     ...overrides,
@@ -34,6 +35,7 @@ describe('toMedicationFormValues', () => {
       endMode: 'dose_count',
       endDate: '',
       totalScheduledDoses: '60',
+      allowEarly: false,
     });
   });
 
@@ -49,6 +51,13 @@ describe('toMedicationFormValues', () => {
       endMode: 'end_date',
       endDate: '2026-08-30',
       totalScheduledDoses: null,
+      allowEarly: false,
     });
+  });
+
+  it('keeps the early-dose option the user set', () => {
+    const values = toMedicationFormValues(makeMedication({ allowEarly: true }));
+    expect(values.allowEarly).toBe(true);
+    expect(toMedicationRoutineInput(values).allowEarly).toBe(true);
   });
 });

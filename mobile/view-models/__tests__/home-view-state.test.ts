@@ -27,6 +27,7 @@ function makeOccurrence(profileId: string, scheduledAt: string, overrides: Parti
     scheduledAt,
     status: 'pending',
     event: null,
+    allowEarly: false,
     ...overrides,
   };
 }

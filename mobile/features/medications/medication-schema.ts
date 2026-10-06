@@ -19,6 +19,7 @@ export const medicationFormSchema = z
     endDate: z.string().optional(),
     /** Raw digits as text (TextInput values are always strings), only required/validated when endMode is `dose_count`. */
     totalScheduledDoses: z.string().optional(),
+    allowEarly: z.boolean(),
   })
   .superRefine((data, ctx) => {
     if (data.endMode === 'end_date') {

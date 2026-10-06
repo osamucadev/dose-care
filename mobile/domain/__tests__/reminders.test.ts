@@ -19,6 +19,7 @@ function makeOccurrence(overrides: Partial<DoseOccurrence> = {}): DoseOccurrence
     scheduledAt,
     status: 'pending',
     event: null,
+    allowEarly: false,
     ...overrides,
   };
 }

@@ -27,6 +27,7 @@ function makeRow(overrides: Record<string, unknown> = {}) {
     end_mode: 'ongoing',
     end_date: null,
     total_scheduled_doses: null,
+    allow_early: 0,
     created_at: '2026-08-15T00:00:00.000Z',
     updated_at: '2026-08-15T00:00:00.000Z',
     ...overrides,
@@ -49,7 +50,7 @@ function makeRoutineInput(overrides: Partial<MedicationRoutineInput> = {}): Medi
  * `MedicationRepository.create` — positional, matching the column list
  * in the INSERT (`id, profile_id, name, dosage, quantity_per_dose,
  * notes, times, start_date, active, end_mode, end_date,
- * total_scheduled_doses, created_at, updated_at`; `active` is a SQL
+ * total_scheduled_doses, allow_early, created_at, updated_at`; `active` is a SQL
  * literal, not a bound `?`, so it consumes no argument slot).
  */
 function getCreatedEndFields(db: ReturnType<typeof fakeDb>) {
@@ -134,6 +135,23 @@ describe('MedicationRepository read path — toMedication', () => {
     expect(medication?.totalScheduledDoses).toBe(6);
   });
 
+  it('reads the early-dose flag, off unless the user turned it on', async () => {
+    const db = fakeDb();
+    db.getFirstAsync.mockResolvedValueOnce(makeRow()).mockResolvedValueOnce(makeRow({ allow_early: 1 }));
+    const repo = new MedicationRepository(db);
+
+    expect((await repo.getById('med-1'))?.allowEarly).toBe(false);
+    expect((await repo.getById('med-1'))?.allowEarly).toBe(true);
+  });
+
+  it('rejects a corrupted early-dose flag', async () => {
+    const db = fakeDb();
+    db.getFirstAsync.mockResolvedValue(makeRow({ allow_early: 2 }));
+    const repo = new MedicationRepository(db);
+
+    await expect(repo.getById('med-1')).rejects.toBeInstanceOf(InvalidPersistedDataError);
+  });
+
   it('rejects a corrupted row where end_mode and end_date are inconsistent', async () => {
     const db = fakeDb();
     // end_mode says 'ongoing' but end_date is set — impossible via the
@@ -154,6 +172,16 @@ describe('MedicationRepository read path — toMedication', () => {
 });
 
 describe('MedicationRepository.create', () => {
+  it('writes allow_early as 0 unless the user turned it on', async () => {
+    const db = fakeDb();
+    const repo = new MedicationRepository(db);
+
+    await repo.create(makeRoutineInput());
+    await repo.create(makeRoutineInput({ allowEarly: true }));
+
+    expect(db.runAsync.mock.calls.map((call) => call[12])).toEqual([0, 1]);
+  });
+
   it('writes null end_date/total_scheduled_doses for an ongoing treatment', async () => {
     const db = fakeDb();
     const repo = new MedicationRepository(db);

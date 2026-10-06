@@ -13,6 +13,7 @@ function occurrence(id: string, overrides: Partial<DoseOccurrence> = {}): DoseOc
     scheduledAt: '2026-10-04T08:00',
     status: 'pending',
     event: null,
+    allowEarly: false,
     ...overrides,
   };
 }

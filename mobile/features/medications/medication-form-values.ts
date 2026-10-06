@@ -28,6 +28,7 @@ export function toMedicationRoutineInput(
       values.endMode === 'dose_count' && values.totalScheduledDoses
         ? Number(values.totalScheduledDoses)
         : null,
+    allowEarly: values.allowEarly,
   };
 }
 
@@ -47,5 +48,6 @@ export function toMedicationFormValues(medication: Medication): MedicationFormVa
     endMode: medication.endMode,
     endDate: medication.endDate ?? '',
     totalScheduledDoses: medication.totalScheduledDoses !== null ? String(medication.totalScheduledDoses) : '',
+    allowEarly: medication.allowEarly,
   };
 }

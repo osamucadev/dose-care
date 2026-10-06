@@ -109,6 +109,7 @@ export function generateOccurrencesForDate(
         scheduledAt,
         status: event ? event.status : 'pending',
         event: event ?? null,
+        allowEarly: medication.allowEarly,
       });
     }
   }

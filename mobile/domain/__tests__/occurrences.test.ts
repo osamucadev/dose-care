@@ -22,6 +22,7 @@ function makeMedication(overrides: Partial<Medication> = {}): Medication {
     endMode: 'ongoing',
     endDate: null,
     totalScheduledDoses: null,
+    allowEarly: false,
     createdAt: '2026-08-01T00:00:00.000Z',
     updatedAt: '2026-08-01T00:00:00.000Z',
     ...overrides,

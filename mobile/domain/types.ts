@@ -52,6 +52,11 @@ export interface Medication {
   endDate: string | null;
   /** Positive integer. Only set when endMode is `dose_count`. Counts scheduled doses, not pills/capsules/ml. */
   totalScheduledDoses: number | null;
+  /**
+   * Whether the user allows taking a dose earlier on the same day than
+   * its scheduled time. Set by the user, never inferred by the app.
+   */
+  allowEarly: boolean;
   /** UTC ISO 8601 timestamps. */
   createdAt: string;
   updatedAt: string;
@@ -100,6 +105,8 @@ export interface DoseOccurrence {
   scheduledAt: string;
   status: DoseOccurrenceStatus;
   event: DoseEvent | null;
+  /** Copied from the medication: whether this dose may be taken early, on the same day. */
+  allowEarly: boolean;
 }
 
 /**

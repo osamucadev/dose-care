@@ -27,7 +27,7 @@ export async function commitStoredAction(
   newId: () => string
 ): Promise<CommitResult> {
   const event = createDoseEventFromOccurrence(
-    { ...action.occurrence, status: 'pending', event: null },
+    { ...action.occurrence, status: 'pending', event: null, allowEarly: false },
     action.status,
     { id: newId(), occurredAt: action.occurredAt }
   );
