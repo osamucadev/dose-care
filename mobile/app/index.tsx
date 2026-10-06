@@ -83,7 +83,15 @@ export default function HomeScreen() {
             <AllClearCard />
           )}
 
-          {doses.next ? <NextPreview occurrence={doses.next} profile={doses.nextProfile ?? undefined} /> : null}
+          {doses.next ? (
+            <NextPreview
+              occurrence={doses.next}
+              profile={doses.nextProfile ?? undefined}
+              onTakeEarly={
+                doses.earlyIds.has(doses.next.id) ? () => doses.next && vm.takeEarly(doses.next) : undefined
+              }
+            />
+          ) : null}
 
           {vm.restock.length > 0 ? <RestockList rows={vm.restock} onSelect={vm.updateStock} /> : null}
 
@@ -116,6 +124,8 @@ export default function HomeScreen() {
             occurrences={doses.upcoming}
             profilesById={doses.upcomingProfilesById}
             emptyLabel={doses.upcomingEmptyLabel}
+            earlyIds={doses.earlyIds}
+            onTakeEarly={vm.takeEarly}
           />
         </>
       )}

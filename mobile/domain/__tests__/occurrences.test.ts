@@ -1,6 +1,8 @@
 import {
+  canTakeEarly,
   computeNowAndNext,
   computeProfileDayStatus,
+  earlyTakeableIds,
   estimateDoseCountDuration,
   generateOccurrencesForDate,
   generateOccurrencesForDateRange,
@@ -564,5 +566,63 @@ describe('generateOccurrencesForDate — editing preserves history', () => {
     const day1 = generateOccurrencesForDate([madeOngoing], '2026-08-15', [recordedEvent]);
     expect(day1[0].status).toBe('taken');
     expect(day1[0].event).toEqual(recordedEvent);
+  });
+});
+
+describe('canTakeEarly', () => {
+  const day = '2026-08-15';
+  const occurrencesFor = (medication: Medication, events: DoseEvent[] = []) =>
+    generateOccurrencesForDate([medication], day, events);
+  const at = (h: number, m = 0) => new Date(2026, 7, 15, h, m);
+
+  it('allows the next dose of a medication the user marked as early-allowed, any time earlier that day', () => {
+    const occurrences = occurrencesFor(makeMedication({ times: ['18:00'], allowEarly: true }));
+    expect(canTakeEarly(occurrences[0], occurrences, at(6, 30))).toBe(true);
+    expect(canTakeEarly(occurrences[0], occurrences, at(17, 30))).toBe(true);
+  });
+
+  it('never allows it for a medication without the option', () => {
+    const occurrences = occurrencesFor(makeMedication({ times: ['18:00'], allowEarly: false }));
+    expect(canTakeEarly(occurrences[0], occurrences, at(17, 30))).toBe(false);
+  });
+
+  it('is not "early" once the dose is due: it is in Agora', () => {
+    const occurrences = occurrencesFor(makeMedication({ times: ['18:00'], allowEarly: true }));
+    expect(canTakeEarly(occurrences[0], occurrences, at(18, 0))).toBe(false);
+  });
+
+  it('only for the same day', () => {
+    const occurrences = generateOccurrencesForDateRange(
+      [makeMedication({ times: ['08:00'], allowEarly: true })],
+      day,
+      '2026-08-16',
+      [makeEvent({ scheduledAt: '2026-08-15T08:00' })]
+    );
+    const tomorrow = occurrences.find((o) => o.scheduledAt === '2026-08-16T08:00')!;
+    expect(canTakeEarly(tomorrow, occurrences, at(20, 0))).toBe(false);
+  });
+
+  it('waits for an earlier pending dose of the same medication', () => {
+    const occurrences = occurrencesFor(makeMedication({ times: ['08:00', '20:00'], allowEarly: true }));
+    const evening = occurrences.find((o) => o.scheduledAt.endsWith('20:00'))!;
+    expect(canTakeEarly(evening, occurrences, at(10, 0))).toBe(false);
+
+    const afterMorning = occurrencesFor(makeMedication({ times: ['08:00', '20:00'], allowEarly: true }), [
+      makeEvent({ scheduledAt: '2026-08-15T08:00' }),
+    ]);
+    const eveningAfter = afterMorning.find((o) => o.scheduledAt.endsWith('20:00'))!;
+    expect(canTakeEarly(eveningAfter, afterMorning, at(10, 0))).toBe(true);
+  });
+
+  it('lists the ids that can be taken early', () => {
+    const occurrences = generateOccurrencesForDate(
+      [
+        makeMedication({ id: 'early', times: ['18:00'], allowEarly: true }),
+        makeMedication({ id: 'fixed', times: ['19:00'], allowEarly: false }),
+      ],
+      day,
+      []
+    );
+    expect([...earlyTakeableIds(occurrences, at(12, 0))]).toEqual(['early_2026-08-15T18:00']);
   });
 });

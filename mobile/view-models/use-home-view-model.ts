@@ -38,6 +38,8 @@ export type HomeViewModel =
       dismissActionError: () => void;
       markTaken: (occurrence: DoseOccurrence) => void;
       skip: (occurrence: DoseOccurrence) => void;
+      /** "Tomar agora" on a dose not due yet; same undo window as Tomado. */
+      takeEarly: (occurrence: DoseOccurrence) => void;
       openProfile: (id: string) => void;
       addProfile: () => void;
     };
@@ -108,6 +110,7 @@ export function useHomeViewModel(): HomeViewModel {
     dismissActionError: clearActionError,
     markTaken: (occurrence) => performDoseAction(occurrence, 'taken'),
     skip: (occurrence) => performDoseAction(occurrence, 'skipped'),
+    takeEarly: (occurrence) => performDoseAction(occurrence, 'taken'),
     openProfile: (id) => router.push(`/profile/${id}`),
     addProfile,
   };

@@ -93,12 +93,21 @@ export default function ProfileScreen() {
             <AllClearCard />
           )}
 
-          {doses.next ? <NextPreview occurrence={doses.next} /> : null}
+          {doses.next ? (
+            <NextPreview
+              occurrence={doses.next}
+              onTakeEarly={
+                doses.earlyIds.has(doses.next.id) ? () => doses.next && vm.takeEarly(doses.next) : undefined
+              }
+            />
+          ) : null}
 
           <UpcomingList
             title="Próximas doses de hoje"
             occurrences={doses.upcoming}
             emptyLabel={doses.upcomingEmptyLabel}
+            earlyIds={doses.earlyIds}
+            onTakeEarly={vm.takeEarly}
           />
         </>
       )}

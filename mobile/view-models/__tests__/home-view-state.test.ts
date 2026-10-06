@@ -68,6 +68,18 @@ describe('buildHomeDosesState, aggregated view', () => {
   });
 });
 
+describe('buildHomeDosesState, early doses', () => {
+  it('marks the doses that can be taken now, never one behind a pending dose of the same medication', () => {
+    const occurrences = [
+      makeOccurrence('florita', '2026-08-15T08:00', { allowEarly: true }),
+      makeOccurrence('florita', '2026-08-15T20:00', { allowEarly: true }),
+      makeOccurrence('nino', '2026-08-15T12:00', { allowEarly: true }),
+    ];
+    const state = buildHomeDosesState({ profiles: [florita, nino], occurrences, selectedProfileId: null, now: NOW });
+    expect([...state.earlyIds]).toEqual(['nino_2026-08-15T12:00']);
+  });
+});
+
 describe('buildHomeDosesState, single profile selected', () => {
   const occurrences = [makeOccurrence('florita', '2026-08-15T20:00'), makeOccurrence('nino', '2026-08-15T12:00')];
   const state = buildHomeDosesState({ profiles: [florita, nino], occurrences, selectedProfileId: 'florita', now: NOW });

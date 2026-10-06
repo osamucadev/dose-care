@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 
 import { toLocalDateString } from '@/domain/datetime';
-import { computeNowAndNext } from '@/domain/occurrences';
+import { computeNowAndNext, earlyTakeableIds } from '@/domain/occurrences';
 import type { StockStatus } from '@/domain/stock';
 import type { DoseOccurrence, Medication } from '@/domain/types';
 import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
@@ -26,6 +26,8 @@ export type ProfileDosesSection =
       next: DoseOccurrence | null;
       upcoming: DoseOccurrence[];
       upcomingEmptyLabel: string;
+      /** Doses shown in Próximo or Próximas that can be taken now ("Tomar agora"). */
+      earlyIds: ReadonlySet<string>;
     };
 
 export type ProfileMedicationsSection =
@@ -48,6 +50,8 @@ export type ProfileViewModel =
       dismissActionError: () => void;
       markTaken: (occurrence: DoseOccurrence) => void;
       skip: (occurrence: DoseOccurrence) => void;
+      /** "Tomar agora" on a dose not due yet; same undo window as Tomado. */
+      takeEarly: (occurrence: DoseOccurrence) => void;
       togglingMedicationId: string | null;
       hasToggleError: boolean;
       dismissToggleError: () => void;
@@ -93,6 +97,7 @@ export function useProfileViewModel(id: string): ProfileViewModel {
   );
 
   const nowNext = useMemo(() => computeNowAndNext(occurrences, now), [occurrences, now]);
+  const earlyIds = useMemo(() => earlyTakeableIds(occurrences, now), [occurrences, now]);
 
   if (profileLoading) return { status: 'loading' };
   if (profileError || !profile) return { status: 'error', retry: refreshProfile };
@@ -115,6 +120,7 @@ export function useProfileViewModel(id: string): ProfileViewModel {
             next: nowNext.next,
             upcoming: nowNext.upcomingToday,
             upcomingEmptyLabel: upcomingEmptyLabel(nowNext.now, nowNext.next, toLocalDateString(now)),
+            earlyIds,
           },
     medications: medicationsError
       ? { status: 'error', retry: refreshMedications }
@@ -125,6 +131,7 @@ export function useProfileViewModel(id: string): ProfileViewModel {
     dismissActionError: clearActionError,
     markTaken: (occurrence) => performDoseAction(occurrence, 'taken'),
     skip: (occurrence) => performDoseAction(occurrence, 'skipped'),
+    takeEarly: (occurrence) => performDoseAction(occurrence, 'taken'),
     togglingMedicationId,
     hasToggleError: toggleError !== null,
     dismissToggleError: clearToggleError,

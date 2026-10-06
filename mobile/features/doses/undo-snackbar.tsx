@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ui/themed-text';
+import { parseScheduledLocalDateTime } from '@/domain/datetime';
 import { usePendingDoseAction } from '@/hooks/pending-dose-action-provider';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { minTouchTarget, radius, shadow, spacing } from '@/theme/tokens';
@@ -23,7 +24,9 @@ export function UndoSnackbar() {
 
   const { occurrence, status } = pending;
   const what = occurrence.dosage ? `${occurrence.medicationName} ${occurrence.dosage}` : occurrence.medicationName;
-  const message = `${what}: ${status === 'taken' ? 'dose tomada' : 'dose pulada'}.`;
+  // Only "Tomar agora" can take a dose before its time (Tomado appears once it is due).
+  const early = status === 'taken' && parseScheduledLocalDateTime(occurrence.scheduledAt) > new Date();
+  const message = `${what}: ${status === 'taken' ? (early ? 'dose tomada antes do horário' : 'dose tomada') : 'dose pulada'}.`;
 
   return (
     <View

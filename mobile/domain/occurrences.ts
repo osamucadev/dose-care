@@ -222,3 +222,28 @@ export function computeProfileDayStatus(
   if (next) return 'next';
   return 'ok';
 }
+
+/**
+ * Whether a dose that is not due yet can be taken now ("Tomar agora").
+ * Only when the user allowed it for that medication, only on the same
+ * local day, and only for the next pending dose of that medication: an
+ * earlier one still pending comes first, so two doses of the same
+ * medication are never recorded out of order. A dose already due is not
+ * "early"; it is in Agora with the regular actions.
+ */
+export function canTakeEarly(occurrence: DoseOccurrence, occurrences: DoseOccurrence[], now: Date): boolean {
+  if (!occurrence.allowEarly || occurrence.status !== 'pending') return false;
+  if (parseScheduledLocalDateTime(occurrence.scheduledAt) <= now) return false;
+  if (!occurrence.scheduledAt.startsWith(`${toLocalDateString(now)}T`)) return false;
+  return !occurrences.some(
+    (other) =>
+      other.medicationId === occurrence.medicationId &&
+      other.status === 'pending' &&
+      other.scheduledAt < occurrence.scheduledAt
+  );
+}
+
+/** Ids of the occurrences in `occurrences` that `canTakeEarly` allows right now. */
+export function earlyTakeableIds(occurrences: DoseOccurrence[], now: Date): ReadonlySet<string> {
+  return new Set(occurrences.filter((o) => canTakeEarly(o, occurrences, now)).map((o) => o.id));
+}

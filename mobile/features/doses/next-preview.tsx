@@ -9,16 +9,19 @@ import { getProfileTypeMeta } from '@/theme/profile-types';
 import { spacing } from '@/theme/tokens';
 
 import { doseDayTimeLabel } from './dose-time';
+import { TakeEarlyButton } from './take-early-button';
 import { TimeBadge } from './time-badge';
 
 interface NextPreviewProps {
   occurrence: DoseOccurrence;
   /** Shown in the aggregated (all-profiles) view only. */
   profile?: Profile;
+  /** Set only when this dose may be taken early ("Tomar agora"). */
+  onTakeEarly?: () => void;
 }
 
 /** Compact "PRÓXIMO" preview shown right under the Agora card. May point at tomorrow. */
-export function NextPreview({ occurrence, profile }: NextPreviewProps) {
+export function NextPreview({ occurrence, profile, onTakeEarly }: NextPreviewProps) {
   const todayStr = toLocalDateString(new Date());
 
   return (
@@ -40,6 +43,7 @@ export function NextPreview({ occurrence, profile }: NextPreviewProps) {
         </View>
         <TimeBadge label={doseDayTimeLabel(occurrence.scheduledAt, todayStr)} />
       </View>
+      {onTakeEarly ? <TakeEarlyButton occurrence={occurrence} onPress={onTakeEarly} /> : null}
     </Card>
   );
 }

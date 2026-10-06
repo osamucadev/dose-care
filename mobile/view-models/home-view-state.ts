@@ -1,5 +1,10 @@
 import { toLocalDateString } from '@/domain/datetime';
-import { computeNowAndNext, computeProfileDayStatus, type ProfileDayStatus } from '@/domain/occurrences';
+import {
+  computeNowAndNext,
+  computeProfileDayStatus,
+  earlyTakeableIds,
+  type ProfileDayStatus,
+} from '@/domain/occurrences';
 import type { RestockItem } from '@/domain/reminders';
 import type { DoseOccurrence, Profile } from '@/domain/types';
 import { doseDayTimeLabel } from '@/features/doses/dose-time';
@@ -34,6 +39,8 @@ export interface HomeDosesState {
   upcoming: DoseOccurrence[];
   /** Only in the aggregated view, for the same reason as `nextProfile`. */
   upcomingProfilesById: Record<string, Profile> | undefined;
+  /** Doses shown in Próximo or Próximos that can be taken now ("Tomar agora"). */
+  earlyIds: ReadonlySet<string>;
   /** One row per profile in the aggregated view; null while a single profile is selected. */
   profileRows: HomeProfileRow[] | null;
 }
@@ -86,6 +93,7 @@ export function buildHomeDosesState(input: {
     upcoming: nowNext.upcomingToday.slice(0, HOME_UPCOMING_LIMIT),
     upcomingEmptyLabel: upcomingEmptyLabel(nowNext.now, nowNext.next, todayStr),
     upcomingProfilesById: aggregated ? profilesById : undefined,
+    earlyIds: earlyTakeableIds(occurrences, now),
     profileRows: aggregated
       ? profiles.map((profile) => {
           const own = occurrences.filter((o) => o.profileId === profile.id);

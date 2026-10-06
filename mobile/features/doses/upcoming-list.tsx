@@ -9,6 +9,7 @@ import { getProfileTypeMeta } from '@/theme/profile-types';
 import { spacing } from '@/theme/tokens';
 
 import { doseTimeLabel } from './dose-time';
+import { TakeEarlyButton } from './take-early-button';
 import { TimeBadge } from './time-badge';
 
 interface UpcomingListProps {
@@ -17,9 +18,19 @@ interface UpcomingListProps {
   /** Resolves each row's profile for aggregated (all-profiles) lists. */
   profilesById?: Record<string, Profile>;
   emptyLabel: string;
+  /** Rows that may be taken early show "Tomar agora". */
+  earlyIds?: ReadonlySet<string>;
+  onTakeEarly?: (occurrence: DoseOccurrence) => void;
 }
 
-export function UpcomingList({ title, occurrences, profilesById, emptyLabel }: UpcomingListProps) {
+export function UpcomingList({
+  title,
+  occurrences,
+  profilesById,
+  emptyLabel,
+  earlyIds,
+  onTakeEarly,
+}: UpcomingListProps) {
   const border = useThemeColor({}, 'border');
 
   return (
@@ -33,10 +44,12 @@ export function UpcomingList({ title, occurrences, profilesById, emptyLabel }: U
         ) : (
           occurrences.map((occurrence, index) => {
             const profile = profilesById?.[occurrence.profileId];
+            const takeEarly = onTakeEarly && earlyIds?.has(occurrence.id) ? () => onTakeEarly(occurrence) : null;
             return (
               <View
                 key={occurrence.id}
-                style={[styles.row, index > 0 && { borderTopWidth: 1, borderTopColor: border }]}>
+                style={[styles.item, index > 0 && { borderTopWidth: 1, borderTopColor: border }]}>
+                <View style={styles.row}>
                 {profile ? (
                   <Avatar avatar={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={40} />
                 ) : null}
@@ -51,6 +64,8 @@ export function UpcomingList({ title, occurrences, profilesById, emptyLabel }: U
                   ) : null}
                 </View>
                 <TimeBadge label={doseTimeLabel(occurrence.scheduledAt)} />
+                </View>
+                {takeEarly ? <TakeEarlyButton occurrence={occurrence} onPress={takeEarly} /> : null}
               </View>
             );
           })
@@ -63,7 +78,8 @@ export function UpcomingList({ title, occurrences, profilesById, emptyLabel }: U
 const styles = StyleSheet.create({
   section: { gap: spacing.md },
   card: { gap: 0, paddingVertical: spacing.sm },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.md },
+  item: { gap: spacing.sm, paddingVertical: spacing.md },
+  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   text: { flex: 1, gap: 2 },
   empty: { paddingVertical: spacing.sm },
 });
