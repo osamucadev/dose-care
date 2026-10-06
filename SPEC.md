@@ -2149,3 +2149,44 @@ O app mostra quantos dias o estoque cobre na rotina atual:
 ```
 
 É uma estimativa organizacional, não uma recomendação.
+
+---
+
+# 82. Antecipar uma dose
+
+Alguns medicamentos não têm hora exata: quem toma às 18:00 pode, em certos dias, preferir tomar às 17:30. Para esses casos, o medicamento pode permitir que a dose seja tomada antes do horário.
+
+## Configuração
+
+No cadastro do medicamento:
+
+```text
+Pode ser tomado antes do horário, no mesmo dia    [ ]
+```
+
+* desligado por padrão;
+* é uma escolha de quem usa o app, orientada por quem acompanha o tratamento. O app nunca decide sozinho que um medicamento pode ser antecipado.
+
+## Comportamento
+
+Com a opção ligada, a próxima dose do dia desse medicamento mostra **Tomar agora** no card Próximo e na lista Próximos:
+
+```text
+PRÓXIMO
+Losartana 50 mg                 18:00
+[ Tomar agora ]
+```
+
+* vale para qualquer horário anterior, desde que no mesmo dia. Não há janela a configurar: menos passos para o mesmo resultado;
+* só a próxima dose pendente daquele medicamento pode ser antecipada. Se uma dose anterior do mesmo medicamento ainda está pendente, ela vem primeiro;
+* doses de amanhã não podem ser antecipadas hoje;
+* um toque registra a dose como **Tomado**, com o horário do toque, e passa pela mesma janela de **Desfazer** (§41):
+
+```text
+Losartana 50 mg: dose tomada antes do horário.        [ Desfazer ]
+```
+
+* o lembrete daquela dose é cancelado, como em qualquer dose registrada;
+* no histórico, a dose aparece como **Tomado antes do horário**, com o horário previsto e o realizado.
+
+Medicamentos SOS não têm horário e não usam essa opção.

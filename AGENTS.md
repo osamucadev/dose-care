@@ -84,7 +84,11 @@ theme/, constants/  tokens visuais e paleta
    - Ela vira `DoseEvent` ao fim da janela, ao registrar outra dose, quando o app sai do primeiro plano ou perde o foco, e, se o app morreu antes, na próxima abertura (`commitLeftoverDoseActions`).
    - O `occurredAt` é sempre o horário do toque.
    - No Android, o app continua "ativo" na tela de recentes: deslizá-lo para fechar mata o processo sem evento de segundo plano. Por isso a gravação no toque é obrigatória, não um detalhe.
-9. **Avatares são sempre ilustrações** (`svg:<chave>`, lista em `components/ui/avatar.tsx`). Não use emojis na interface.
+9. **Antecipar dose é opção do usuário, por medicamento** (`allow_early`, desligado por padrão, SPEC §82).
+   - O app nunca liga essa opção sozinho nem sugere ligá-la.
+   - A regra de quem pode ser antecipada fica em `canTakeEarly` (`domain/occurrences.ts`): mesmo dia, ainda não chegou a hora, e só a próxima dose pendente daquele medicamento.
+   - "Tomar agora" usa o mesmo caminho de Tomado, com a janela de desfazer. "Antecipado" é derivado no histórico (`wasTakenEarly`), nunca salvo.
+10. **Avatares são sempre ilustrações** (`svg:<chave>`, lista em `components/ui/avatar.tsx`). Não use emojis na interface.
 
 ## Testes de banco
 

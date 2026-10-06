@@ -6,6 +6,10 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Não lançado]
 
+### Adicionado
+
+- Antecipar doses: no cadastro do medicamento, a opção "Pode ser tomado antes do horário, no mesmo dia" mostra "Tomar agora" na próxima dose do dia. A dose vai para o histórico como "Tomado antes do horário", com o horário do toque, e pode ser desfeita como qualquer outra. A opção vem desligada.
+
 ### Alterado
 
 - O histórico mostra o nome atual de um medicamento renomeado, com "Registrado como ..." indicando o nome original. A dose exibida continua sendo a registrada, e nenhum registro é reescrito.
