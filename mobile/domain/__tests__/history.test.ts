@@ -1,4 +1,4 @@
-import { buildHistoryEntries } from '../history';
+import { buildHistoryEntries, wasTakenEarly } from '../history';
 import type { DoseEvent, Medication } from '../types';
 
 function event(overrides: Partial<DoseEvent> = {}): DoseEvent {
@@ -77,5 +77,29 @@ describe('buildHistoryEntries', () => {
       ['Losartana Potássica', 'Losartana'],
       ['Omeprazol', null],
     ]);
+  });
+});
+
+describe('wasTakenEarly', () => {
+  const localIso = (h: number, m: number) => new Date(2026, 9, 4, h, m).toISOString();
+
+  it('is true for a dose taken before its scheduled time', () => {
+    expect(wasTakenEarly(event({ scheduledAt: '2026-10-04T18:00', occurredAt: localIso(17, 30) }))).toBe(true);
+  });
+
+  it('is false at or after the scheduled time, and for a skipped dose', () => {
+    expect(wasTakenEarly(event({ scheduledAt: '2026-10-04T18:00', occurredAt: localIso(18, 0) }))).toBe(false);
+    expect(wasTakenEarly(event({ scheduledAt: '2026-10-04T18:00', occurredAt: localIso(19, 5) }))).toBe(false);
+    expect(
+      wasTakenEarly(event({ scheduledAt: '2026-10-04T18:00', occurredAt: localIso(17, 30), status: 'skipped' }))
+    ).toBe(false);
+  });
+
+  it('is part of each history entry', () => {
+    const [entry] = buildHistoryEntries(
+      [event({ scheduledAt: '2026-10-04T18:00', occurredAt: localIso(17, 30) })],
+      [medication()]
+    );
+    expect(entry.takenEarly).toBe(true);
   });
 });

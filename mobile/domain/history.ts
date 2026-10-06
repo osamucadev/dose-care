@@ -1,3 +1,4 @@
+import { parseScheduledLocalDateTime } from './datetime';
 import type { DoseEvent, Medication } from './types';
 
 export interface HistoryEntry {
@@ -9,6 +10,17 @@ export interface HistoryEntry {
    * the screen can say what the dose was recorded as. Null when unchanged.
    */
   recordedAsName: string | null;
+  /** Taken before its scheduled time ("Tomar agora"); see `wasTakenEarly`. */
+  takenEarly: boolean;
+}
+
+/**
+ * Whether a dose was taken before its scheduled time. Only "Tomar
+ * agora" can do that: Tomado is offered once the dose is due, so its
+ * tap time is never earlier than the schedule.
+ */
+export function wasTakenEarly(event: Pick<DoseEvent, 'status' | 'scheduledAt' | 'occurredAt'>): boolean {
+  return event.status === 'taken' && new Date(event.occurredAt) < parseScheduledLocalDateTime(event.scheduledAt);
 }
 
 /**
@@ -24,9 +36,10 @@ export function buildHistoryEntries(events: DoseEvent[], medications: Medication
   return events.map((event) => {
     const current = currentNameById.get(event.medicationId)?.trim();
     const recorded = event.medicationNameSnapshot;
+    const takenEarly = wasTakenEarly(event);
     if (!current || current === recorded.trim()) {
-      return { event, medicationName: recorded, recordedAsName: null };
+      return { event, medicationName: recorded, recordedAsName: null, takenEarly };
     }
-    return { event, medicationName: current, recordedAsName: recorded };
+    return { event, medicationName: current, recordedAsName: recorded, takenEarly };
   });
 }

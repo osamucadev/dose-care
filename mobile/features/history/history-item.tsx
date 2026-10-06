@@ -11,7 +11,7 @@ import { doseTimeLabel } from '../doses/dose-time';
 import { formatHistoryDate } from './history-date';
 
 export function HistoryItem({ entry }: { entry: HistoryEntry }) {
-  const { event, medicationName, recordedAsName } = entry;
+  const { event, medicationName, recordedAsName, takenEarly } = entry;
   const success = useThemeColor({}, 'success');
   const danger = useThemeColor({}, 'danger');
   const taken = event.status === 'taken';
@@ -34,7 +34,7 @@ export function HistoryItem({ entry }: { entry: HistoryEntry }) {
       <View style={styles.status}>
         <Icon name={taken ? 'check-circle' : 'close'} size={18} color={taken ? success : danger} />
         <ThemedText variant="label" style={{ color: taken ? success : danger }}>
-          {taken ? 'Tomado' : 'Pulado'}
+          {taken ? (takenEarly ? 'Tomado antes do horário' : 'Tomado') : 'Pulado'}
         </ThemedText>
       </View>
     </View>
