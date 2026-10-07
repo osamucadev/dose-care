@@ -88,7 +88,9 @@ theme/, constants/  tokens visuais e paleta
    - O app nunca liga essa opção sozinho nem sugere ligá-la.
    - A regra de quem pode ser antecipada fica em `canTakeEarly` (`domain/occurrences.ts`): mesmo dia, ainda não chegou a hora, e só a próxima dose pendente daquele medicamento.
    - "Tomar agora" usa o mesmo caminho de Tomado, com a janela de desfazer. "Antecipado" é derivado no histórico (`wasTakenEarly`), nunca salvo.
-10. **Avatares são sempre ilustrações** (`svg:<chave>`, lista em `components/ui/avatar.tsx`). Não use emojis na interface.
+10. **Avatares são sempre ilustrações** (`svg:<chave>`). Não use emojis na interface.
+    - Os desenhos são gerados por `scripts/generate-svg-assets.py`, que também escreve o mapa `assets/svg/avatars/index.ts`. Os nomes falados ficam em `components/ui/avatar.tsx`, e as opções de cada tipo em `theme/profile-types.ts`.
+    - Avatares de pessoas têm uma versão por tom de pele. O tom é escolhido à parte e fica em `profiles.skin_tone`, então trocar de avatar ou de tipo não o perde. Perfil novo começa em "médio"; os anteriores à escolha ficaram em "claro", o tom em que foram desenhados.
 
 ## Testes de banco
 

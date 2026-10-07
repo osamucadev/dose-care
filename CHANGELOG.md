@@ -10,6 +10,10 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 - Antecipar doses: no cadastro do medicamento, a opção "Pode ser tomado antes do horário, no mesmo dia" mostra "Tomar agora" na próxima dose do dia. A dose vai para o histórico como "Tomado antes do horário", com o horário do toque, e pode ser desfeita como qualquer outra. A opção vem desligada.
 
+- Tom de pele para os avatares de criança, adulto e idoso, com cinco opções escolhidas à parte do avatar. Perfil novo começa no tom médio; os perfis existentes continuam como estavam.
+- Mais avatares de pets: labrador, husky, boxer, vira-lata caramelo, gato preto, gato branco, gato tricolor, peixe, hamster, tartaruga, lagarto, cobra e robô.
+- Mais avatares de plantas: suculenta, orquídea e samambaia.
+
 ### Alterado
 
 - O histórico mostra o nome atual de um medicamento renomeado, com "Registrado como ..." indicando o nome original. A dose exibida continua sendo a registrada, e nenhum registro é reescrito.

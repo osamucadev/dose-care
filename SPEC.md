@@ -121,6 +121,7 @@ Cada perfil deve possuir:
 * nome
 * tipo
 * avatar
+* tom de pele (só perfis de pessoas: criança, adulto e idoso)
 * cor temática
 * data de criação
 * observações opcionais
