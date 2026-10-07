@@ -7,12 +7,13 @@ import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/text-field';
 import { ThemedText } from '@/components/ui/themed-text';
 import { getProfileTypeMeta } from '@/theme/profile-types';
-import { DEFAULT_SKIN_TONE } from '@/theme/skin-tones';
+import { DEFAULT_SKIN_TONE, getSkinToneOption } from '@/theme/skin-tones';
 import { spacing } from '@/theme/tokens';
 
 import { AvatarPicker } from './avatar-picker';
 import { profileFormSchema, type ProfileFormValues } from './profile-schema';
 import { ProfileTypePicker } from './profile-type-picker';
+import { SkinTonePicker } from './skin-tone-picker';
 
 interface ProfileFormProps {
   defaultValues?: Partial<ProfileFormValues>;
@@ -111,6 +112,17 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
           </ThemedText>
         ) : null}
       </View>
+
+      {meta.hasSkinTone ? (
+        <View style={styles.field}>
+          <ThemedText variant="label">Tom de pele: {getSkinToneOption(selectedSkinTone).label}</ThemedText>
+          <Controller
+            control={control}
+            name="skinTone"
+            render={({ field }) => <SkinTonePicker value={field.value} onChange={field.onChange} />}
+          />
+        </View>
+      ) : null}
 
       <Controller
         control={control}

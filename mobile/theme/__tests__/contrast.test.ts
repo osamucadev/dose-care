@@ -1,6 +1,7 @@
 import { Colors } from '@/constants/theme';
 
 import { PROFILE_TYPES } from '../profile-types';
+import { SKIN_TONES } from '../skin-tones';
 
 /** WCAG 2.1 relative luminance of a "#RRGGBB" color. */
 function luminance(hex: string): number {
@@ -64,6 +65,15 @@ describe('profile accent colors (dark mode card borders)', () => {
     '%s accent stands out from the dark background',
     (_label, color) => {
       expect(contrastRatio(color, Colors.dark.background)).toBeGreaterThanOrEqual(UI_BOUNDARY_MIN);
+    }
+  );
+});
+
+describe('skin tone swatches', () => {
+  it.each(SKIN_TONES.map((tone) => [tone.label, tone] as const))(
+    'the selected check stands out on the %s swatch',
+    (_, tone) => {
+      expect(contrastRatio(tone.checkColor, tone.swatch)).toBeGreaterThanOrEqual(UI_BOUNDARY_MIN);
     }
   );
 });
