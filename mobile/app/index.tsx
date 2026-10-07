@@ -75,6 +75,7 @@ export default function HomeScreen() {
               occurrence={doses.now}
               profileName={doses.nowProfile?.name}
               profileAvatar={doses.nowProfile?.avatar}
+              profileSkinTone={doses.nowProfile?.skinTone}
               profileTint={doses.nowProfile?.tint}
               onTaken={() => doses.now && vm.markTaken(doses.now)}
               onSkip={() => doses.now && vm.skip(doses.now)}

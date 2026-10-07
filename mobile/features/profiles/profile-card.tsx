@@ -43,7 +43,7 @@ export function ProfileCard({ profile, status, nextTime, onPress }: ProfileCardP
         styles.card,
         { backgroundColor: surface.background, borderColor: surface.border, opacity: pressed ? 0.85 : 1 },
       ]}>
-      <Avatar avatar={profile.avatar} tint={meta.tint} size={48} />
+      <Avatar avatar={profile.avatar} skinTone={profile.skinTone} tint={meta.tint} size={48} />
       <View style={styles.text}>
         <ThemedText variant="subtitle" style={styles.name}>
           {profile.name}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-caramelo"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#D3EDD8"/>
+<g clip-path="url(#clip-caramelo)">
+  <path d="M24 100 C26 82 36 75 48 75 C60 75 70 82 72 100 Z" fill="#D99547"/>
+  <path d="M41 75 C44 84 52 84 55 75" fill="#F6DDB6"/>
+  <path d="M29 44 L31 21 L45 33 Z" fill="#D99547"/>
+  <path d="M67 44 L65 21 L51 33 Z" fill="#D99547"/>
+  <path d="M33 37 L33.5 27 L40 33 Z M63 37 L62.5 27 L56 33 Z" fill="#F6DDB6"/>
+  <ellipse cx="48" cy="51" rx="20" ry="20" fill="#D99547"/>
+  <path d="M44 33 C45 40 45 47 48 52 C51 47 51 40 52 33 C49 31.5 47 31.5 44 33 Z" fill="#F6DDB6"/>
+  <ellipse cx="48" cy="61" rx="11.5" ry="8.5" fill="#F6DDB6"/>
+  <ellipse cx="48" cy="56.5" rx="4.2" ry="3.2" fill="#3A2A22"/>
+  <circle cx="39.5" cy="48" r="2.7" fill="#3A2A22"/>
+  <circle cx="56.5" cy="48" r="2.7" fill="#3A2A22"/>
+  <path d="M48 59.5 V62 M43.5 62.5 Q48 66 52.5 62.5" stroke="#7A4E36" stroke-width="2" stroke-linecap="round"/>
+</g>
+</svg>

@@ -255,7 +255,302 @@ def sunflower_figure():
   <circle cx="45" cy="33" r="1.4" fill="#6B4426"/><circle cx="51" cy="34" r="1.4" fill="#6B4426"/><circle cx="47" cy="39" r="1.4" fill="#6B4426"/><circle cx="52" cy="39" r="1.2" fill="#6B4426"/>'''
 
 
-CHILD_BG, ADULT_BG, ELDERLY_BG, PET_BG, PLANT_BG = '#FCE3A6', '#D6E6FB', '#EADCF5', '#D3EDD8', '#DCF0D3'
+# Dog breeds share the head of `dog_figure`; only coat, ears and markings change.
+
+def dog_head(coat):
+    return f'''
+  <ellipse cx="48" cy="51" rx="20" ry="20" fill="{coat}"/>'''
+
+
+def dog_face(muzzle, eye='#3A2A22', mouth='#7A4E36', iris=None):
+    eyes = (
+        f'''
+  <circle cx="39.5" cy="48" r="3.1" fill="{iris}"/>
+  <circle cx="56.5" cy="48" r="3.1" fill="{iris}"/>
+  <circle cx="39.5" cy="48" r="1.5" fill="{eye}"/>
+  <circle cx="56.5" cy="48" r="1.5" fill="{eye}"/>'''
+        if iris
+        else f'''
+  <circle cx="39.5" cy="48" r="2.7" fill="{eye}"/>
+  <circle cx="56.5" cy="48" r="2.7" fill="{eye}"/>'''
+    )
+    return f'''
+  <ellipse cx="48" cy="61" rx="11.5" ry="8.5" fill="{muzzle}"/>
+  <ellipse cx="48" cy="56.5" rx="4.2" ry="3.2" fill="#3A2A22"/>{eyes}
+  <path d="M48 59.5 V62 M43.5 62.5 Q48 66 52.5 62.5" stroke="{mouth}" stroke-width="2" stroke-linecap="round"/>'''
+
+
+def floppy_ears(fill):
+    return f'''
+  <path d="M30 34 C19 36 16 55 22 66 C29 65 32 52 35 41 Z" fill="{fill}"/>
+  <path d="M66 34 C77 36 80 55 74 66 C67 65 64 52 61 41 Z" fill="{fill}"/>'''
+
+
+def dog_body(coat, chest):
+    return f'''
+  <path d="M24 100 C26 82 36 75 48 75 C60 75 70 82 72 100 Z" fill="{coat}"/>
+  <path d="M41 75 C44 84 52 84 55 75" fill="{chest}"/>'''
+
+
+def labrador_figure():
+    coat, muzzle = '#E6C48A', '#F5E3C0'
+    return (
+        dog_body(coat, muzzle)
+        + dog_head(coat)
+        + floppy_ears('#D2A462')
+        + dog_face(muzzle)
+    )
+
+
+def husky_figure():
+    coat, white = '#7F8C99', '#F7F7F5'
+    return dog_body(coat, white) + f'''
+  <path d="M29 42 L31 18 L45 33 Z" fill="{coat}"/>
+  <path d="M67 42 L65 18 L51 33 Z" fill="{coat}"/>
+  <path d="M32 36 L33 25 L40 32 Z M64 36 L63 25 L56 32 Z" fill="#F2D3D0"/>''' + dog_head(coat) + f'''
+  <path d="M48 38 C44 42 41 44 34 46 C30 52 30 62 36 68 C40 71 44 72 48 72 C52 72 56 71 60 68 C66 62 66 52 62 46 C55 44 52 42 48 38 Z" fill="{white}"/>
+  <circle cx="39.5" cy="41.5" r="2.4" fill="{white}"/>
+  <circle cx="56.5" cy="41.5" r="2.4" fill="{white}"/>''' + dog_face(white, iris='#5A9AD8', mouth='#6E7882')
+
+
+def boxer_figure():
+    coat, white, mask = '#C98544', '#FBF4EA', '#5C4A40'
+    return dog_body(coat, white) + f'''
+  <path d="M29 42 C26 34 28 27 34 26 C40 26 42 32 40 38 Z" fill="#A66A33"/>
+  <path d="M67 42 C70 34 68 27 62 26 C56 26 54 32 56 38 Z" fill="#A66A33"/>''' + dog_head(coat) + f'''
+  <path d="M45 32 C46 40 46 46 48 52 C50 46 50 40 51 32 C49 31 47 31 45 32 Z" fill="{white}"/>''' + dog_face(mask, mouth='#CBB8A6')
+
+
+def caramelo_figure():
+    coat, muzzle = '#D99547', '#F6DDB6'
+    return dog_body(coat, muzzle) + f'''
+  <path d="M29 44 L31 21 L45 33 Z" fill="{coat}"/>
+  <path d="M67 44 L65 21 L51 33 Z" fill="{coat}"/>
+  <path d="M33 37 L33.5 27 L40 33 Z M63 37 L62.5 27 L56 33 Z" fill="{muzzle}"/>''' + dog_head(coat) + f'''
+  <path d="M44 33 C45 40 45 47 48 52 C51 47 51 40 52 33 C49 31.5 47 31.5 44 33 Z" fill="{muzzle}"/>''' + dog_face(muzzle)
+
+
+# Cat coats share the head of `cat_figure`.
+
+def cat_coat(coat, ear_inner, muzzle, nose, whisker, eye='#3A2A22', iris=None, left_ear=None, right_ear=None, stripes=None, patches=''):
+    eyes = (
+        f'''
+  <ellipse cx="39.5" cy="50" rx="3.2" ry="3.8" fill="{iris}"/>
+  <ellipse cx="56.5" cy="50" rx="3.2" ry="3.8" fill="{iris}"/>
+  <ellipse cx="39.5" cy="50" rx="1.3" ry="3" fill="{eye}"/>
+  <ellipse cx="56.5" cy="50" rx="1.3" ry="3" fill="{eye}"/>'''
+        if iris
+        else f'''
+  <ellipse cx="39.5" cy="50" rx="2.6" ry="3.4" fill="{eye}"/>
+  <ellipse cx="56.5" cy="50" rx="2.6" ry="3.4" fill="{eye}"/>'''
+    )
+    stripe_el = (
+        f'''
+  <path d="M41 33 C43 37 53 37 55 33 M38 38 C42 42 54 42 58 38" stroke="{stripes}" stroke-width="2.4" stroke-linecap="round"/>'''
+        if stripes
+        else ''
+    )
+    return f'''
+  <path d="M24 100 C26 82 36 76 48 76 C60 76 70 82 72 100 Z" fill="{coat}"/>
+  <path d="M28 46 L30 22 L44 34 Z" fill="{left_ear or coat}"/>
+  <path d="M68 46 L66 22 L52 34 Z" fill="{right_ear or coat}"/>
+  <path d="M31 40 L32 28 L40 35 Z M65 40 L64 28 L56 35 Z" fill="{ear_inner}"/>
+  <ellipse cx="48" cy="52" rx="22" ry="20" fill="{coat}"/>{patches}{stripe_el}
+  <ellipse cx="48" cy="61" rx="10" ry="7" fill="{muzzle}"/>
+  <path d="M45.5 57 H50.5 L48 60 Z" fill="{nose}"/>{eyes}
+  <path d="M48 60 V62 M44 63.5 Q48 66.5 52 63.5 M30 58 H39 M30 63 L39 61 M66 58 H57 M66 63 L57 61" stroke="{whisker}" stroke-width="1.6" stroke-linecap="round"/>'''
+
+
+def black_cat_figure():
+    return cat_coat('#3B3742', '#8C6B78', '#56505E', '#D6929C', '#C9C3D0', eye='#1E1A20', iris='#E2C84E')
+
+
+def white_cat_figure():
+    return cat_coat('#F5F1EB', '#F4C3C8', '#FFFFFF', '#E39AA2', '#B3A69C')
+
+
+def tricolor_cat_figure():
+    patches = '''
+  <path d="M27 48 C27 39 32 34 39 32.5 C42 36 43 41 41 46 C37 47 32 48 27 48 Z" fill="#E59A52"/>
+  <path d="M69 50 C69 41 64 35 56 32.5 C53 37 54 43 57 47 C61 48 65 49 69 50 Z" fill="#3B3742"/>'''
+    return cat_coat('#F7F2EA', '#F4C3C8', '#FFFFFF', '#D98A94', '#A8968A', left_ear='#E59A52', right_ear='#3B3742', patches=patches)
+
+
+def fish_figure():
+    return f'''
+  <path d="M0 64 C20 58 30 70 48 64 C66 58 76 70 96 64 V100 H0 Z" fill="#B9DDF2"/>
+  <path d="M66 46 L84 32 C86 42 86 54 84 64 Z" fill="#E9874A"/>
+  <ellipse cx="46" cy="48" rx="24" ry="17" fill="#F4A259"/>
+  <path d="M38 32 C44 24 54 25 58 33 Z" fill="#E9874A"/>
+  <path d="M42 64 C46 70 52 70 54 63 Z" fill="#E9874A"/>
+  <path d="M50 33 C55 40 55 56 50 63" stroke="#FBE3C8" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="33" cy="45" r="3.4" fill="#FFFFFF"/>
+  <circle cx="33" cy="45" r="2" fill="#3A2A22"/>
+  <circle cx="30" cy="52" r="3" fill="{C['cheek']}" opacity="0.5"/>
+  <path d="M23 52 Q26 55 29 53" stroke="#A9573F" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="18" cy="34" r="3" stroke="#8FC5E0" stroke-width="1.6"/>
+  <circle cx="14" cy="24" r="2" stroke="#8FC5E0" stroke-width="1.4"/>
+  <circle cx="22" cy="78" r="2" fill="#FFFFFF" opacity="0.6"/>
+  <circle cx="70" cy="82" r="2.5" fill="#FFFFFF" opacity="0.6"/>'''
+
+
+def hamster_figure():
+    return f'''
+  <circle cx="30" cy="34" r="8" fill="#D9984D"/>
+  <circle cx="66" cy="34" r="8" fill="#D9984D"/>
+  <circle cx="30" cy="34" r="4.5" fill="#F4C3C8"/>
+  <circle cx="66" cy="34" r="4.5" fill="#F4C3C8"/>
+  <path d="M18 100 C16 66 28 36 48 36 C68 36 80 66 78 100 Z" fill="#E4A85E"/>
+  <path d="M28 100 C26 76 36 58 48 58 C60 58 70 76 68 100 Z" fill="#FAEBD7"/>
+  <ellipse cx="48" cy="56" rx="17" ry="12" fill="#FAEBD7"/>
+  <circle cx="30" cy="62" r="9" fill="#FAEBD7"/>
+  <circle cx="66" cy="62" r="9" fill="#FAEBD7"/>
+  <circle cx="39" cy="50" r="2.7" fill="#3A2A22"/>
+  <circle cx="57" cy="50" r="2.7" fill="#3A2A22"/>
+  <circle cx="32" cy="60" r="3.4" fill="{C['cheek']}" opacity="0.5"/>
+  <circle cx="64" cy="60" r="3.4" fill="{C['cheek']}" opacity="0.5"/>
+  <ellipse cx="48" cy="56" rx="2.6" ry="2" fill="#D98A94"/>
+  <path d="M48 58 V60 M45 61 Q48 63.5 51 61" stroke="#9C7A62" stroke-width="1.6" stroke-linecap="round"/>
+  <ellipse cx="48" cy="74" rx="6" ry="7.5" fill="#C9874A"/>
+  <path d="M48 67.5 V80" stroke="#A86E3A" stroke-width="1.2"/>
+  <ellipse cx="41" cy="74" rx="3.5" ry="3" fill="#F4C3C8"/>
+  <ellipse cx="55" cy="74" rx="3.5" ry="3" fill="#F4C3C8"/>'''
+
+
+def turtle_figure():
+    return f'''
+  <ellipse cx="48" cy="82" rx="30" ry="4" fill="#9CC98F"/>
+  <ellipse cx="30" cy="81" rx="6" ry="5" fill="#9CCB7E"/>
+  <ellipse cx="72" cy="81" rx="6" ry="5" fill="#9CCB7E"/>
+  <path d="M22 58 C24 64 30 66 34 64 L32 54 Z" fill="#9CCB7E"/>
+  <circle cx="20" cy="52" r="10" fill="#9CCB7E"/>
+  <path d="M24 78 C22 56 34 40 52 40 C70 40 82 56 80 78 Z" fill="#6FA567"/>
+  <path d="M52 44 L62 50 L60 62 L48 66 L38 60 L40 49 Z" fill="#5C9254" stroke="#4E8049" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M40 49 L32 46 M62 50 L71 50 M60 62 L68 72 M48 66 L48 77 M38 60 L29 70" stroke="#4E8049" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M22 78 H82" stroke="#D9C78A" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="17" cy="49" r="2.4" fill="#3A2A22"/>
+  <circle cx="23" cy="55" r="2.6" fill="{C['cheek']}" opacity="0.5"/>
+  <path d="M12 55 Q15 58 19 56.5" stroke="#4E8049" stroke-width="1.6" stroke-linecap="round"/>'''
+
+
+def lizard_figure():
+    return f'''
+  <path d="M48 66 C48 80 60 86 70 82 C78 78 78 70 72 68 C68 67 66 72 70 74" stroke="#5DAA5E" stroke-width="6" stroke-linecap="round"/>
+  <path d="M34 46 L22 40 M62 46 L74 40 M36 64 L24 72 M60 64 L72 72" stroke="#5DAA5E" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="21" cy="39" r="3" fill="#5DAA5E"/><circle cx="75" cy="39" r="3" fill="#5DAA5E"/>
+  <circle cx="23" cy="73" r="3" fill="#5DAA5E"/><circle cx="73" cy="73" r="3" fill="#5DAA5E"/>
+  <ellipse cx="48" cy="56" rx="13" ry="16" fill="#6DBB6A"/>
+  <ellipse cx="48" cy="30" rx="15" ry="13" fill="#6DBB6A"/>
+  <circle cx="40" cy="58" r="2" fill="#F6C14F"/><circle cx="54" cy="52" r="2.4" fill="#F6C14F"/><circle cx="50" cy="64" r="1.8" fill="#F6C14F"/>
+  <circle cx="40" cy="25" r="5.4" fill="#FFFFFF"/>
+  <circle cx="56" cy="25" r="5.4" fill="#FFFFFF"/>
+  <circle cx="40.5" cy="25.5" r="3" fill="#3A2A22"/>
+  <circle cx="55.5" cy="25.5" r="3" fill="#3A2A22"/>
+  <circle cx="37" cy="33" r="2.8" fill="{C['cheek']}" opacity="0.5"/>
+  <circle cx="59" cy="33" r="2.8" fill="{C['cheek']}" opacity="0.5"/>
+  <path d="M42 35 Q48 39 54 35" stroke="#3F7F45" stroke-width="2" stroke-linecap="round"/>'''
+
+
+def snake_figure():
+    return f'''
+  <ellipse cx="48" cy="80" rx="28" ry="9" fill="#5FA86A"/>
+  <ellipse cx="48" cy="77" rx="26" ry="8" fill="#77BD7F"/>
+  <ellipse cx="48" cy="68" rx="20" ry="7.5" fill="#5FA86A"/>
+  <ellipse cx="48" cy="65.5" rx="18" ry="6.5" fill="#77BD7F"/>
+  <path d="M60 64 C66 58 64 50 56 46" stroke="#77BD7F" stroke-width="10" stroke-linecap="round"/>
+  <path d="M37 72 l3 3 M47 73 l3 3 M57 72 l3 3 M41 63 l3 3 M52 63 l3 3" stroke="#4E9A5C" stroke-width="1.8" stroke-linecap="round"/>
+  <ellipse cx="46" cy="38" rx="15" ry="12" fill="#77BD7F"/>
+  <path d="M46 50 V56 M46 56 L43 60 M46 56 L49 60" stroke="#D9574A" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="40" cy="35" r="2.7" fill="#3A2A22"/>
+  <circle cx="52" cy="35" r="2.7" fill="#3A2A22"/>
+  <circle cx="36" cy="42" r="2.8" fill="{C['cheek']}" opacity="0.5"/>
+  <circle cx="56" cy="42" r="2.8" fill="{C['cheek']}" opacity="0.5"/>
+  <path d="M42 44 Q46 47 50 44" stroke="#3F7F45" stroke-width="1.8" stroke-linecap="round"/>'''
+
+
+def robot_figure():
+    return f'''
+  <path d="M48 22 V14" stroke="#8496A8" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="48" cy="12" r="4" fill="#F29E8E"/>
+  <rect x="22" y="80" width="52" height="24" rx="10" fill="#A9B8C6"/>
+  <rect x="42" y="72" width="12" height="10" rx="3" fill="#8496A8"/>
+  <rect x="16" y="38" width="8" height="18" rx="4" fill="#8496A8"/>
+  <rect x="72" y="38" width="8" height="18" rx="4" fill="#8496A8"/>
+  <rect x="22" y="22" width="52" height="52" rx="16" fill="#C7D3DE"/>
+  <rect x="29" y="32" width="38" height="30" rx="10" fill="#2F4A5E"/>
+  <circle cx="40" cy="45" r="4" fill="#8FE3D6"/>
+  <circle cx="56" cy="45" r="4" fill="#8FE3D6"/>
+  <path d="M42 53 Q48 57 54 53" stroke="#8FE3D6" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="48" cy="90" r="4" fill="#F6C14F"/>'''
+
+
+def pot(y=70, fill=C['terracotta'], rim='#C9744A'):
+    return f'''
+  <path d="M33 {y} H63 L59 {y + 18} H37 Z" fill="{fill}"/>
+  <rect x="31" y="{y - 4}" width="34" height="7" rx="2.5" fill="{rim}"/>'''
+
+
+def succulent_figure():
+    def petal(angle, length, width, fill):
+        return (
+            f'<path d="M48 62 C{48 - width} {62 - length * 0.5} {48 - width * 0.4} {62 - length} 48 {62 - length} '
+            f'C{48 + width * 0.4} {62 - length} {48 + width} {62 - length * 0.5} 48 62 Z" '
+            f'fill="{fill}" transform="rotate({angle} 48 62)"/>'
+        )
+
+    outer = ''.join(petal(a, 26, 9, '#6FAF94') for a in (-75, -45, -15, 15, 45, 75))
+    inner = ''.join(petal(a, 20, 7, '#8CC6AA') for a in (-55, -25, 0, 25, 55))
+    core = ''.join(petal(a, 12, 5, '#B5DDC6') for a in (-30, 0, 30))
+    return f'''
+  {outer}{inner}{core}
+  <path d="M28 52 l2 2 M68 52 l-2 2" stroke="#F29E8E" stroke-width="2" stroke-linecap="round"/>''' + pot(66)
+
+
+def orchid_figure():
+    def flower(x, y, s):
+        petals = ''.join(
+            f'<ellipse cx="{x}" cy="{y - 6 * s}" rx="{3.6 * s}" ry="{6 * s}" fill="#E8A0C8" transform="rotate({a} {x} {y})"/>'
+            for a in (0, 72, 144, 216, 288)
+        )
+        return f'{petals}<circle cx="{x}" cy="{y}" r="{3 * s}" fill="#F6C14F"/><circle cx="{x}" cy="{y + 1 * s}" r="{1.6 * s}" fill="#C9578E"/>'
+
+    return f'''
+  <path d="M46 66 C44 48 48 32 60 22" stroke="#4E8A4E" stroke-width="2.4" stroke-linecap="round"/>
+  {flower(62, 24, 1.0)}
+  {flower(50, 34, 1.15)}
+  {flower(36, 46, 1.25)}
+  <path d="M48 66 C36 66 24 60 22 52 C32 50 44 56 48 66 Z" fill="{C['leaf']}"/>
+  <path d="M48 66 C60 66 72 60 74 52 C64 50 52 56 48 66 Z" fill="{C['leaf_dark']}"/>''' + pot(70, '#E9E4DD', '#D5CEC5')
+
+
+def fern_figure():
+    def frond(x0, y0, x1, y1, cx, cy, fill):
+        leaflets = ''
+        for i in range(1, 8):
+            t = i / 8
+            # point on the quadratic curve and its tangent
+            px = (1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t ** 2 * x1
+            py = (1 - t) ** 2 * y0 + 2 * (1 - t) * t * cy + t ** 2 * y1
+            tx = 2 * (1 - t) * (cx - x0) + 2 * t * (x1 - cx)
+            ty = 2 * (1 - t) * (cy - y0) + 2 * t * (y1 - cy)
+            angle = math.degrees(math.atan2(ty, tx))
+            size = 6.5 * (1 - t * 0.6)
+            for side in (-1, 1):
+                leaflets += (
+                    f'<ellipse cx="{px:.1f}" cy="{py:.1f}" rx="{size:.1f}" ry="{size * 0.42:.1f}" fill="{fill}" '
+                    f'transform="rotate({angle + side * 60:.0f} {px:.1f} {py:.1f}) translate({size * 0.8:.1f} 0)"/>'
+                )
+        return f'<path d="M{x0} {y0} Q{cx} {cy} {x1} {y1}" stroke="#3F8A4E" stroke-width="1.8" stroke-linecap="round"/>{leaflets}'
+
+    return f'''
+  {frond(46, 66, 16, 64, 24, 38, C['leaf'])}
+  {frond(50, 66, 80, 64, 72, 38, C['leaf'])}
+  {frond(46, 66, 30, 26, 36, 40, C['leaf_dark'])}
+  {frond(50, 66, 66, 26, 60, 40, C['leaf_dark'])}
+  {frond(48, 66, 49, 18, 46, 40, C['leaf_light'])}''' + pot(70)
+
+
+CHILD_BG, ADULT_BG, ELDERLY_BG, PET_BG, PLANT_BG ='#FCE3A6', '#D6E6FB', '#EADCF5', '#D3EDD8', '#DCF0D3'
 
 AVATARS = {
     'child': (CHILD_BG, child_figure),
@@ -266,26 +561,116 @@ AVATARS = {
     'elderly': (ELDERLY_BG, elderly_figure),
     'elderly-man': (ELDERLY_BG, elderly_man_figure),
     'pet': (PET_BG, dog_figure),
+    'labrador': (PET_BG, labrador_figure),
+    'husky': (PET_BG, husky_figure),
+    'boxer': (PET_BG, boxer_figure),
+    'caramelo': (PET_BG, caramelo_figure),
     'cat': (PET_BG, cat_figure),
+    'black-cat': (PET_BG, black_cat_figure),
+    'white-cat': (PET_BG, white_cat_figure),
+    'tricolor-cat': (PET_BG, tricolor_cat_figure),
     'rabbit': (PET_BG, rabbit_figure),
     'bird': (PET_BG, bird_figure),
+    'fish': (PET_BG, fish_figure),
+    'hamster': (PET_BG, hamster_figure),
+    'turtle': (PET_BG, turtle_figure),
+    'lizard': (PET_BG, lizard_figure),
+    'snake': (PET_BG, snake_figure),
+    'robot': (PET_BG, robot_figure),
     'plant': (PLANT_BG, plant_figure),
     'potted-plant': (PLANT_BG, potted_plant_figure),
     'cactus': (PLANT_BG, cactus_figure),
     'sunflower': (PLANT_BG, sunflower_figure),
+    'succulent': (PLANT_BG, succulent_figure),
+    'orchid': (PLANT_BG, orchid_figure),
+    'fern': (PLANT_BG, fern_figure),
 }
 
 
-def avatar_group(kind, uid):
+# People avatars come in every skin tone (`SKIN_TONE_VALUES` in
+# domain/types.ts). The figures above are drawn in the "light" tone; the
+# other tones swap those skin colors, plus the mouth, eyes and glasses
+# where they would otherwise lose contrast.
+# Keep the `base` values in sync with the swatches in theme/skin-tones.ts.
+PEOPLE = ['child', 'girl', 'baby', 'adult', 'man', 'elderly', 'elderly-man']
+LIGHT_SKIN = ['#F6C9A0', '#F2C29E', '#EDBB94', '#F3C7A6']
+LIGHT_SHADOW = ['#E8AE85', '#E9B48E']
+SKIN_TONES = {
+    'light': None,
+    'medium-light': {'base': '#E3AD82', 'shadow': '#CC9468', 'mouth': '#93492F'},
+    'medium': {'base': '#C68B5E', 'shadow': '#AD744A', 'mouth': '#7A3626'},
+    'medium-dark': {'base': '#9C6640', 'shadow': '#83522F', 'mouth': '#E3A08C', 'eye': '#1C110C', 'glasses': '#DCCBC0'},
+    'dark': {'base': '#6B432C', 'shadow': '#57341F', 'mouth': '#E3A08C', 'eye': '#1C110C', 'glasses': '#DCCBC0'},
+}
+GLASSES = '#8A6A5A'
+
+
+def tone_figure(fig, tone):
+    palette = SKIN_TONES[tone]
+    if palette is None:
+        return fig
+    for color in LIGHT_SKIN:
+        fig = fig.replace(color, palette['base'])
+    for color in LIGHT_SHADOW:
+        fig = fig.replace(color, palette['shadow'])
+    fig = fig.replace(C['mouth'], palette['mouth'])
+    # On the darker tones the default eyes and glasses frames would blend in.
+    if 'eye' in palette:
+        fig = fig.replace(C['eye'], palette['eye']).replace(GLASSES, palette['glasses'])
+    return fig
+
+
+def avatar_group(kind, uid, tone='light'):
     bg, fig = AVATARS[kind]
     return f'''<defs><clipPath id="clip-{uid}"><circle cx="48" cy="48" r="48"/></clipPath></defs>
 <circle cx="48" cy="48" r="48" fill="{bg}"/>
-<g clip-path="url(#clip-{uid})">{fig()}
+<g clip-path="url(#clip-{uid})">{tone_figure(fig(), tone)}
 </g>'''
 
 
+def avatar_file(kind, tone='light'):
+    return kind if tone == 'light' else f'{kind}-{tone}'
+
+
 for kind in AVATARS:
-    write(f'avatars/{kind}.svg', svg('0 0 96 96', avatar_group(kind, kind), 96, 96))
+    tones = SKIN_TONES if kind in PEOPLE else ['light']
+    for tone in tones:
+        name = avatar_file(kind, tone)
+        write(f'avatars/{name}.svg', svg('0 0 96 96', avatar_group(kind, name, tone), 96, 96))
+
+
+def component_name(file):
+    return ''.join(part.capitalize() for part in file.split('-')) + 'Avatar'
+
+
+# The app imports avatars through this generated map, so adding an avatar
+# or a skin tone here never means hand-writing dozens of imports.
+imports, entries = [], []
+for kind in AVATARS:
+    if kind in PEOPLE:
+        tones = []
+        for tone in SKIN_TONES:
+            file = avatar_file(kind, tone)
+            imports.append(f"import {component_name(file)} from './{file}.svg';")
+            tones.append(f"    '{tone}': {component_name(file)},")
+        entries.append(f"  'svg:{kind}': {{\n" + '\n'.join(tones) + '\n  },')
+    else:
+        imports.append(f"import {component_name(kind)} from './{kind}.svg';")
+        entries.append(f"  'svg:{kind}': {component_name(kind)},")
+
+write('avatars/index.ts', f'''// Generated by scripts/generate-svg-assets.py. Do not edit by hand.
+import type {{ FC }} from 'react';
+import type {{ SvgProps }} from 'react-native-svg';
+
+import type {{ SkinTone }} from '@/domain/types';
+
+{chr(10).join(imports)}
+
+/** People avatars have one illustration per skin tone; the others have one. */
+export const AVATAR_ART: Record<string, FC<SvgProps> | Record<SkinTone, FC<SvgProps>>> = {{
+{chr(10).join(entries)}
+}};
+''')
 
 
 # ---------------------------------------------------------------------

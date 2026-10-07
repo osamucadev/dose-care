@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-robot"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#D3EDD8"/>
+<g clip-path="url(#clip-robot)">
+  <path d="M48 22 V14" stroke="#8496A8" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="48" cy="12" r="4" fill="#F29E8E"/>
+  <rect x="22" y="80" width="52" height="24" rx="10" fill="#A9B8C6"/>
+  <rect x="42" y="72" width="12" height="10" rx="3" fill="#8496A8"/>
+  <rect x="16" y="38" width="8" height="18" rx="4" fill="#8496A8"/>
+  <rect x="72" y="38" width="8" height="18" rx="4" fill="#8496A8"/>
+  <rect x="22" y="22" width="52" height="52" rx="16" fill="#C7D3DE"/>
+  <rect x="29" y="32" width="38" height="30" rx="10" fill="#2F4A5E"/>
+  <circle cx="40" cy="45" r="4" fill="#8FE3D6"/>
+  <circle cx="56" cy="45" r="4" fill="#8FE3D6"/>
+  <path d="M42 53 Q48 57 54 53" stroke="#8FE3D6" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="48" cy="90" r="4" fill="#F6C14F"/>
+</g>
+</svg>

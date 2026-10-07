@@ -51,7 +51,7 @@ export function UpcomingList({
                 style={[styles.item, index > 0 && { borderTopWidth: 1, borderTopColor: border }]}>
                 <View style={styles.row}>
                 {profile ? (
-                  <Avatar avatar={profile.avatar} tint={getProfileTypeMeta(profile.type).tint} size={40} />
+                  <Avatar avatar={profile.avatar} skinTone={profile.skinTone} tint={getProfileTypeMeta(profile.type).tint} size={40} />
                 ) : null}
                 <View style={styles.text}>
                   {profile ? <ThemedText variant="label">{profile.name}</ThemedText> : null}

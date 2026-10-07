@@ -10,6 +10,8 @@ export interface ProfileTypeMeta {
    */
   defaultAvatar: string;
   avatarOptions: string[];
+  /** People types: their avatars come in the profile's skin tone. */
+  hasSkinTone: boolean;
   /** Used sparingly: borders, badges, small accents, never large fills. */
   color: string;
   /** Very soft tint, safe as a card/badge background in both themes. */
@@ -22,6 +24,7 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     label: 'Criança',
     defaultAvatar: 'svg:child',
     avatarOptions: ['svg:child', 'svg:girl', 'svg:baby'],
+    hasSkinTone: true,
     color: '#D49A2A',
     tint: '#FEF4D5',
   },
@@ -30,6 +33,7 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     label: 'Adulto',
     defaultAvatar: 'svg:adult',
     avatarOptions: ['svg:adult', 'svg:man'],
+    hasSkinTone: true,
     color: '#4F86C6',
     tint: '#E6F1FE',
   },
@@ -38,6 +42,7 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     label: 'Idoso',
     defaultAvatar: 'svg:elderly',
     avatarOptions: ['svg:elderly', 'svg:elderly-man'],
+    hasSkinTone: true,
     color: '#8F6FBF',
     tint: '#F4E7F9',
   },
@@ -45,7 +50,26 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     type: 'pet',
     label: 'Pet',
     defaultAvatar: 'svg:pet',
-    avatarOptions: ['svg:pet', 'svg:cat', 'svg:rabbit', 'svg:bird'],
+    avatarOptions: [
+      'svg:pet',
+      'svg:labrador',
+      'svg:husky',
+      'svg:boxer',
+      'svg:caramelo',
+      'svg:cat',
+      'svg:black-cat',
+      'svg:white-cat',
+      'svg:tricolor-cat',
+      'svg:rabbit',
+      'svg:bird',
+      'svg:fish',
+      'svg:hamster',
+      'svg:turtle',
+      'svg:lizard',
+      'svg:snake',
+      'svg:robot',
+    ],
+    hasSkinTone: false,
     color: '#3E9A8C',
     tint: '#E1F3E4',
   },
@@ -53,7 +77,16 @@ export const PROFILE_TYPES: ProfileTypeMeta[] = [
     type: 'plant',
     label: 'Planta',
     defaultAvatar: 'svg:plant',
-    avatarOptions: ['svg:plant', 'svg:potted-plant', 'svg:cactus', 'svg:sunflower'],
+    avatarOptions: [
+      'svg:plant',
+      'svg:potted-plant',
+      'svg:cactus',
+      'svg:sunflower',
+      'svg:succulent',
+      'svg:orchid',
+      'svg:fern',
+    ],
+    hasSkinTone: false,
     color: '#5A9A5E',
     tint: '#E6F7E2',
   },

@@ -45,12 +45,13 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
 
   const selectedType = watch('type');
   const selectedAvatar = watch('avatar');
+  const selectedSkinTone = watch('skinTone');
   const meta = getProfileTypeMeta(selectedType);
 
   return (
     <View style={styles.form}>
       <View style={styles.preview}>
-        <Avatar avatar={selectedAvatar} tint={meta.tint} size={104} />
+        <Avatar avatar={selectedAvatar} skinTone={selectedSkinTone} tint={meta.tint} size={104} />
       </View>
 
       <Controller
@@ -77,6 +78,7 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
           render={({ field }) => (
             <ProfileTypePicker
               value={field.value}
+              skinTone={selectedSkinTone}
               onChange={(type) => {
                 field.onChange(type);
                 const nextMeta = getProfileTypeMeta(type);
@@ -97,6 +99,7 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
             <AvatarPicker
               options={meta.avatarOptions}
               value={field.value}
+              skinTone={selectedSkinTone}
               onChange={field.onChange}
               tint={meta.tint}
             />

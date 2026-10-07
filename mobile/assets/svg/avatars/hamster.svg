@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-hamster"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#D3EDD8"/>
+<g clip-path="url(#clip-hamster)">
+  <circle cx="30" cy="34" r="8" fill="#D9984D"/>
+  <circle cx="66" cy="34" r="8" fill="#D9984D"/>
+  <circle cx="30" cy="34" r="4.5" fill="#F4C3C8"/>
+  <circle cx="66" cy="34" r="4.5" fill="#F4C3C8"/>
+  <path d="M18 100 C16 66 28 36 48 36 C68 36 80 66 78 100 Z" fill="#E4A85E"/>
+  <path d="M28 100 C26 76 36 58 48 58 C60 58 70 76 68 100 Z" fill="#FAEBD7"/>
+  <ellipse cx="48" cy="56" rx="17" ry="12" fill="#FAEBD7"/>
+  <circle cx="30" cy="62" r="9" fill="#FAEBD7"/>
+  <circle cx="66" cy="62" r="9" fill="#FAEBD7"/>
+  <circle cx="39" cy="50" r="2.7" fill="#3A2A22"/>
+  <circle cx="57" cy="50" r="2.7" fill="#3A2A22"/>
+  <circle cx="32" cy="60" r="3.4" fill="#F29E8E" opacity="0.5"/>
+  <circle cx="64" cy="60" r="3.4" fill="#F29E8E" opacity="0.5"/>
+  <ellipse cx="48" cy="56" rx="2.6" ry="2" fill="#D98A94"/>
+  <path d="M48 58 V60 M45 61 Q48 63.5 51 61" stroke="#9C7A62" stroke-width="1.6" stroke-linecap="round"/>
+  <ellipse cx="48" cy="74" rx="6" ry="7.5" fill="#C9874A"/>
+  <path d="M48 67.5 V80" stroke="#A86E3A" stroke-width="1.2"/>
+  <ellipse cx="41" cy="74" rx="3.5" ry="3" fill="#F4C3C8"/>
+  <ellipse cx="55" cy="74" rx="3.5" ry="3" fill="#F4C3C8"/>
+</g>
+</svg>

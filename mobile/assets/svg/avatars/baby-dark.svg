@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-baby-dark"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#FCE3A6"/>
+<g clip-path="url(#clip-baby-dark)">
+  <path d="M18 100 C20 80 32 74 48 74 C64 74 76 80 78 100 Z" fill="#9CC3E8"/>
+  <circle cx="48" cy="80" r="5" fill="#FFFFFF" opacity="0.7"/>
+  <circle cx="25" cy="50" r="5.5" fill="#6B432C"/>
+  <circle cx="71" cy="50" r="5.5" fill="#6B432C"/>
+  <circle cx="48" cy="49" r="24" fill="#6B432C"/>
+  <path d="M44 26 C44 20 52 19 52 24 C52 27 48 28 47 26" stroke="#C7783E" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="39" cy="50" r="2.6" fill="#1C110C"/>
+  <circle cx="57" cy="50" r="2.6" fill="#1C110C"/>
+  <circle cx="34" cy="57" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <circle cx="62" cy="57" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <path d="M42 59 Q48 64 54 59" stroke="#E3A08C" stroke-width="2.2" stroke-linecap="round"/>
+</g>
+</svg>

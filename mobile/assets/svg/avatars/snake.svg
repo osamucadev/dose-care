@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-snake"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#D3EDD8"/>
+<g clip-path="url(#clip-snake)">
+  <ellipse cx="48" cy="80" rx="28" ry="9" fill="#5FA86A"/>
+  <ellipse cx="48" cy="77" rx="26" ry="8" fill="#77BD7F"/>
+  <ellipse cx="48" cy="68" rx="20" ry="7.5" fill="#5FA86A"/>
+  <ellipse cx="48" cy="65.5" rx="18" ry="6.5" fill="#77BD7F"/>
+  <path d="M60 64 C66 58 64 50 56 46" stroke="#77BD7F" stroke-width="10" stroke-linecap="round"/>
+  <path d="M37 72 l3 3 M47 73 l3 3 M57 72 l3 3 M41 63 l3 3 M52 63 l3 3" stroke="#4E9A5C" stroke-width="1.8" stroke-linecap="round"/>
+  <ellipse cx="46" cy="38" rx="15" ry="12" fill="#77BD7F"/>
+  <path d="M46 50 V56 M46 56 L43 60 M46 56 L49 60" stroke="#D9574A" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="40" cy="35" r="2.7" fill="#3A2A22"/>
+  <circle cx="52" cy="35" r="2.7" fill="#3A2A22"/>
+  <circle cx="36" cy="42" r="2.8" fill="#F29E8E" opacity="0.5"/>
+  <circle cx="56" cy="42" r="2.8" fill="#F29E8E" opacity="0.5"/>
+  <path d="M42 44 Q46 47 50 44" stroke="#3F7F45" stroke-width="1.8" stroke-linecap="round"/>
+</g>
+</svg>

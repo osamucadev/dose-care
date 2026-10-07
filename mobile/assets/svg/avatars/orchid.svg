@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-orchid"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#DCF0D3"/>
+<g clip-path="url(#clip-orchid)">
+  <path d="M46 66 C44 48 48 32 60 22" stroke="#4E8A4E" stroke-width="2.4" stroke-linecap="round"/>
+  <ellipse cx="62" cy="18.0" rx="3.6" ry="6.0" fill="#E8A0C8" transform="rotate(0 62 24)"/><ellipse cx="62" cy="18.0" rx="3.6" ry="6.0" fill="#E8A0C8" transform="rotate(72 62 24)"/><ellipse cx="62" cy="18.0" rx="3.6" ry="6.0" fill="#E8A0C8" transform="rotate(144 62 24)"/><ellipse cx="62" cy="18.0" rx="3.6" ry="6.0" fill="#E8A0C8" transform="rotate(216 62 24)"/><ellipse cx="62" cy="18.0" rx="3.6" ry="6.0" fill="#E8A0C8" transform="rotate(288 62 24)"/><circle cx="62" cy="24" r="3.0" fill="#F6C14F"/><circle cx="62" cy="25.0" r="1.6" fill="#C9578E"/>
+  <ellipse cx="50" cy="27.1" rx="4.14" ry="6.8999999999999995" fill="#E8A0C8" transform="rotate(0 50 34)"/><ellipse cx="50" cy="27.1" rx="4.14" ry="6.8999999999999995" fill="#E8A0C8" transform="rotate(72 50 34)"/><ellipse cx="50" cy="27.1" rx="4.14" ry="6.8999999999999995" fill="#E8A0C8" transform="rotate(144 50 34)"/><ellipse cx="50" cy="27.1" rx="4.14" ry="6.8999999999999995" fill="#E8A0C8" transform="rotate(216 50 34)"/><ellipse cx="50" cy="27.1" rx="4.14" ry="6.8999999999999995" fill="#E8A0C8" transform="rotate(288 50 34)"/><circle cx="50" cy="34" r="3.4499999999999997" fill="#F6C14F"/><circle cx="50" cy="35.15" r="1.8399999999999999" fill="#C9578E"/>
+  <ellipse cx="36" cy="38.5" rx="4.5" ry="7.5" fill="#E8A0C8" transform="rotate(0 36 46)"/><ellipse cx="36" cy="38.5" rx="4.5" ry="7.5" fill="#E8A0C8" transform="rotate(72 36 46)"/><ellipse cx="36" cy="38.5" rx="4.5" ry="7.5" fill="#E8A0C8" transform="rotate(144 36 46)"/><ellipse cx="36" cy="38.5" rx="4.5" ry="7.5" fill="#E8A0C8" transform="rotate(216 36 46)"/><ellipse cx="36" cy="38.5" rx="4.5" ry="7.5" fill="#E8A0C8" transform="rotate(288 36 46)"/><circle cx="36" cy="46" r="3.75" fill="#F6C14F"/><circle cx="36" cy="47.25" r="2.0" fill="#C9578E"/>
+  <path d="M48 66 C36 66 24 60 22 52 C32 50 44 56 48 66 Z" fill="#5FA86A"/>
+  <path d="M48 66 C60 66 72 60 74 52 C64 50 52 56 48 66 Z" fill="#4E9A5C"/>
+  <path d="M33 70 H63 L59 88 H37 Z" fill="#E9E4DD"/>
+  <rect x="31" y="66" width="34" height="7" rx="2.5" fill="#D5CEC5"/>
+</g>
+</svg>

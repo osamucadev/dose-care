@@ -1,17 +1,19 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar, avatarAccessibilityLabel } from '@/components/ui/avatar';
+import type { SkinTone } from '@/domain/types';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { radius, spacing } from '@/theme/tokens';
 
 interface AvatarPickerProps {
   options: string[];
   value: string;
+  skinTone: SkinTone;
   onChange: (avatar: string) => void;
   tint: string;
 }
 
-export function AvatarPicker({ options, value, onChange, tint }: AvatarPickerProps) {
+export function AvatarPicker({ options, value, skinTone, onChange, tint }: AvatarPickerProps) {
   const surface = useThemeColor({}, 'surface');
   const border = useThemeColor({}, 'border');
   const accent = useThemeColor({}, 'tint');
@@ -35,7 +37,7 @@ export function AvatarPicker({ options, value, onChange, tint }: AvatarPickerPro
                 borderWidth: selected ? 2.5 : 1.5,
               },
             ]}>
-            <Avatar avatar={avatar} tint="transparent" size={40} />
+            <Avatar avatar={avatar} skinTone={skinTone} tint="transparent" size={40} />
           </Pressable>
         );
       })}

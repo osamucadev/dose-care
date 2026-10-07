@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-elderly-medium-light"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#EADCF5"/>
+<g clip-path="url(#clip-elderly-medium-light)">
+  <circle cx="48" cy="20" r="9" fill="#CFC8C3"/>
+  <path d="M15 100 C17 79 31 73 48 73 C65 73 79 79 81 100 Z" fill="#B79AD6"/>
+  <path d="M38 74 C42 80 54 80 58 74" stroke="#9C7EC2" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="42" y="60" width="12" height="14" rx="5" fill="#CC9468"/>
+  <circle cx="27" cy="49" r="5" fill="#E3AD82"/>
+  <circle cx="69" cy="49" r="5" fill="#E3AD82"/>
+  <ellipse cx="48" cy="48" rx="20" ry="21" fill="#E3AD82"/>
+  <path d="M26 50 C22 32 33 23 48 23 C63 23 74 32 70 50 C67 42 61 37 55 36 C51 38 44 38 40 36 C34 37 29 42 26 50 Z" fill="#DAD4D0"/>
+  <path d="M41 51 Q44 50 47 51" stroke="#B9918A" stroke-width="0"/>
+  <circle cx="40" cy="50" r="2.6" fill="#3B2A24"/>
+  <circle cx="56" cy="50" r="2.6" fill="#3B2A24"/>
+  <circle cx="35" cy="57" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <circle cx="61" cy="57" r="3.6" fill="#F29E8E" opacity="0.5"/>
+  <path d="M42 59 Q48 64 54 59" stroke="#93492F" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="40" cy="50" r="6.2" stroke="#8A6A5A" stroke-width="1.8"/>
+  <circle cx="56" cy="50" r="6.2" stroke="#8A6A5A" stroke-width="1.8"/>
+  <path d="M46.2 49.5 Q48 48 49.8 49.5" stroke="#8A6A5A" stroke-width="1.8" stroke-linecap="round"/>
+</g>
+</svg>

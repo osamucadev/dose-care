@@ -3,18 +3,20 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Avatar } from '@/components/ui/avatar';
 import { Icon } from '@/components/ui/icon';
 import { ThemedText } from '@/components/ui/themed-text';
-import type { ProfileType } from '@/domain/types';
+import type { ProfileType, SkinTone } from '@/domain/types';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { PROFILE_TYPES } from '@/theme/profile-types';
 import { minTouchTarget, radius, spacing } from '@/theme/tokens';
 
 interface ProfileTypePickerProps {
   value: ProfileType;
+  /** So the people types preview the tone already chosen. */
+  skinTone: SkinTone;
   onChange: (type: ProfileType) => void;
 }
 
 /** Vertical list of profile types; the selected row gets a soft fill, a border and a check. */
-export function ProfileTypePicker({ value, onChange }: ProfileTypePickerProps) {
+export function ProfileTypePicker({ value, skinTone, onChange }: ProfileTypePickerProps) {
   const surface = useThemeColor({}, 'surface');
   const border = useThemeColor({}, 'border');
   const inputBorder = useThemeColor({}, 'inputBorder');
@@ -37,7 +39,7 @@ export function ProfileTypePicker({ value, onChange }: ProfileTypePickerProps) {
               index > 0 && { borderTopWidth: 1, borderTopColor: border },
               selected && { backgroundColor: tintSoft },
             ]}>
-            <Avatar avatar={meta.defaultAvatar} tint={meta.tint} size={32} />
+            <Avatar avatar={meta.defaultAvatar} skinTone={skinTone} tint={meta.tint} size={32} />
             <ThemedText variant="body" style={[styles.label, selected && styles.selectedLabel]}>
               {meta.label}
             </ThemedText>

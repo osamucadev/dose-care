@@ -44,7 +44,7 @@ export function RestockList({ rows, onSelect }: RestockListProps) {
               index > 0 && { borderTopWidth: 1, borderTopColor: border },
               { opacity: pressed ? 0.85 : 1 },
             ]}>
-            <Avatar avatar={row.profile.avatar} tint={getProfileTypeMeta(row.profile.type).tint} size={40} />
+            <Avatar avatar={row.profile.avatar} skinTone={row.profile.skinTone} tint={getProfileTypeMeta(row.profile.type).tint} size={40} />
             <View style={styles.text}>
               <ThemedText variant="label">{row.profile.name}</ThemedText>
               <ThemedText variant="body">{row.medicationLabel}</ThemedText>

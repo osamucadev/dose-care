@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="none">
+<defs><clipPath id="clip-succulent"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+<circle cx="48" cy="48" r="48" fill="#DCF0D3"/>
+<g clip-path="url(#clip-succulent)">
+  <path d="M48 62 C39 49.0 44.4 36 48 36 C51.6 36 57 49.0 48 62 Z" fill="#6FAF94" transform="rotate(-75 48 62)"/><path d="M48 62 C39 49.0 44.4 36 48 36 C51.6 36 57 49.0 48 62 Z" fill="#6FAF94" transform="rotate(-45 48 62)"/><path d="M48 62 C39 49.0 44.4 36 48 36 C51.6 36 57 49.0 48 62 Z" fill="#6FAF94" transform="rotate(-15 48 62)"/><path d="M48 62 C39 49.0 44.4 36 48 36 C51.6 36 57 49.0 48 62 Z" fill="#6FAF94" transform="rotate(15 48 62)"/><path d="M48 62 C39 49.0 44.4 36 48 36 C51.6 36 57 49.0 48 62 Z" fill="#6FAF94" transform="rotate(45 48 62)"/><path d="M48 62 C39 49.0 44.4 36 48 36 C51.6 36 57 49.0 48 62 Z" fill="#6FAF94" transform="rotate(75 48 62)"/><path d="M48 62 C41 52.0 45.2 42 48 42 C50.8 42 55 52.0 48 62 Z" fill="#8CC6AA" transform="rotate(-55 48 62)"/><path d="M48 62 C41 52.0 45.2 42 48 42 C50.8 42 55 52.0 48 62 Z" fill="#8CC6AA" transform="rotate(-25 48 62)"/><path d="M48 62 C41 52.0 45.2 42 48 42 C50.8 42 55 52.0 48 62 Z" fill="#8CC6AA" transform="rotate(0 48 62)"/><path d="M48 62 C41 52.0 45.2 42 48 42 C50.8 42 55 52.0 48 62 Z" fill="#8CC6AA" transform="rotate(25 48 62)"/><path d="M48 62 C41 52.0 45.2 42 48 42 C50.8 42 55 52.0 48 62 Z" fill="#8CC6AA" transform="rotate(55 48 62)"/><path d="M48 62 C43 56.0 46.0 50 48 50 C50.0 50 53 56.0 48 62 Z" fill="#B5DDC6" transform="rotate(-30 48 62)"/><path d="M48 62 C43 56.0 46.0 50 48 50 C50.0 50 53 56.0 48 62 Z" fill="#B5DDC6" transform="rotate(0 48 62)"/><path d="M48 62 C43 56.0 46.0 50 48 50 C50.0 50 53 56.0 48 62 Z" fill="#B5DDC6" transform="rotate(30 48 62)"/>
+  <path d="M28 52 l2 2 M68 52 l-2 2" stroke="#F29E8E" stroke-width="2" stroke-linecap="round"/>
+  <path d="M33 66 H63 L59 84 H37 Z" fill="#D9875A"/>
+  <rect x="31" y="62" width="34" height="7" rx="2.5" fill="#C9744A"/>
+</g>
+</svg>
