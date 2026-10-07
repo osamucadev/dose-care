@@ -14,26 +14,68 @@ O histórico de versões está no [CHANGELOG](./CHANGELOG.md).
 
 ## Funcionalidades atuais
 
-O app inclui:
+### Perfis
 
-- criação e edição de múltiplos perfis;
-- perfis para crianças, adultos, idosos, pets e plantas;
-- avatar ilustrado por perfil;
-- exclusão lógica de perfis, preservando seus dados e histórico;
-- cadastro e edição de medicamentos de rotina;
-- um ou mais horários fixos por medicamento;
-- tratamentos contínuos, com data final ou por quantidade de doses programadas;
-- ativação e desativação de medicamentos;
-- visão agregada de todos os perfis;
-- identificação da dose que precisa de atenção agora;
-- apresentação da próxima dose, inclusive no dia seguinte;
-- registro de doses tomadas ou puladas;
-- histórico individual por perfil;
-- atualização automática da interface conforme o horário avança;
-- lembretes no horário de cada dose, mesmo com o app fechado;
-- aviso para abrir o app antes que os lembretes programados acabem;
-- controle de estoque em doses, com aviso diário de reposição quando restam 10% ou menos;
-- persistência local e funcionamento offline.
+- Vários perfis, de crianças, adultos, idosos, pets e plantas.
+- Avatar ilustrado por perfil, com 31 opções e cinco tons de pele para pessoas (veja [Avatares](#avatares)).
+- Edição de perfis.
+- Exclusão sem perda de dados: o perfil sai da Home, mas o histórico continua guardado.
+
+### Medicamentos de rotina
+
+- Um ou mais horários fixos por dia, a partir de uma data de início.
+- Tratamento contínuo, até uma data ou por quantidade de doses programadas.
+- Desativar e reativar sem apagar o histórico.
+- Opção, desligada por padrão, de permitir tomar a dose antes do horário, no mesmo dia.
+- Editar uma rotina muda só as próximas doses, nunca o que já foi registrado.
+
+### Doses
+
+- **Agora:** a dose que precisa de atenção.
+- **Próximo:** a próxima dose, inclusive quando cai no dia seguinte.
+- Registro como Tomado ou Pulado em um toque, com proteção contra registro duplicado.
+- "Desfazer" por alguns segundos depois de Tomado ou Pular. Fechar o app nesse intervalo não perde a ação.
+- "Tomar agora" na próxima dose do dia, quando o medicamento permite antecipar.
+- A tela se atualiza sozinha na virada de cada minuto, ao voltar do segundo plano e na troca de dia.
+
+### Home
+
+- Visão de todos os perfis, com o status de cada um.
+- Filtro por perfil.
+- Lista dos próximos cuidados.
+- Seção "Para repor" com os medicamentos de estoque baixo.
+
+### Histórico
+
+- Histórico por perfil, com horário previsto e horário realizado.
+- Doses tomadas antes da hora aparecem como "Tomado antes do horário".
+- Um medicamento renomeado aparece com o nome atual e "Registrado como ..." com o nome da época. A dose mostrada é sempre a registrada.
+
+### Lembretes
+
+- Notificação no horário de cada dose, mesmo com o app fechado, sem internet nem servidor.
+- Tocar na notificação abre o perfil da dose.
+- Aviso para abrir o app três, dois e um dia antes de os lembretes programados acabarem.
+- A permissão é pedida ao cadastrar o primeiro medicamento.
+
+### Estoque
+
+- Estoque contado em doses, por medicamento: cada dose tomada desconta uma, e dose pulada não desconta.
+- Estimativa de quantos dias o estoque cobre.
+- Aviso quando restam 10% ou menos da última contagem: selo no medicamento, seção na Home e notificação diária às 09:00 até a reposição.
+
+### Visual e acessibilidade
+
+- Modo claro e escuro.
+- Contraste WCAG AA em todos os textos.
+- Áreas de toque de pelo menos 48px.
+- Status sempre com texto ou símbolo, nunca só por cor.
+- Rótulos para leitores de tela, inclusive nos avatares e nos tons de pele.
+
+### Dados
+
+- Tudo fica no próprio aparelho, em SQLite, e o app funciona sem internet.
+- Não há conta nem login.
 
 ## Telas
 
@@ -54,6 +96,80 @@ Capturas feitas com dados fictícios.
     <td align="center"><img src="docs/screenshots/estoque.png" width="220" alt="Tela de estoque da Sinvastatina com estoque baixo"><br><sub><b>Estoque:</b> doses restantes e aviso de reposição</sub></td>
     <td></td>
     <td></td>
+  </tr>
+</table>
+
+## Avatares
+
+Cada perfil tem um avatar ilustrado, escolhido entre as opções do seu tipo. São todos desenhos em SVG, sem emojis.
+
+### Pessoas
+
+Criança, adulto e idoso. O tom de pele é escolhido à parte, entre cinco opções, e vale para todos os avatares de pessoa daquele perfil. Perfil novo começa no tom médio.
+
+<table>
+  <tr>
+    <td align="center"><img src="mobile/assets/svg/avatars/child-medium.svg" width="64" alt="Menino"><br><sub>Menino</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/girl-medium.svg" width="64" alt="Menina"><br><sub>Menina</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/baby-medium.svg" width="64" alt="Bebê"><br><sub>Bebê</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/adult-medium.svg" width="64" alt="Mulher"><br><sub>Mulher</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/man-medium.svg" width="64" alt="Homem"><br><sub>Homem</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/elderly-medium.svg" width="64" alt="Senhora"><br><sub>Senhora</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/elderly-man-medium.svg" width="64" alt="Senhor"><br><sub>Senhor</sub></td>
+  </tr>
+</table>
+
+Os cinco tons, no avatar de mulher:
+
+<table>
+  <tr>
+    <td align="center"><img src="mobile/assets/svg/avatars/adult.svg" width="64" alt="Claro"><br><sub>Claro</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/adult-medium-light.svg" width="64" alt="Médio claro"><br><sub>Médio claro</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/adult-medium.svg" width="64" alt="Médio"><br><sub>Médio</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/adult-medium-dark.svg" width="64" alt="Médio escuro"><br><sub>Médio escuro</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/adult-dark.svg" width="64" alt="Escuro"><br><sub>Escuro</sub></td>
+  </tr>
+</table>
+
+### Pets
+
+<table>
+  <tr>
+    <td align="center"><img src="mobile/assets/svg/avatars/pet.svg" width="64" alt="Cachorro"><br><sub>Cachorro</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/labrador.svg" width="64" alt="Labrador"><br><sub>Labrador</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/husky.svg" width="64" alt="Husky"><br><sub>Husky</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/boxer.svg" width="64" alt="Boxer"><br><sub>Boxer</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/caramelo.svg" width="64" alt="Vira-lata caramelo"><br><sub>Vira-lata caramelo</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/cat.svg" width="64" alt="Gato laranja"><br><sub>Gato laranja</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="mobile/assets/svg/avatars/black-cat.svg" width="64" alt="Gato preto"><br><sub>Gato preto</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/white-cat.svg" width="64" alt="Gato branco"><br><sub>Gato branco</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/tricolor-cat.svg" width="64" alt="Gato tricolor"><br><sub>Gato tricolor</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/rabbit.svg" width="64" alt="Coelho"><br><sub>Coelho</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/bird.svg" width="64" alt="Pássaro"><br><sub>Pássaro</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/fish.svg" width="64" alt="Peixe"><br><sub>Peixe</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="mobile/assets/svg/avatars/hamster.svg" width="64" alt="Hamster"><br><sub>Hamster</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/turtle.svg" width="64" alt="Tartaruga"><br><sub>Tartaruga</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/lizard.svg" width="64" alt="Lagarto"><br><sub>Lagarto</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/snake.svg" width="64" alt="Cobra"><br><sub>Cobra</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/robot.svg" width="64" alt="Robô"><br><sub>Robô</sub></td>
+  </tr>
+</table>
+
+### Plantas
+
+<table>
+  <tr>
+    <td align="center"><img src="mobile/assets/svg/avatars/plant.svg" width="64" alt="Muda"><br><sub>Muda</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/potted-plant.svg" width="64" alt="Planta no vaso"><br><sub>Planta no vaso</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/cactus.svg" width="64" alt="Cacto"><br><sub>Cacto</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/sunflower.svg" width="64" alt="Girassol"><br><sub>Girassol</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/succulent.svg" width="64" alt="Suculenta"><br><sub>Suculenta</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/orchid.svg" width="64" alt="Orquídea"><br><sub>Orquídea</sub></td>
+    <td align="center"><img src="mobile/assets/svg/avatars/fern.svg" width="64" alt="Samambaia"><br><sub>Samambaia</sub></td>
   </tr>
 </table>
 
@@ -132,6 +248,9 @@ Esses comandos verificam, respectivamente, os tipos TypeScript, as regras de lin
 dose-care/
 ├── README.md
 ├── SPEC.md
+├── AGENTS.md
+├── CHANGELOG.md
+├── docs/
 └── mobile/
     ├── app/
     ├── assets/
@@ -140,6 +259,7 @@ dose-care/
     ├── domain/
     ├── features/
     ├── hooks/
+    ├── scripts/
     ├── services/
     ├── theme/
     └── view-models/
@@ -147,12 +267,14 @@ dose-care/
 
 Responsabilidades principais:
 
+- `docs`: capturas de tela e esboço da página do projeto;
 - `mobile/app`: telas e rotas do Expo Router (Views, apenas renderizam);
 - `mobile/components`: componentes visuais compartilhados;
 - `mobile/database`: conexão SQLite, migrations e repositórios;
 - `mobile/domain`: tipos, validações e regras de negócio puras;
 - `mobile/features`: componentes organizados por área funcional;
 - `mobile/hooks`: integração entre estado React e serviços;
+- `mobile/scripts`: geração dos SVGs (avatares, ícones, ilustrações), dos ícones do app e do APK de release;
 - `mobile/services`: operações da aplicação e acesso aos repositórios;
 - `mobile/theme`: tokens e definições visuais;
 - `mobile/view-models`: um ViewModel por tela, com o estado pronto para exibir e os comandos, incluindo a navegação.
@@ -183,6 +305,11 @@ DoseEvent
 
 As ocorrências pendentes são calculadas em tempo de execução. Apenas ações do usuário são persistidas como eventos. Cada evento armazena um snapshot das informações relevantes do medicamento, garantindo que o histórico permaneça compreensível mesmo depois de uma edição ou desativação.
 
+Duas regras completam esse modelo:
+
+- **Desfazer.** Ao tocar em Tomado ou Pular, a ação é gravada na hora numa tabela de ações pendentes, que não é histórico. Ela vira `DoseEvent` ao fim da janela de desfazer, ao registrar outra dose, quando o app sai do primeiro plano ou, se o app foi encerrado, na próxima abertura. Desfazer apenas apaga a ação pendente.
+- **Estoque.** Cada contagem de estoque é um registro imutável. O estoque atual é derivado: a última contagem menos as doses tomadas depois dela.
+
 Perfis e medicamentos utilizam exclusão lógica. Seus registros não são removidos fisicamente, preservando a integridade do histórico.
 
 ## Datas e horários
@@ -195,9 +322,16 @@ A Home e a tela do perfil possuem um relógio reativo. A interface é atualizada
 
 ## Armazenamento
 
-O MVP utiliza SQLite no próprio aparelho e funciona sem conexão com a internet. O banco é inicializado na primeira abertura e evolui por migrations versionadas.
+O app utiliza SQLite no próprio aparelho e funciona sem conexão com a internet. O banco é inicializado na primeira abertura e evolui por migrations versionadas.
 
 As telas não executam SQL diretamente. O acesso aos dados passa por repositórios e serviços, mantendo as regras de negócio separadas da interface.
+
+## Limitações conhecidas
+
+- Os lembretes cobrem os próximos 7 dias. Abrir o app renova essa janela, e o aviso de renovação chega antes de ela acabar.
+- No Android, "Forçar parada" apaga os lembretes até o app ser aberto de novo.
+- No Expo Go, lembretes com o app fechado não funcionam. Para testá-los, use o APK ou um development build.
+- A versão web abre a interface, mas ainda não o banco de dados.
 
 ## Próximas funcionalidades
 
