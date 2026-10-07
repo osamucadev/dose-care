@@ -10,6 +10,7 @@ function makeRow(overrides: Record<string, unknown> = {}) {
     name: 'Florita',
     type: 'elderly',
     avatar: '👵',
+    skin_tone: 'light',
     color: '#8B6FB3',
     notes: null,
     active: 1,

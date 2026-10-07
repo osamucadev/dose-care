@@ -2,14 +2,20 @@ import * as Crypto from 'expo-crypto';
 import type { SQLiteDatabase } from 'expo-sqlite';
 
 import { nowUtcIso } from '@/domain/datetime';
-import type { Profile, ProfileType } from '@/domain/types';
-import { InvalidPersistedDataError, assertValidProfileInput, isValidProfileType } from '@/domain/validation';
+import type { Profile, ProfileType, SkinTone } from '@/domain/types';
+import {
+  InvalidPersistedDataError,
+  assertValidProfileInput,
+  isValidProfileType,
+  isValidSkinTone,
+} from '@/domain/validation';
 
 interface ProfileRow {
   id: string;
   name: string;
   type: string;
   avatar: string;
+  skin_tone: string;
   color: string;
   notes: string | null;
   active: number;
@@ -23,12 +29,16 @@ function toProfile(row: ProfileRow): Profile {
   if (row.active !== 0 && row.active !== 1) {
     throw new InvalidPersistedDataError(`Profile ${row.id} has an invalid active flag: ${row.active}.`);
   }
+  if (!isValidSkinTone(row.skin_tone)) {
+    throw new InvalidPersistedDataError(`Profile ${row.id} has an unknown skin tone: ${row.skin_tone}.`);
+  }
 
   return {
     id: row.id,
     name: row.name,
     type: row.type,
     avatar: row.avatar,
+    skinTone: row.skin_tone,
     color: row.color,
     notes: row.notes,
     active: row.active === 1,
@@ -40,6 +50,7 @@ export interface CreateProfileInput {
   name: string;
   type: ProfileType;
   avatar: string;
+  skinTone: SkinTone;
   color: string;
   notes?: string | null;
 }
@@ -48,6 +59,7 @@ export interface UpdateProfileInput {
   name: string;
   type: ProfileType;
   avatar: string;
+  skinTone: SkinTone;
   color: string;
   notes?: string | null;
 }
@@ -85,12 +97,13 @@ export class ProfileRepository {
     const createdAt = nowUtcIso();
 
     await this.db.runAsync(
-      `INSERT INTO profiles (id, name, type, avatar, color, notes, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?);`,
+      `INSERT INTO profiles (id, name, type, avatar, skin_tone, color, notes, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
       id,
       input.name,
       input.type,
       input.avatar,
+      input.skinTone,
       input.color,
       input.notes ?? null,
       createdAt
@@ -101,6 +114,7 @@ export class ProfileRepository {
       name: input.name,
       type: input.type,
       avatar: input.avatar,
+      skinTone: input.skinTone,
       color: input.color,
       notes: input.notes ?? null,
       active: true,
@@ -111,10 +125,11 @@ export class ProfileRepository {
   async update(id: string, input: UpdateProfileInput): Promise<void> {
     assertValidProfileInput(input);
     await this.db.runAsync(
-      `UPDATE profiles SET name = ?, type = ?, avatar = ?, color = ?, notes = ? WHERE id = ?;`,
+      `UPDATE profiles SET name = ?, type = ?, avatar = ?, skin_tone = ?, color = ?, notes = ? WHERE id = ?;`,
       input.name,
       input.type,
       input.avatar,
+      input.skinTone,
       input.color,
       input.notes ?? null,
       id

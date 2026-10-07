@@ -43,6 +43,7 @@ export function useEditProfileViewModel(id: string): EditProfileViewModel {
       name: profile.name,
       type: profile.type,
       avatar: profile.avatar,
+      skinTone: profile.skinTone,
       color: profile.color,
       notes: profile.notes ?? '',
     },

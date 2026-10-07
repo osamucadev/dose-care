@@ -8,6 +8,7 @@ function makeProfile(overrides: Partial<Profile> = {}): Profile {
     name: 'Florita',
     type: 'elderly',
     avatar: 'svg:elderly',
+    skinTone: 'light',
     color: '#8F6FBF',
     notes: null,
     active: true,
@@ -46,7 +47,12 @@ describe('buildHomeDosesState, aggregated view', () => {
 
   it('shows the due dose as Agora with its owner', () => {
     expect(state.now?.scheduledAt).toBe('2026-08-15T08:00');
-    expect(state.nowProfile).toEqual({ name: 'Florita', avatar: 'svg:elderly', tint: expect.any(String) });
+    expect(state.nowProfile).toEqual({
+      name: 'Florita',
+      avatar: 'svg:elderly',
+      skinTone: 'light',
+      tint: expect.any(String),
+    });
   });
 
   it('shows Próximo with its owner', () => {

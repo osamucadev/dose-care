@@ -5,7 +5,7 @@ import { useCallback, useMemo } from 'react';
 import { toLocalDateString } from '@/domain/datetime';
 import { computeNowAndNext, earlyTakeableIds } from '@/domain/occurrences';
 import type { StockStatus } from '@/domain/stock';
-import type { DoseOccurrence, Medication } from '@/domain/types';
+import type { DoseOccurrence, Medication, SkinTone } from '@/domain/types';
 import { useDoseActionHandler } from '@/hooks/use-dose-action-handler';
 import { useDoses } from '@/hooks/use-doses';
 import { useMedicationToggleHandler } from '@/hooks/use-medication-toggle-handler';
@@ -43,6 +43,7 @@ export type ProfileViewModel =
       name: string;
       typeLabel: string;
       avatar: string;
+      skinTone: SkinTone;
       avatarTint: string;
       doses: ProfileDosesSection;
       medications: ProfileMedicationsSection;
@@ -109,6 +110,7 @@ export function useProfileViewModel(id: string): ProfileViewModel {
     name: profile.name,
     typeLabel: meta.label,
     avatar: profile.avatar,
+    skinTone: profile.skinTone,
     avatarTint: meta.tint,
     doses: dosesError
       ? { status: 'error', retry: refreshDoses }

@@ -7,6 +7,7 @@ function makeProfile(overrides: Partial<Profile> = {}): Profile {
     name: 'Florita',
     type: 'elderly',
     avatar: '👵',
+    skinTone: 'light',
     color: '#8B6FB3',
     notes: null,
     active: true,

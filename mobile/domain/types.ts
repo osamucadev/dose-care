@@ -1,11 +1,21 @@
 export const PROFILE_TYPE_VALUES = ['child', 'adult', 'elderly', 'pet', 'plant'] as const;
 export type ProfileType = (typeof PROFILE_TYPE_VALUES)[number];
 
+/** Skin tones of the people avatars, from lightest to darkest. */
+export const SKIN_TONE_VALUES = ['light', 'medium-light', 'medium', 'medium-dark', 'dark'] as const;
+export type SkinTone = (typeof SKIN_TONE_VALUES)[number];
+
 export interface Profile {
   id: string;
   name: string;
   type: ProfileType;
   avatar: string;
+  /**
+   * Chosen apart from the avatar so it carries over when the avatar or
+   * the type changes. Only people avatars use it; pets and plants keep
+   * the value without showing it.
+   */
+  skinTone: SkinTone;
   color: string;
   notes: string | null;
   /**

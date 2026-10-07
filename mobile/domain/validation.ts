@@ -4,8 +4,8 @@ import {
   isValidTimeString,
   isValidUtcIsoTimestamp,
 } from './datetime';
-import { DOSE_EVENT_STATUS_VALUES, PROFILE_TYPE_VALUES, TREATMENT_END_MODE_VALUES } from './types';
-import type { DoseEvent, DoseEventStatus, ProfileType, TreatmentEndMode } from './types';
+import { DOSE_EVENT_STATUS_VALUES, PROFILE_TYPE_VALUES, SKIN_TONE_VALUES, TREATMENT_END_MODE_VALUES } from './types';
+import type { DoseEvent, DoseEventStatus, ProfileType, SkinTone, TreatmentEndMode } from './types';
 
 /**
  * Thrown when data read back from SQLite (or about to be written to it)
@@ -22,6 +22,10 @@ export class InvalidPersistedDataError extends Error {
 
 export function isValidProfileType(value: string): value is ProfileType {
   return (PROFILE_TYPE_VALUES as readonly string[]).includes(value);
+}
+
+export function isValidSkinTone(value: string): value is SkinTone {
+  return (SKIN_TONE_VALUES as readonly string[]).includes(value);
 }
 
 export function isValidDoseEventStatus(value: string): value is DoseEventStatus {
@@ -213,6 +217,7 @@ export function assertValidMedicationInput(input: MedicationInputToValidate): No
 export interface ProfileInputToValidate {
   name: string;
   type: string;
+  skinTone: string;
 }
 
 export function assertValidProfileInput(input: ProfileInputToValidate): void {
@@ -221,6 +226,9 @@ export function assertValidProfileInput(input: ProfileInputToValidate): void {
   }
   if (!isValidProfileType(input.type)) {
     throw new InvalidPersistedDataError(`Invalid profile type: ${input.type}.`);
+  }
+  if (!isValidSkinTone(input.skinTone)) {
+    throw new InvalidPersistedDataError(`Invalid skin tone: ${input.skinTone}.`);
   }
 }
 

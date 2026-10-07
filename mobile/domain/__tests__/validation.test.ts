@@ -240,17 +240,23 @@ describe('assertValidTreatmentEndMode', () => {
 
 describe('assertValidProfileInput', () => {
   it('accepts a valid profile input', () => {
-    expect(() => assertValidProfileInput({ name: 'Florita', type: 'elderly' })).not.toThrow();
+    expect(() => assertValidProfileInput({ name: 'Florita', type: 'elderly', skinTone: 'medium' })).not.toThrow();
   });
 
   it('rejects a blank name', () => {
-    expect(() => assertValidProfileInput({ name: '  ', type: 'elderly' })).toThrow(
+    expect(() => assertValidProfileInput({ name: '  ', type: 'elderly', skinTone: 'medium' })).toThrow(
       InvalidPersistedDataError
     );
   });
 
   it('rejects an unknown profile type', () => {
-    expect(() => assertValidProfileInput({ name: 'Florita', type: 'robot' })).toThrow(
+    expect(() => assertValidProfileInput({ name: 'Florita', type: 'robot', skinTone: 'medium' })).toThrow(
+      InvalidPersistedDataError
+    );
+  });
+
+  it('rejects an unknown skin tone', () => {
+    expect(() => assertValidProfileInput({ name: 'Florita', type: 'elderly', skinTone: 'blue' })).toThrow(
       InvalidPersistedDataError
     );
   });

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/text-field';
 import { ThemedText } from '@/components/ui/themed-text';
 import { getProfileTypeMeta } from '@/theme/profile-types';
+import { DEFAULT_SKIN_TONE } from '@/theme/skin-tones';
 import { spacing } from '@/theme/tokens';
 
 import { AvatarPicker } from './avatar-picker';
@@ -35,6 +36,7 @@ export function ProfileForm({ defaultValues, onSubmit, submitLabel }: ProfileFor
       name: '',
       type: initialType,
       avatar: initialMeta.defaultAvatar,
+      skinTone: DEFAULT_SKIN_TONE,
       color: initialMeta.color,
       notes: '',
       ...defaultValues,

@@ -5,6 +5,7 @@ import { svgAvatars } from './004_svg_avatars';
 import { stockCounts } from './005_stock_counts';
 import { pendingDoseActions } from './006_pending_dose_actions';
 import { medicationAllowEarly } from './007_medication_allow_early';
+import { profileSkinTone } from './008_profile_skin_tone';
 import type { Migration } from './types';
 
 /**
@@ -30,6 +31,7 @@ export const migrations: Migration[] = [
   stockCounts,
   pendingDoseActions,
   medicationAllowEarly,
+  profileSkinTone,
 ];
 
 export type { Migration };

@@ -2,7 +2,7 @@ import { migrations } from '../migrations';
 
 describe('migrations index', () => {
   it('lists every migration in ascending version order, starting at 1', () => {
-    expect(migrations.map((m) => m.version)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    expect(migrations.map((m) => m.version)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   });
 
   it('keeps migration 001 exactly as the initial schema — no active column on profiles', () => {

@@ -6,7 +6,7 @@ import {
   type ProfileDayStatus,
 } from '@/domain/occurrences';
 import type { RestockItem } from '@/domain/reminders';
-import type { DoseOccurrence, Profile } from '@/domain/types';
+import type { DoseOccurrence, Profile, SkinTone } from '@/domain/types';
 import { doseDayTimeLabel } from '@/features/doses/dose-time';
 import type { RestockRow } from '@/features/medications/restock-list';
 import { getProfileTypeMeta } from '@/theme/profile-types';
@@ -24,6 +24,7 @@ export interface HomeProfileRow {
 export interface HomeNowProfile {
   name: string;
   avatar: string;
+  skinTone: SkinTone;
   tint: string;
 }
 
@@ -85,7 +86,12 @@ export function buildHomeDosesState(input: {
   return {
     now: nowNext.now,
     nowProfile: nowOwner
-      ? { name: nowOwner.name, avatar: nowOwner.avatar, tint: getProfileTypeMeta(nowOwner.type).tint }
+      ? {
+          name: nowOwner.name,
+          avatar: nowOwner.avatar,
+          skinTone: nowOwner.skinTone,
+          tint: getProfileTypeMeta(nowOwner.type).tint,
+        }
       : null,
     next: nowNext.next,
     nextProfile: aggregated ? (nextOwner ?? null) : null,
