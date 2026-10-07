@@ -2,8 +2,11 @@
 <defs><clipPath id="clip-caramelo"><circle cx="48" cy="48" r="48"/></clipPath></defs>
 <circle cx="48" cy="48" r="48" fill="#D3EDD8"/>
 <g clip-path="url(#clip-caramelo)">
-  <path d="M24 100 C26 82 36 75 48 75 C60 75 70 82 72 100 Z" fill="#D99547"/>
-  <path d="M41 75 C44 84 52 84 55 75" fill="#F6DDB6"/>
+  <path d="M29 100 C28 85 36 72 48 72 C60 72 68 85 67 100 Z" fill="#D99547"/>
+  <path d="M41 73 C38 80 40 87 48 91 C56 87 58 80 55 73 Z" fill="#F6DDB6"/>
+  <ellipse cx="39" cy="86.5" rx="7" ry="5" fill="#F6DDB6"/>
+  <ellipse cx="57" cy="86.5" rx="7" ry="5" fill="#F6DDB6"/>
+  <path d="M36.5 83.5 V86.5 M41.5 83.5 V86.5 M54.5 83.5 V86.5 M59.5 83.5 V86.5" stroke="#000000" stroke-opacity="0.18" stroke-width="1.2" stroke-linecap="round"/>
   <path d="M29 44 L31 21 L45 33 Z" fill="#D99547"/>
   <path d="M67 44 L65 21 L51 33 Z" fill="#D99547"/>
   <path d="M33 37 L33.5 27 L40 33 Z M63 37 L62.5 27 L56 33 Z" fill="#F6DDB6"/>

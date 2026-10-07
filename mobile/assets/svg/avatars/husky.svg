@@ -2,8 +2,11 @@
 <defs><clipPath id="clip-husky"><circle cx="48" cy="48" r="48"/></clipPath></defs>
 <circle cx="48" cy="48" r="48" fill="#D3EDD8"/>
 <g clip-path="url(#clip-husky)">
-  <path d="M24 100 C26 82 36 75 48 75 C60 75 70 82 72 100 Z" fill="#7F8C99"/>
-  <path d="M41 75 C44 84 52 84 55 75" fill="#F7F7F5"/>
+  <path d="M29 100 C28 85 36 72 48 72 C60 72 68 85 67 100 Z" fill="#7F8C99"/>
+  <path d="M41 73 C38 80 40 87 48 91 C56 87 58 80 55 73 Z" fill="#F7F7F5"/>
+  <ellipse cx="39" cy="86.5" rx="7" ry="5" fill="#F7F7F5"/>
+  <ellipse cx="57" cy="86.5" rx="7" ry="5" fill="#F7F7F5"/>
+  <path d="M36.5 83.5 V86.5 M41.5 83.5 V86.5 M54.5 83.5 V86.5 M59.5 83.5 V86.5" stroke="#000000" stroke-opacity="0.18" stroke-width="1.2" stroke-linecap="round"/>
   <path d="M29 42 L31 18 L45 33 Z" fill="#7F8C99"/>
   <path d="M67 42 L65 18 L51 33 Z" fill="#7F8C99"/>
   <path d="M32 36 L33 25 L40 32 Z M64 36 L63 25 L56 32 Z" fill="#F2D3D0"/>

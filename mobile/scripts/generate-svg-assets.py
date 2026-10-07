@@ -99,10 +99,19 @@ def elderly_figure():
   <path d="M46.2 49.5 Q48 48 49.8 49.5" stroke="#8A6A5A" stroke-width="1.8" stroke-linecap="round"/>'''
 
 
-def dog_figure():
+def animal_body(coat, chest, paw):
+    """A sitting animal: a narrow chest and two front paws, so pets never
+    get the broad shoulders of the people avatars."""
     return f'''
-  <path d="M24 100 C26 82 36 75 48 75 C60 75 70 82 72 100 Z" fill="#C79465"/>
-  <path d="M41 75 C44 84 52 84 55 75" fill="#F1DCC4"/>
+  <path d="M29 100 C28 85 36 72 48 72 C60 72 68 85 67 100 Z" fill="{coat}"/>
+  <path d="M41 73 C38 80 40 87 48 91 C56 87 58 80 55 73 Z" fill="{chest}"/>
+  <ellipse cx="39" cy="86.5" rx="7" ry="5" fill="{paw}"/>
+  <ellipse cx="57" cy="86.5" rx="7" ry="5" fill="{paw}"/>
+  <path d="M36.5 83.5 V86.5 M41.5 83.5 V86.5 M54.5 83.5 V86.5 M59.5 83.5 V86.5" stroke="#000000" stroke-opacity="0.18" stroke-width="1.2" stroke-linecap="round"/>'''
+
+
+def dog_figure():
+    return animal_body('#C79465', '#F1DCC4', '#D9AE84') + f'''
   <ellipse cx="48" cy="51" rx="20" ry="20" fill="#C79465"/>
   <path d="M30 34 C19 36 16 55 22 66 C29 65 32 52 35 41 Z" fill="#6B4630"/>
   <path d="M66 34 C77 36 80 55 74 66 C67 65 64 52 61 41 Z" fill="#6B4630"/>
@@ -174,8 +183,7 @@ def elderly_man_figure():
 
 
 def cat_figure():
-    return f'''
-  <path d="M24 100 C26 82 36 76 48 76 C60 76 70 82 72 100 Z" fill="#E59A52"/>
+    return animal_body('#E59A52', '#FBE3D0', '#F0B47C') + f'''
   <path d="M28 46 L30 22 L44 34 Z" fill="#E59A52"/>
   <path d="M68 46 L66 22 L52 34 Z" fill="#E59A52"/>
   <path d="M31 40 L32 28 L40 35 Z M65 40 L64 28 L56 35 Z" fill="#F6C6A8"/>
@@ -189,8 +197,7 @@ def cat_figure():
 
 
 def rabbit_figure():
-    return f'''
-  <path d="M24 100 C26 82 36 76 48 76 C60 76 70 82 72 100 Z" fill="#E7E1DA"/>
+    return animal_body('#E7E1DA', '#F7F3EE', '#F3EEE8') + f'''
   <ellipse cx="38" cy="22" rx="6.5" ry="18" fill="#E7E1DA"/>
   <ellipse cx="58" cy="22" rx="6.5" ry="18" fill="#E7E1DA"/>
   <ellipse cx="38" cy="23" rx="3" ry="13" fill="#F4C3C8"/>
@@ -287,9 +294,7 @@ def floppy_ears(fill):
 
 
 def dog_body(coat, chest):
-    return f'''
-  <path d="M24 100 C26 82 36 75 48 75 C60 75 70 82 72 100 Z" fill="{coat}"/>
-  <path d="M41 75 C44 84 52 84 55 75" fill="{chest}"/>'''
+    return animal_body(coat, chest, chest)
 
 
 def labrador_figure():
@@ -332,7 +337,7 @@ def caramelo_figure():
 
 # Cat coats share the head of `cat_figure`.
 
-def cat_coat(coat, ear_inner, muzzle, nose, whisker, eye='#3A2A22', iris=None, left_ear=None, right_ear=None, stripes=None, patches=''):
+def cat_coat(coat, ear_inner, muzzle, nose, whisker, eye='#3A2A22', iris=None, left_ear=None, right_ear=None, stripes=None, patches='', chest=None):
     eyes = (
         f'''
   <ellipse cx="39.5" cy="50" rx="3.2" ry="3.8" fill="{iris}"/>
@@ -351,7 +356,7 @@ def cat_coat(coat, ear_inner, muzzle, nose, whisker, eye='#3A2A22', iris=None, l
         else ''
     )
     return f'''
-  <path d="M24 100 C26 82 36 76 48 76 C60 76 70 82 72 100 Z" fill="{coat}"/>
+{animal_body(coat, chest or muzzle, chest or muzzle)}
   <path d="M28 46 L30 22 L44 34 Z" fill="{left_ear or coat}"/>
   <path d="M68 46 L66 22 L52 34 Z" fill="{right_ear or coat}"/>
   <path d="M31 40 L32 28 L40 35 Z M65 40 L64 28 L56 35 Z" fill="{ear_inner}"/>

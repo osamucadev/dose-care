@@ -2,8 +2,11 @@
 <defs><clipPath id="clip-labrador"><circle cx="48" cy="48" r="48"/></clipPath></defs>
 <circle cx="48" cy="48" r="48" fill="#D3EDD8"/>
 <g clip-path="url(#clip-labrador)">
-  <path d="M24 100 C26 82 36 75 48 75 C60 75 70 82 72 100 Z" fill="#E6C48A"/>
-  <path d="M41 75 C44 84 52 84 55 75" fill="#F5E3C0"/>
+  <path d="M29 100 C28 85 36 72 48 72 C60 72 68 85 67 100 Z" fill="#E6C48A"/>
+  <path d="M41 73 C38 80 40 87 48 91 C56 87 58 80 55 73 Z" fill="#F5E3C0"/>
+  <ellipse cx="39" cy="86.5" rx="7" ry="5" fill="#F5E3C0"/>
+  <ellipse cx="57" cy="86.5" rx="7" ry="5" fill="#F5E3C0"/>
+  <path d="M36.5 83.5 V86.5 M41.5 83.5 V86.5 M54.5 83.5 V86.5 M59.5 83.5 V86.5" stroke="#000000" stroke-opacity="0.18" stroke-width="1.2" stroke-linecap="round"/>
   <ellipse cx="48" cy="51" rx="20" ry="20" fill="#E6C48A"/>
   <path d="M30 34 C19 36 16 55 22 66 C29 65 32 52 35 41 Z" fill="#D2A462"/>
   <path d="M66 34 C77 36 80 55 74 66 C67 65 64 52 61 41 Z" fill="#D2A462"/>
