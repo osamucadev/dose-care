@@ -6,16 +6,20 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Não lançado]
 
+## [1.4.0] - 2026-10-10
+
+Doses que podem ser antecipadas e avatares para mais gente, bichos e plantas.
+
 ### Adicionado
 
 - Antecipar doses: no cadastro do medicamento, a opção "Pode ser tomado antes do horário, no mesmo dia" mostra "Tomar agora" na próxima dose do dia. A dose vai para o histórico como "Tomado antes do horário", com o horário do toque, e pode ser desfeita como qualquer outra. A opção vem desligada.
-
 - Tom de pele para os avatares de criança, adulto e idoso, com cinco opções escolhidas à parte do avatar. Perfil novo começa no tom médio; os perfis existentes continuam como estavam.
 - Mais avatares de pets: labrador, husky, boxer, vira-lata caramelo, gato preto, gato branco, gato tricolor, peixe, hamster, tartaruga, lagarto, cobra e robô.
 - Mais avatares de plantas: suculenta, orquídea e samambaia.
 
 ### Alterado
 
+- Cachorros, gatos e coelho aparecem sentados, com as patas da frente, em vez de com ombros parecidos com os das pessoas.
 - O histórico mostra o nome atual de um medicamento renomeado, com "Registrado como ..." indicando o nome original. A dose exibida continua sendo a registrada, e nenhum registro é reescrito.
 
 ## [1.3.0] - 2026-10-04
@@ -128,7 +132,8 @@ Primeira versão oficial. App Android instalável por APK, com todos os dados gu
 - **Ainda não existem:** medicamentos SOS, adiamento de dose ("Depois") e recorrências além de horários fixos.
 - **A versão web ainda não abre o banco de dados.**
 
-[Não lançado]: https://github.com/osamucadev/dose-care/compare/v1.3.0...HEAD
+[Não lançado]: https://github.com/osamucadev/dose-care/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/osamucadev/dose-care/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/osamucadev/dose-care/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/osamucadev/dose-care/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/osamucadev/dose-care/compare/v1.0.0...v1.1.0
